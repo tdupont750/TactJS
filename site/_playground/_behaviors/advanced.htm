@@ -1,0 +1,63 @@
+﻿<script>
+    var funkySlide = function () {
+        $('.clonespace').each(function (index, clonespace) {
+            $('.slider', clonespace).each(function (index2, element) {
+                setTimeout(function () {
+                    $(element).enqueueMsg('slideToggle').enqueueMsg('slideToggle').unqueue();
+                }, (200 * index2));
+            });
+        });
+    };
+</script>
+<div style="height: 400px;">
+    <div class="pet" data-behaviors-lazy="Docs.Demos.Lib.PetBehavior" data-voice-box="voiceBox"
+        data-name="Turtle" data-type="Pet">
+        <input type="button" value="Walk" onclick="$(this).parent().msg('walk')" />
+        <input type="button" value="Do Business" onclick="$(this).parent().msg('doBusiness')" />
+        <input type="button" value="Check Box" onclick="$(this).parent().msg('checkBox')" /><br />
+        <img src="images/turtle.gif" class="pointer" onclick="$(this).parent().msg('speak')" /><br />
+        <div style="height: 20px;">
+            <span id="voiceBox" class="voice toggle-off"></span>
+        </div>
+    </div>
+    <div class="pet" data-behaviors-lazy="Docs.Demos.Lib.PetBehavior" data-voice-box="voiceBox2"
+        data-name="Taboo" data-type="Dog">
+        <input type="button" value="Walk" onclick="$(this).parent().msg('walk')" />
+        <input type="button" value="Do Business" onclick="$(this).parent().msg('doBusiness')" />
+        <input type="button" value="Check Box" onclick="$(this).parent().msg('checkBox')" /><br />
+        <img src="images/dog.gif" class="pointer" onclick="$(this).parent().msg('speak')" /><br />
+        <div style="height: 20px;">
+            <span id="voiceBox2" class="voice toggle-off"></span>
+        </div>
+    </div>
+    <div class="pet" data-behaviors-lazy="Docs.Demos.Lib.PetBehavior" data-voice-box="voiceBox3"
+        data-name="Linq" data-type="Cat">
+        <input type="button" value="Walk" onclick="$(this).parent().msg('walk')" />
+        <input type="button" value="Do Business" onclick="$(this).parent().msg('doBusiness')" />
+        <input type="button" value="Check Box" onclick="$(this).parent().msg('checkBox')" /><br />
+        <img src="images/cat.gif" class="pointer" onclick="$(this).parent().msg('speak')" /><br />
+        <div style="height: 20px;">
+            <span id="voiceBox3" class="voice toggle-off"></span>
+        </div>
+    </div>
+</div>
+<div id="slider1" class="square mas slider" data-behaviors-lazy="Docs.Demos.Queueable.Toggler Docs.Demos.Queueable.Slider Docs.Demos.Queueable.SlideToggler"
+    data-slide-time="2000" data-slide-distance="200" data-toggle-class="bg-red bg-green">
+    <div class="square bg-red pointer toggle-on" onclick="$('#slider1').enqueueMsg('slideToggle').enqueueMsg('slideToggle').unqueue()">
+    </div>
+</div>
+<input type="button" value="Clone Square" onclick="$('.clonespace').msg('clone', 'slider1')" />
+<input type="button" value="Message Sliders" onclick="$('.slider').msg('slideToggle')" />
+<input type="button" value="Broadcast Sliders" onclick="$('.clonespace').broadcast('slideToggle')" />
+<input type="button" value="Funky Slide" onclick="funkySlide()" />
+<br />
+<br />
+<div id="clonespace" class="clonespace" data-behaviors-eager="TestSpace.Cloner">
+</div>
+<div id="clonespace2" class="clonespace" data-behaviors-eager="TestSpace.Cloner">
+</div>
+<div id="clonespace3" class="clonespace" data-behaviors-eager="TestSpace.Cloner">
+</div>
+<div id="clonespace4" class="clonespace" data-behaviors-eager="TestSpace.Cloner">
+</div>
+

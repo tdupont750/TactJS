@@ -1,0 +1,59 @@
+﻿<h3>
+    API - Classes - Event</h3>
+<hr>
+<h4>
+    Tact.Event</h4>
+<p>
+    @class<br>
+    @description Handles Events</p>
+<h4>
+    Example</h4>
+<pre>var event = new Tact.Event();
+
+event.subscribe(function(arg) {
+	alert('Event was fired with: ' + arg);
+});
+
+event.fire('Stuff!'); // Event was fired with: Stuff!</pre>
+<h3>
+    API - Classes - Event - constructor</h3>
+<hr>
+<h4>
+    new Tact.Event()</h4>
+<p>
+    @constructor
+</p>
+<h3>
+    API - Classes - Event - subscribe</h3>
+<hr>
+<h4>
+    Tact.Event.subscribe(delegate)</h4>
+<p>
+    @description Add a callback delegate.<br>
+    @param {function} delegate
+</p>
+<h3>
+    API - Classes - Event - unsubscribe</h3>
+<hr>
+<h4>
+    Tact.Event.unsubscribe(delegate)</h4>
+<p>
+    @description Remove a callback delegate.<br>
+    @param {function} delegate
+</p>
+<h3>
+    API - Classes - Event - fire</h3>
+<hr>
+<h4>
+    Tact.Event.fire(arguments)</h4>
+<p>
+    @description Fire event, invoking all registered delegates.
+</p>
+<h3>
+    API - Classes - Event - subscriptionCount</h3>
+<hr>
+<h4>
+    Tact.Event.subscriptionCount()</h4>
+<p>
+    @description Returns the number of handlers subscribed to the event. @returns {number}
+</p>

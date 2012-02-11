@@ -1,0 +1,117 @@
+﻿<div class="span1 col1 right center">
+    <a class="center" href="downloads/demos/classes/override.zip">
+        <div class="download center">
+        </div>
+    </a>
+</div>
+<h3>
+    Demos - Objects & Inheritence - Overriding Members</h3>
+<hr>
+<p>
+    In order to see how overriding methods and properties of an object might work, let's
+    take a look at Docs.Demos.Enterprise...
+</p>
+<pre>
+(function ($) { 
+    $.types.ns("Docs.Demos");
+    Docs.Demos.Enterprise = $.types.define(function() {
+
+	    var self = {
+		    captain: function() {
+			    return "Jonathan Archer";
+		    }
+	    };
+	
+	    return self;
+    });
+})(jQuery);
+</pre>
+<p>
+    This object tracks the name of the captain of the Enterprise from the show of the
+    same name. When we declare a new Docs.Demos.Enterprise and invoke the "captain()" method,
+    we get "Johnathan Archer."
+</p>
+<pre>
+var enterprise = new Docs.Demos.Enterprise();
+enterprise.captain(); // Jonathan Archer
+</pre>
+<p>
+    Since the show Enterprise is set before the original Star Trek, let's extend our
+    Docs.Demos.Enterprise class, and override the captain's name.
+</p>
+<pre>
+(function ($) { 
+    $.types.ns("Docs.Demos");
+    Docs.Demos.StarTrek = $.types.extend(Docs.Demos.Enterprise, function() {
+
+	    var self = {
+		    captain: function() {
+			    return "James T. Kirk";
+		    },
+            previousCaptain: function(){
+                return self.superclass.captain();
+            }
+	    };
+	
+	    return self;
+    });
+})(jQuery);
+</pre>
+<p>
+    Notice that the "captain()" has been effectively overridden to show our new captain,
+    James T. Kirk. We still have access to the superclass "captain()" method however,
+    so we can create a new method called "previousCaptain()" which will return "Johnathan
+    Archer."
+</p>
+<pre>
+    var original = new Docs.Demos.StarTrek();
+    original.captain();         // James T. Kirk
+    original.previousCaptain(); // Jonathan Archer
+</pre>
+<p>
+    The same technique works equally well with methods and properties, but remember
+    that you can only perform overrides against methods and properties that are in the
+    public scope of your extended class.
+</p>
+<p>
+    You are not limited to only one level of override either. Let's go one step further and create a Docs.Demos.NextGeneration class...
+</p>
+<pre>
+(function ($) { 
+    $.types.ns("Docs.Demos");
+    Docs.Demos.NextGeneration = $.types.extend(Docs.Demos.StarTrek, function() {	    
+
+	    var self = {
+		    captain: function() {
+			    return "Jean-Luc Picard";
+		    },
+		    previousCaptain: function() {
+			    return self.superclass.captain();
+		    },
+		    previousPreviousCaptain: function() {
+			    return self.superclass.superclass.captain();
+		    }
+	    };
+	
+	    return self;
+    });
+})(jQuery);
+</pre>
+<p>
+    This should allow us to see all our captains.
+</p>
+<pre>
+var nextGen = new Docs.Demos.NextGeneration();
+nextGen.captain();                 // Jean-Luc Picard
+nextGen.previousCaptain();         // James T. Kirk
+nextGen.previousPreviousCaptain(); // Jonathan Archer
+</pre>
+<p>
+    You can access the superclass methods from anywhere because they are by necessity in a public scope, so you can do something like this...
+</p>
+<pre>
+var nextGen = new Docs.Demos.NextGeneration();
+nextGen.captain();                       // Jean-Luc Picard
+nextGen.superclass.captain();            // James T. Kirk
+nextGen.superclass.superclass.captain(); // Jonathan Archer
+</pre>

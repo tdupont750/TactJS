@@ -1,0 +1,115 @@
+﻿<h3>
+    API - Static - Class</h3>
+<hr>
+<h4>
+    $.types</h4>
+    <br />
+<br />
+<h3>
+    API - Static - Class - define</h3>
+<hr>
+<h4>
+    $.types.define(declaration)</h4>
+<p>
+    @description Define a class.<br>
+    @param {function} declaration<br>
+    @return {function} Class constructor.
+</p>
+<h4>
+    Example</h4>
+<pre>$.types.ns("Tact");
+
+Tact.Pet = $.types.define(function(name) {
+	var _name = name;
+	var _walkCount = 0;
+	var self = {
+		walk : function() {
+			_walkCount++;
+			return name
+				+ " has been walked "
+				+ _walkCount
+				+ " time(s) today.";
+		};
+	};
+	return self;
+});
+
+var pet = new Tact.Pet("Taboo");
+pet.walk(); // Taboo has been walked 1 time(s) today.
+pet.walk(); // Taboo has been walked 2 time(s) today.</pre>
+<h3>
+    API - Static - Class - defineAsSingleton</h3>
+<hr>
+<h4>
+    $.types.defineAsSingleton(declaration)</h4>
+<p>
+    @description Define a singleton.<br>
+    @param {function} declaration<br>
+    @return {function} Singleton instance of class definition.
+</p>
+<h3>
+    API - Static - Class - extend</h3>
+<hr>
+<h4>
+    $.types.extend(superclass, declaration)</h4>
+<p>
+    @description Define a class that inherits from a superclass.<br>
+    @param {function} superclass<br>
+    @param {function} declaration<br>
+    @return {function} Child class constructor.
+</p>
+<h4>
+    Example</h4>
+<pre>Tact.Cat = $.types.extend(Tact.Pet, function(name) {
+	var _speak = "Meow";
+	var self = {
+		speak: function() {
+			return "The Cat says: " + _speak;
+		};
+	};
+	return self;
+});
+
+var cat = new Tact.Cat("Linq");
+cat.walk(); // Taboo has been walked 1 time(s) today.
+cat.speak(); // The Cat says: Meow</pre>
+<h3>
+    API - Static - Class - extendAsSingleton</h3>
+<hr>
+<h4>
+    $.types.extendAsSingleton(superclass, declaration)</h4>
+<p>
+    @description Define a singleton that inherits from a superclass.<br>
+    @param {function} superclass<br>
+    @param {function} declaration<br>
+    @return {function} Singleton instance of class extension.
+</p>
+<h3>
+    API - Static - Class - is</h3>
+<hr>
+<h4>
+    $.types.is(object, type)</h4>
+<p>
+    @description Type checks an object.<br>
+    @param {object} object<br>
+    @param {function} type<br>
+    @return {boolean} True if object is derivative of type.
+</p>
+<h4>
+    Example</h4>
+<pre>var cat = new Tact.Cat("Linq");
+$.types.isClass(cat, Tact.Pet); // true
+$.types.isClass(cat, Tact.Cat); // true
+$.types.isClass(cat, Tact.Dog); // false</pre>
+<h3>
+    API - Static - Class - ns</h3>
+<hr>
+<h4>
+    $.types.ns(namespace)</h4>
+<p>
+    @description Defines namespaces for object delcaration.<br>
+    @param {string} namespace<br>
+</p>
+<h4>
+    Example</h4>
+<pre>$.types.ns("System.ComponentModel.DataAnnotations");</pre>

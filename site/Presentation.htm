@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>TactJS :: Introduction</title>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic"
+        rel="stylesheet" />
+    <link href="styles/presentation/core.css" rel="Stylesheet" />
+    <link href="styles/presentation/presentationv1.css" rel="Stylesheet" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery/json2.js"></script>
+    <script type="text/javascript" src="scripts/jquery/livequery.js"></script>
+    <script type="text/javascript" src="scripts/core.js?v=12"></script>
+    <script type="text/javascript" src="scripts/domdata.js?v=1"></script>
+    <script type="text/javascript" src="scripts/events.js?v=1"></script>
+    <script type="text/javascript" src="scripts/log.js?v=1"></script>
+    <script type="text/javascript" src="scripts/bootloader.js?v=12345"></script>
+    <script type="text/javascript" src="scripts/behaviors.js?v=12345"></script>
+    <script type="text/javascript" src="scripts/dependencies.js?v=12345"></script>
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-28818516-1']);
+        _gaq.push(['_trackPageview']);
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</head>
+<body>
+    <div id="impress" data-behaviors-eager="Presentation.Impress.Canvas" data-start-step="1"
+        data-canvas-class="canvas" data-not-supported-class="impress-not-supported">
+        <div class="canvas">
+            <div class="fallback-message">
+                <p>
+                    Your browser <b>doesn't support the features required</b> by this presentation,
+                    so you are presented with a simplified version.</p>
+                <p>
+                    For the best experience please use the latest <b>Chrome</b> or <b>Safari</b> browser.
+                    Firefox 10 (to be released soon) will also handle it.</p>
+            </div>
+            <div id="kludge" class="step" data-x="2500" data-y="1600" data-rotate="-90" data-scale="3"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="1">
+                <p>
+                    Are you a web-developer who's tired of <b class="rotatePlus10 transition05 delay15 ">
+                        K</b><b class="rotateMinus10 delay175 transition05">L</b><b class="rotatePlus10 delay20 transition05">U</b><b
+                            class="rotateMinus10 delay225 transition05">D</b><b class="rotatePlus10 delay25 transition05">G</b><b
+                                class="rotateMinus10 delay275 transition05">E</b><b class="rotatePlus10 delay30 transition05">Y</b>
+                    JavaScript? <span style="font-size: 15px;">(use the spacebar to continue)</span>
+                </p>
+            </div>
+            <div id="west" class="step" data-x="3700" data-y="0" data-rotate="0" data-scale="3"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="2">
+                <p>
+                    Does every project's front-end feel like stepping into the <i>Wild West?</i>
+                </p>
+            </div>
+            <div id="clear" class="step" data-x="3100" data-y="1800" data-rotate="90" data-scale="3"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="3">
+                <p>
+                    Wouldn't it be nice if there was a <strong>CLEAR STRATEGY</strong> for front-end
+                    development that lets everything <b class="transformPlus150Y delay20 transition05">FALL</b>
+                    <b class="transformPlus150Y delay25 transition05">INTO</b> <b class="transformPlus150Y delay30 transition05">
+                        PLACE?</b></p>
+            </div>
+            <div id="declarative" class="step" data-x="3700" data-y="3400" data-rotate="180"
+                data-scale="2" data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="4">
+                <p>
+                    How about a <b>DECLARATIVE</b> framework that makes it easy to see <b>AT A GLANCE</b>
+                    how a page works and where problems are coming from just by looking at the markup?</p>
+            </div>
+            <div id="concept" class="step" data-x="4800" data-y="300" data-rotate="-45" data-scale="2"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="5">
+                <p>
+                    What if you could easily<br />
+                    <b>conceptualize</b> your front-end objectives<br />
+                    using patterns and practices from <b>Object Oriented Development?</b>
+            </div>
+            <div id="intro" class="step" data-x="5100" data-y="2400" data-rotate="0" data-scale="4"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="6">
+                <small>Introducing</small>
+                <h1>
+                    TactJS<sup>*</sup></h1>
+                <span class="footnote"><sup>*</sup>Tactful Javascript</span>
+            </div>
+            <div id="makes" class="step" data-x="6700" data-y="2000" data-rotate="90" data-scale="3"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="7">
+                <p>
+                    <b>TactJS</b> makes front-end development easier to control, maintain, and debug
+                    by offering a few awesome features like...
+                </p>
+            </div>
+            <div id="namespacing" class="step" data-x="5700" data-y="300" data-rotate="0" data-scale="1"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="8">
+                <h1>
+                    NAMESPACING</h1>
+                <span class="footnote">Separate your code into feature sets and reuse core components!</span>
+            </div>
+            <div id="loading" class="step" data-x="7400" data-y="1500" data-rotate="-90" data-scale="4"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="9">
+                <b>INTELLIGENT RESOURCE LOADING</b><br />
+                <span class="footnote">Simply declare an object type in your markup and let the boot
+                    loader find and fetch it from your server automatically on page load, OR trigger
+                    the resource load with an event like onclick!</span>
+            </div>
+            <div id="behaviors" class="step" data-x="5100" data-y="1500" data-rotate="180" data-scale="1.5"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="10">
+                <p>
+                    <small>&lt;div data-behaviors-eager=&quot;<b style="font-size: 60px;" class="rotate180 delay05">DECLARATIVE.BEHAVIORS</b>&quot;&gt;
+                        <span class="footnote">
+                            <br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;That can be invoked and loaded dynamically
+                            to reduce page load and javascript processing times so your COMPLEX pages stay LEAN!
+                            <br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A messaging architecture combined with
+                            dynamic events lets individual behaviors communicate to perform complex tasks<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with VERY LOW COUPLING!
+                            <br />
+                        </span>&lt;/div&gt; </small>
+                </p>
+            </div>
+            <div id="simplify" class="step" data-x="2000" data-y="1700" data-rotate="90" data-scale="2"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="11">
+                <p>
+                    <b>TactJS</b> simplifies and steamlines some of the core components of Object
+                    Oriented Programing for javascript including...
+                </p>
+            </div>
+            <div id="poly" class="step" data-x="900" data-y="0" data-rotate="0" data-scale="3"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="12">
+                <p>
+                    <b>INHERITANCE</b><br />
+                    <b class="delay15 transition05 transformMinus250X">&amp; POLY</b><b class="delay175 transition05 transformPlus150Y">MORPH</b><b
+                        class="delay20 transition05 transformPlus200X">ISM...</b>
+                </p>
+            </div>
+            <div id="di" class="step" data-x="900" data-y="0" data-z="-15000" data-rotate="0"
+                data-scale="1" data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="13">
+                <p>
+                    <b>DEPENDENCY INJECTION...</b>
+                </p>
+            </div>
+            <div id="scope" class="step" data-x="1000" data-y="500" data-rotate="0" data-scale="2"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="14">
+                <p>
+                    <b>SCOPE</b> &amp;<br />
+                    <b>{ CLOSURES }</b> <span class="footnote">Thanks Douglas Crockford!</span>
+                </p>
+            </div>
+            <div id="paradigm" class="step" data-x="1500" data-y="1900" data-rotate="-90" data-scale="3"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="15">
+                <p>
+                    So you can create and reuse complex systems while working in a familiar paradigm!
+                </p>
+            </div>
+            <div id="unit" class="step" data-x="1800" data-y="3400" data-rotate="0" data-scale="1"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="16">
+                <p>
+                    Are you into <b>UNIT TESTING?</b>
+                </p>
+            </div>
+            <div id="usecase" class="step" data-x="700" data-y="2100" data-rotate="90" data-scale="2"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="17">
+                <p>
+                    <b>TactJS</b> provides an incredibly simple and lightweight test suite so you
+                    can quickly and easily <b>validate</b> and <b>visualize</b> your use-cases!
+                </p>
+            </div>
+            <div id="possibilities" class="step" data-x="5500" data-y="1000" data-rotate="0"
+                data-scale="1.5" data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="18">
+                <h1>
+                    So many possibilities!</h1>
+            </div>
+            <div id="word" class="step" data-x="5500" data-y="1000" data-z="15000" data-rotate="0"
+                data-scale="2" data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="19">
+                <p>
+                    <b>But don't take our word for it...</b>
+                </p>
+            </div>
+            <div id="api" class="step" data-x="1500" data-y="3700" data-rotate="0" data-scale="2"
+                data-behaviors-eager="Presentation.Impress.Step" onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="20">
+                <p>
+                    <b><a href="features.htm">Check out the Docs</a></b><br />
+                    For features and <b>TONS OF DEMOS!</b><br />
+                    <span class="footnote">(including this page based on <a href="http://bartaz.github.com/impress.js"
+                        target="_blank">impress.js</a> by bartaz!)</span>
+                </p>
+            </div>
+            <div id="overview" class="step" data-x="4000" data-y="1600" data-scale="5" data-behaviors-eager="Presentation.Impress.Step"
+                onclick="$(this).parent().broadcast('hideThisStep');$(this).msg('showThisStep')"
+                data-step-number="0">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

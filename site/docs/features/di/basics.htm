@@ -1,0 +1,41 @@
+﻿<h3>
+    Features - Dependency Injection - Basics</h3>
+<hr>
+<p>
+    Adds dependency injection to jQuery. Add a Tact.Dependency object to the public interface
+    of your class and it will be replaced by the desired mapping when you instantiate
+    your class using the IOC resolve method.</p>
+<h4>
+    Example</h4>
+<pre>Tact.Cat = $.types.define(function() {
+	var self = {
+		box : new Tact.Dependency('IBox'),
+		doBusiness : function(a) { 
+			self.box.poop();
+		}
+	};
+	return self;
+});
+
+Tact.LitterBox = $.types.define(function() {
+	var _isStinky = false;
+	var self = {
+		poop : function() { 
+			_isStinky = true;
+		},
+		clean : function() {
+			_isStinky = false;
+		},
+		isStinky : function() {
+			return _isStinky;
+		}
+	};
+	return self;
+});
+
+$.ioc.register('IPet', Tact.Cat);
+$.ioc.register('IBox', Tact.LitterBox);
+
+var cat = $.ioc.resolve('IPet');
+cat.doBusiness();
+cat.box.isStinky(); // True</pre>

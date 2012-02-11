@@ -1,0 +1,17 @@
+﻿<h3>
+    Features - Testing - Basics</h3>
+<hr>
+<p>
+    Adds unit testing capabilities to jQuery.</p>
+<h4>
+    Example</h4>
+<pre>$.testing.register('TactJS Testing', {
+    'Are Equal' : function () {
+        $.assert.areEqual('Equal', 'Equal');
+    },
+    'Not Equal' : function() {
+        $.assert.notEqual('Yes', 'No');
+    }
+});
+
+$.testing.runAll();</pre>

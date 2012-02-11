@@ -1,0 +1,98 @@
+﻿<style type="text/css">
+    .court { width:410px; }
+    .scoreboard { height: 55px; width: 400px; }
+    .score { float: left; width: 200px; text-align: center; }
+    .playerName { font-size: 16px; }
+    .scoreValue { font-size: 30px; font-weight: bold; }
+    .pongField { background-color: #000; height: 300px; width: 400px; border: solid 5px #ccc; }
+    .pongPaddle { background-color: #fff; height: 50px; width: 10px; }
+    .pongBall { background-color: #fff; height: 10px; width: 10px; }
+</style>
+<div class="span1 col1 right center">
+    <a class="center" href="downloads/casestudies/pong/pong1.zip">
+        <div class="download center">
+        </div>
+    </a>
+</div>
+<h3>
+    Demos - Case Study :: Pong - Iteration 1 :: Behaviors
+</h3>
+<hr />
+<p>
+    To start out with, I wanted to see how quickly I could get a really simple version
+    of Pong working. I ended up using only behaviors and hacked together the working
+    version below in about an hour.
+</p>
+<p>
+    This approach has a lot of flaws. The code for each behavior is pretty specific
+    to this implementation, and I couldn't so something like change the field size in
+    the stylesheet without causing the demo to fail. At this point we also haven't implemented
+    a complete solution because there is no AI opponent, and there are no rounds, just
+    one never-ending game.
+</p>
+<p>
+    What I DO have however is a set of scoped behaviors which I can use to create multiple
+    games on the same page. That counts for something right? I also have a demo that
+    looks a lot like Pong that I can build on for the next version that will tackle
+    some of the architechture problems in this iteration.
+</p>
+<hr />
+<div id="court1" class="court center" data-behaviors-eager="Pong1.UI.Court">
+    <div class="scoreboard">
+        <div class="score js-player1">
+            <div class="playerName">
+                Player 1
+            </div>
+            <div class="scoreValue" data-behaviors-eager="Pong1.UI.Updatable" data-key="player1">
+                0
+            </div>
+        </div>
+        <div class="score js-player2">
+            <div class="playerName">
+                Player 2
+            </div>
+            <div class="scoreValue" data-behaviors-eager="Pong1.UI.Updatable" data-key="player2">
+                0
+            </div>
+        </div>
+    </div>
+    <div class="pongField" onmouseover="$(this).broadcast('activate');" onmouseout="$(this).broadcast('deactivate');">
+        <div class="pongPaddle js-player1" data-behaviors-eager="Pong1.UI.Paddle" data-controllable="true">
+        </div>
+        <div class="pongBall" data-behaviors-eager="Pong1.UI.Ball" data-initial-direction="left"
+            data-speed="1600">
+        </div>
+        <div class="pongPaddle js-player2" data-behaviors-eager="Pong1.UI.Paddle" data-controllable="true">
+        </div>
+    </div>
+</div>
+<br />
+<div id="court2" class="court center" data-behaviors-eager="Pong1.UI.Court">
+    <div class="scoreboard">
+        <div class="score js-player1">
+            <div class="playerName">
+                Player 1
+            </div>
+            <div class="scoreValue" data-behaviors-eager="Pong1.UI.Updatable" data-key="player1">
+                0
+            </div>
+        </div>
+        <div class="score js-player2">
+            <div class="playerName">
+                Player 2
+            </div>
+            <div class="scoreValue" data-behaviors-eager="Pong1.UI.Updatable" data-key="player2">
+                0
+            </div>
+        </div>
+    </div>
+    <div class="pongField" onmouseover="$(this).broadcast('activate');" onmouseout="$(this).broadcast('deactivate');">
+        <div class="pongPaddle js-player1" data-behaviors-eager="Pong1.UI.Paddle" data-controllable="true">
+        </div>
+        <div class="pongBall" data-behaviors-eager="Pong1.UI.Ball" data-initial-direction="left"
+            data-speed="1600">
+        </div>
+        <div class="pongPaddle js-player2" data-behaviors-eager="Pong1.UI.Paddle" data-controllable="true">
+        </div>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>TactJS :: Demos :: Overriding an Object</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/core.js?v=1"></script>
+    <script type="text/javascript" src="scripts/docs/demos/Enterprise.js?v=1"></script>
+    <script type="text/javascript" src="scripts/docs/demos/StarTrek.js?v=1"></script>
+    <script type="text/javascript" src="scripts/docs/demos/NextGeneration.js?v=1"></script>
+</head>
+<body>
+    <h1>
+        TactJS :: Creating an Object</h1>
+    <p>
+        <h3>
+            Enterprise Captain</h3>
+        captain(): <span id="enterpriseCaptain"></span>
+        <hr />
+        <h3>
+            Star Trek Captain</h3>
+        captain(): <span id="starTrekCaptain"></span>
+        <br />
+        previousCaptain(): <span id="starTrekPreviousCaptain"></span>
+        <hr />
+        <h3>
+            Next Generation Captain</h3>
+        captain(): <span id="nextGenCaptain"></span>
+        <br />
+        previousCaptain(): <span id="nextGenPreviousCaptain"></span>
+        <br />
+        previousPreviousCaptain(): <span id="nextGenPreviousPreviousCaptain"></span>
+        <hr />
+        <h3>
+            Next Generation Superclass Demo</h3>
+        captain(): <span id="nextGenCaptain2"></span>
+        <br />
+        superclass.captain(): <span id="nextGenSuperclassCaptain"></span>
+        <br />
+        superclass.superclass.captain(): <span id="nextGenSuperclassSuperclassCaptain"></span>
+
+    </p>
+    <script type="text/javascript">
+        var enterprise = new Docs.Demos.Enterprise();
+        $('#enterpriseCaptain').text(enterprise.captain());
+
+        var starTrek = new Docs.Demos.StarTrek();
+        $('#starTrekCaptain').text(starTrek.captain());
+        $('#starTrekPreviousCaptain').text(starTrek.previousCaptain());
+
+        var nextGeneration = new Docs.Demos.NextGeneration();
+        $('#nextGenCaptain').text(nextGeneration.captain());
+        $('#nextGenPreviousCaptain').text(nextGeneration.previousCaptain());
+        $('#nextGenPreviousPreviousCaptain').text(nextGeneration.previousPreviousCaptain());
+
+        $('#nextGenCaptain2').text(nextGeneration.captain());
+        $('#nextGenSuperclassCaptain').text(nextGeneration.superclass.captain());
+        $('#nextGenSuperclassSuperclassCaptain').text(nextGeneration.superclass.superclass.captain());
+    </script>
+</body>
+</html>

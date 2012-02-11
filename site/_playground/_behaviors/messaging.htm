@@ -1,0 +1,135 @@
+﻿<h3>
+    Message and Broadcast</h3>
+<p>
+    Message and broadcast are easy ways to interact with behaviors on specific elements
+    with very low coupling.
+</p>
+<ul>
+    <li><strong>message</strong>
+        <ul>
+            <li>Sending a message ($.fn.msg(cmd)) to an element with uninitialized behaviors will
+                load and initialize all the behaviors on that element, and then send the message
+                to the newly initialized behaviors.</li>
+        </ul>
+    </li>
+    <li><strong>broadcast</strong>
+        <ul>
+            <li>Like message, sending a broadcast ($.fn.broadcast(cmd)) to an element will load
+                and initialize all the behaviors on that element. It will also load and initialize
+                all the behaviors on child elements and send the broadcast to them as well.</li>
+        </ul>
+    </li>
+</ul>
+<p>
+    Let's take another look at <strong>Docs.Demos.Toggler</strong>...
+</p>
+<h3>
+    Message</h3>
+<p>
+    Here we'll continue to use our <strong>Docs.Demos.Toggler</strong> class:</p>
+<pre>// Docs.Demos.Toggler :: Toggles visibility of first child elements
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.Toggler = $.types.define(function () {
+        var _context;
+        var _config;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _config = $(_context).data();
+                if (_config.behaviorsEager)
+                    self.toggle();
+            },
+            toggle: function () {
+                $(_context).children().toggleClass("toggle-off toggle-on");
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+<p>
+    Notice the method <strong>toggle</strong> in the behavior's self. When we send a
+    message or broadcast of <strong>"toggle"</strong> to an element with <strong>Docs.Demos.Toggler</strong>,
+    we will invoke the <strong>toggle</strong> method for that element.
+</p>
+<p>
+    Here's the markup we'll use to see message work. Notice that there is <strong></strong>
+    no data-init="true"</strong> on the element. When a message is sent to an element
+    with a behavior declared on it, that behavior is loaded onto the page via the bootloader,
+    and then the behavior is initialized on the element, and only then is the message
+    sent. Of course, if the behavior's script file is already loaded, that step will
+    be skipped, likewise if the behavior has already been initialized.
+</p>
+<pre>&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#toggleOnClick&#39;).msg(&#39;toggle&#39;)&quot; 
+    value=&quot;Toggle Single Element&quot; /&gt;            
+&lt;div class=&quot;square mas&quot; data-behaviors-lazy=&quot;Docs.Demos.Toggler&quot; id=&quot;toggleOnClick&quot;&gt;
+    &lt;div class=&quot;bg-green square pointer toggle-off&quot; &gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;bg-red square pointer toggle-on&quot;&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+            </pre>
+<input type="button" onclick="$('#toggleOnClick').msg('toggle')" value="Toggle Single Element" />
+<div class="square mas" data-behaviors-lazy="Docs.Demos.Toggler" id="toggleOnClick">
+    <div class="bg-green square pointer toggle-off">
+    </div>
+    <div class="bg-red square pointer toggle-on">
+    </div>
+</div>
+<h3>
+    Broadcast</h3>
+<p>
+    The only difference between message and broadcast is that broadcast will also send
+    a message to all the children of the element that is broadcast to. To demonstrate,
+    we'll create several of the toggler-squares as above inside a div which does <strong>
+        not</strong> need a behavior in order for broadcast to work. Since broadcast
+    leverages message to do it's work, the same rules for loading behavior js files
+    and initialization apply. Broadcast will load the required behavior js files onto
+    the page and initialize the behaviors on their elements if necessary</p>
+<pre>&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#toggleBroadcast&#39;).broadcast(&#39;toggle&#39;)&quot; 
+    value=&quot;Toggle Multiple Elements&quot; /&gt;
+&lt;div id=&quot;toggleBroadcast&quot;&gt;
+    &lt;div class=&quot;square block&quot; data-behaviors-lazy=&quot;Docs.Demos.Toggler&quot; class=&quot;block&quot;&gt;
+        &lt;div class=&quot;bg-green square pointer toggle-off&quot;&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;bg-red square pointer toggle-on&quot;&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;square block&quot; data-behaviors-lazy=&quot;Docs.Demos.Toggler&quot; class=&quot;block&quot;&gt;
+        &lt;div class=&quot;bg-green square pointer toggle-off&quot;&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;bg-red square pointer toggle-on&quot;&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;square block&quot; data-behaviors-lazy=&quot;Docs.Demos.Toggler&quot; class=&quot;block&quot;&gt;
+        &lt;div class=&quot;bg-green square pointer toggle-off&quot;&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;bg-red square pointer toggle-on&quot;&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;            
+            </pre>
+<input type="button" onclick="$('#toggleBroadcast').broadcast('toggle')" value="Toggle Multiple Elements" />
+<div id="toggleBroadcast">
+    <div class="square block" data-behaviors-lazy="Docs.Demos.Toggler" class="block">
+        <div class="bg-green square pointer toggle-off">
+        </div>
+        <div class="bg-red square pointer toggle-on">
+        </div>
+    </div>
+    <div class="square block" data-behaviors-lazy="Docs.Demos.Toggler" class="block">
+        <div class="bg-green square pointer toggle-off">
+        </div>
+        <div class="bg-red square pointer toggle-on">
+        </div>
+    </div>
+    <div class="square block" data-behaviors-lazy="Docs.Demos.Toggler" class="block">
+        <div class="bg-green square pointer toggle-off">
+        </div>
+        <div class="bg-red square pointer toggle-on">
+        </div>
+    </div>
+</div>
+<div style="clear: both;">
+</div>

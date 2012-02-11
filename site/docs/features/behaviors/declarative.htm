@@ -1,0 +1,93 @@
+﻿<h3>
+    Features - Behaviors - Declarative Behaviors</h3>
+<hr />
+<p>
+    Behaviors in TactJS are based on a declarative model. The idea is that binding
+    your scripts to an element (or elements) on the page should be as up-front as possible
+    in order to prevent confusion, duplication, and to provide a discovery path that
+    you or another developer can use to easily see what scripts are running on a given
+    piece of your document.
+</p>
+<p>
+    There are a couple of very simple rules for implementing behaviors which we recommend
+    you follow.
+</p>
+<ol>
+    <li>Keep individual behaviors in their own file which should be named the same as the
+        behavior, minus the namespace.
+        <div class="ind10">
+            If you have a behavior with the fully qualified name of "Docs.Demos.Toggler" then
+            it should be in "toggler.js" (case doesn't matter).</div>
+    </li>
+    <li>If you want to be able to use the bootloader to find and load behaviors asynchronously
+        when they are needed, put your behavior js file in a folder structure inside your
+        _scriptsRoot which matches its namespace.
+        <div class="ind10">
+            A behavior named "Docs.Demos.Toggler" should be located at "_scriptsRoot/Docs/Demos/toggler.js"
+            (again, case doesn't matter).</div>
+    </li>
+</ol>
+<p>
+    In order to bind this behavior to an element you have two options: lazy and eager.
+</p>
+<ol>
+    <li>Lazy
+        <div class="ind10">
+            Lazy means that the script won't be loaded on the client until an action is performed
+            against the element where that behavior is declared (like $.fn.msg(), or $.fn.broadcast),
+            which gives you control over how scripts are loaded on the client. Most of the time,
+            behavior script loads will be triggered by a user-initiated action like a button
+            click or mouseover.</div>
+    </li>
+    <li>Eager
+        <div class="ind10">
+            Eager behaviors will be loaded as soon as the element is rendered in the DOM. These
+            scripts will be loaded and thier init() methods called as soon as possible after
+            the page is requested and will be available immidiately after page load.</div>
+    </li>
+</ol>
+<p>
+    Let's say you have a simple behavior called <strong>Docs.Demos.Toggler</strong>
+    which is means to toggle a couple of classes on all the children in it's context...
+</p>
+<h3>
+    Docs.Demos.Toggler</h3>
+<pre>// Docs.Demos.Toggler :: Toggles visibility of first child elements
+(function ($) {
+    $.types.ns('Docs.Demos');
+    Docs.Demos.Toggler = $.types.define(function () {
+        var _context;
+        var self = {
+            init: function (context) {
+                _context = context;
+            },
+            toggle: function () {
+                $(_context).children().toggleClass("toggle-off toggle-on");
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+<p>
+    If we wanted to make sure this behavior was available as soon as the page is rendered,
+    we would declare it using the "eager" modifier like so.
+</p>
+<pre data-behaviors-eager="Docs.HTMLEncode">
+<div data-behaviors-eager="Docs.Demos.Toggler">
+</div>
+</pre>
+<p>
+    If on the other hand, we wanted the behavior to be loaded and acted against at some
+    time after the page is rendered, we would declare it using the "lazy" modifier.
+</p>
+<pre data-behaviors-eager="Docs.HTMLEncode">
+<div data-behaviors-lazy="Docs.Demos.Toggler">
+</div>
+</pre>
+<p>
+    The declarative model doesn't stop there. Thanks to the HTML5 spec "data-" attribute,
+    and the TactJS DOM Data module, we can also declare options which can be picked
+    up by our behaviors and acted against. By using the messaging architecture implemented
+    by TactJS behaviors, your user-initiated actions can be declared in the markup
+    too!
+</p>

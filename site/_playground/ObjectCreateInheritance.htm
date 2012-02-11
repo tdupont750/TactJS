@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Object Create Inheritance with Constructors</title>
+</head>
+<body>
+    
+    <script type="text/javascript">
+    
+        var Animal = function (type) {
+            //setting up a property this way and accessing it inside this function with this.__proto__ effectively makes the value private.
+            //setting writable : false and configurable : true means this value will be instantiated, but can not be changed after creation.
+            Object.defineProperty(Animal.prototype, 'animalType', { value: type, writable: false, configurable: true, enumerable: false });
+        };
+
+        var Mammal = function (type) {
+            //calls constructor for inheirited class.
+            Object.getPrototypeOf(Mammal.prototype).constructor.call(this, type); 
+
+            //private members
+            Object.defineProperty(Mammal.prototype, 'description', {
+                get: function () { return (this.name ? "Name: " + this.name + "\n" : "") + (this.size ? "Size: " + this.size + "\n" : "") + (this.color ? "Color: " + this.color + "\n" : "") + "Blood: " + this.blood + "\nHair: " + this.hair + "\nFeathers: " + this.feathers + "\nDescription: " + this.__proto__.descriptionText; },
+                set: function (text) { this.__proto__.descriptionText = text; },
+                configurable: true,
+                enumerable: true
+            });
+            Object.defineProperty(Mammal.prototype, 'descriptionText', { value: "default", writable: true, configurable: true, enumerable: false });
+
+            //public membesrj
+            this.blood = "warm";
+            this.hair = true;
+            this.feathers = false;
+             
+            //methods
+            Mammal.prototype.GrowHair = function () { return (this.name ? this.name : this.__proto__.animalType) +  ": Grows Hair"; }
+        };
+        Mammal.prototype = Object.create(Animal.prototype); //Sets up inheiritance
+        Mammal.prototype.constructor = Mammal; //Sets up constructor
+
+        var Cat = function (type, color, name, size) {
+            Object.getPrototypeOf(Cat.prototype).constructor.call(this, type);
+
+            this.color = color;
+            this.name = name;
+            this.size = size;
+
+            Cat.prototype.attack = function (target) { return this.name + ": Visciously attacks " + target; };
+        }
+        Cat.prototype = Object.create(Mammal.prototype);
+        Cat.prototype.constructor = Cat;
+
+        var HouseCat = function (color, name) {
+            Object.getPrototypeOf(HouseCat.prototype).constructor.call(this, "HouseCat", color, name, "Small");    
+                    
+            HouseCat.prototype.purr = function () { return this.name + ": purrrrrrr!"; };
+        }
+        HouseCat.prototype = Object.create(Cat.prototype);
+        HouseCat.prototype.constructor = HouseCat;
+
+        var Tiger = function (color, name) {
+            Object.getPrototypeOf(Tiger.prototype).constructor.call(this, "Tiger", color, name, "Big");
+
+            //override a method on the superclass.
+            Tiger.prototype.attack = function (target) { return this.name + ": Mauls and consumes " + target; };
+        }
+        Tiger.prototype = Object.create(Cat.prototype);
+        Tiger.prototype.constructor = Tiger;
+
+
+        var newMammal = new Mammal("Mammal");
+        newMammal.description = "It's a rat."; // set
+        newMammal.descriptionText = "No it's not!"; // not set
+        console.log("Animal Type: " + newMammal.animalType);
+        console.log(newMammal.description);
+        console.log(newMammal.GrowHair());
+        console.log(FindTypes(newMammal));     
+
+        console.log("");
+
+        var testMammal = new Mammal("Mammal2");
+        console.log("Animal Type: " + newMammal.animalType);
+        console.log(testMammal.descriptionText);
+        console.log(testMammal.description);
+        console.log(FindTypes(testMammal));
+
+
+        console.log("");
+
+        var fryPod = new HouseCat("Orange", "FryPod");
+        fryPod.description = "A common housecat. Plays fetch.";
+        console.log("Animal Type: " + fryPod.animalType);
+        console.log(fryPod.attack("Mammal")); // Visciously attacks....
+        console.log(fryPod.purr()); // purrr....
+        console.log(fryPod.GrowHair()); // grows hair
+        console.log(fryPod.description);
+        console.log(FindTypes(fryPod));
+
+        console.log("");
+
+        var hobbes = new Tiger("Black and Orange", "Hobbes");
+        hobbes.description = "A terrible killing machine.";
+        console.log("Animal Type: " + hobbes.animalType);
+        console.log(hobbes.attack(fryPod.name)); // Mauls and consumes...
+        //console.log(hobbes.purr()); // throws exception
+        console.log(hobbes.GrowHair()); // grows hair
+        console.log(hobbes.description);
+        console.log(FindTypes(hobbes));
+
+        console.log("");
+
+        var tony = new Tiger("Black and Orange", "Tony");
+        tony.attack = function (target) { return this.name + ": Gives a bowl of cereal to " + target + ". It's ggrrrrrrreat!"; }
+        tony.description = "A good breakfast mascot.";
+        console.log("Animal Type: " + tony.animalType);
+        console.log(tony.GrowHair()); // grows hair
+        console.log(tony.description);
+        console.log(tony.attack(hobbes.name));
+        delete tony.attack;
+        console.log(tony.attack(hobbes.name));
+        console.log(FindTypes(tony));
+
+        function FindTypes(object) {
+            var isAnimal = object instanceof Animal;
+            var isMammal = object instanceof Mammal;
+            var isCat = object instanceof Cat;
+            var isHouseCat = object instanceof HouseCat;
+            var isTiger = object instanceof Tiger;
+            return "Animal: " + isAnimal + ", Mammal: " + isMammal + ", Cat: " + isCat + ", HouseCat: " + isHouseCat + ", Tiger: " + isTiger;
+        };
+
+
+        var Automobile = function (color) {
+            //private members
+            var color = color;
+            //privileged members
+            Object.defineProperty(Automobile.prototype, 'color', {
+                get: function () { return color; },
+                set: function (c) { color = c; },
+                configurable: true,
+                enumerable: true
+            });
+
+        };
+        var Truck = function (color, make, model) {
+            Object.getPrototypeOf(Truck.prototype).constructor.call(this, color);
+
+            //private members
+            var make = make;
+            var model = model;
+
+            //privileged members
+            Object.defineProperty(Truck.prototype, 'description', {
+                get: function () { return "Color: " + this.color + "\nMake: " + make + "\nModel: " + model; },
+                set: function (description) { var params = description.split(" "); this.color = params[0]; make = params[1]; model = params[2]; },
+                configurable: true,
+                enumerable: true
+            });
+
+            //public members
+            this.tow = function (vehicle) { return "Towing " + vehicle; }
+            this.transform = function () { this.color = "Yellow"; make = "Autobot"; model = "Bumblebee"; }
+        };
+        Truck.prototype = Object.create(Automobile.prototype);
+        Truck.prototype.constructor = Truck;
+
+
+        console.log("");
+
+        var car = new Automobile("Blue");
+        console.log(car.color);
+
+        console.log("");
+
+        var truck = new Truck("Blue", "Ford", "F150");
+        console.log(truck.description);
+        console.log(truck.make);
+        console.log(truck.model);
+        console.log(truck.color);
+        truck.color = "Red";
+        console.log(truck.color);
+        truck.description = 'Green Chevy Tahoe';
+        console.log(truck.description);
+        console.log(truck.tow("Car"));
+        truck.make = "Fiat";
+        console.log(truck.description);
+        truck.transform();
+        console.log(truck.description);
+    </script>
+</body>
+</html>

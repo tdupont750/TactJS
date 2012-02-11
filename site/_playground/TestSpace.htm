@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>TactJS :: Test Space</title>        
+    <style>       
+        .pointer { cursor: pointer; }
+        .square { height: 100px; width: 100px; }
+        .bg-red { background-color: Red; }
+        .bg-green { background-color: Green; }
+        .toggle-off { display: none; }
+        .toggle-on { display: block; }        
+        .mas { margin:5px; }
+        .clonespace{ width:110px; float:left;}
+        .pet{ float:left;margin:10px;border:solid 1px black; padding:10px;}        
+    </style>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>    
+    <script type="text/javascript" src="../scripts/jquery/json2.js"></script>
+    <script type="text/javascript" src="../scripts/jquery/livequery.js"></script>
+    <script type="text/javascript" src="../scripts/core.js?v=12"></script>
+    <script type="text/javascript" src="../scripts/domdata.js?v=1"></script>
+    <script type="text/javascript" src="../scripts/Events.js?v=1"></script>
+    <script type="text/javascript" src="../scripts/Log.js?v=1"></script>
+    <script type="text/javascript" src="../scripts/BootLoader.js?v=1"></script>
+    <script type="text/javascript" src="../scripts/behaviors.js?v=1"></script> 
+    <script type="text/javascript" src="../scripts/dependencies.js?v=12345"></script> 
+    <script type="text/javascript">
+        _scriptsRoot = "../Scripts/";    
+    </script>
+    <script>
+        var funkySlide = function () {
+            $('.clonespace').each(function (index, clonespace) {
+                $('.slider', clonespace).each(function (index2, element) {
+                    setTimeout(function () {
+                        $(element).enqueueMsg('slideToggle').enqueueMsg('slideToggle').unqueue();
+                    }, (200 * index2));
+                }); 
+            });
+        };
+    </script>              
+</head>
+<body>
+    <div>
+        <p style="float: left; margin: 0px;">
+            <a href="CodeDocumentation.htm">Code Documentation</a> | <a href="WorkingBehaviors.htm">Working With Behaviors</a> | <a href="TestSpace.htm">Test Space</a>
+            <br />
+            <strong>Test Space</strong>
+        </p>
+        <p style="text-align: right; float: right; display: inline-block; margin: 0px;">
+            <a href="http://www.tomdupont.net/">www.tomdupont.net</a><br />
+            <a href="http://www.zachmayer.net/">www.zachmayer.net</a></p>
+        <div style="clear: both;">
+            <br />
+        </div>
+    </div>
+    <div id="slider123" class="square mas slider" data-behaviors-lazy="Docs.Demos.Queueable.Toggler" data-toggle-class="bg-red bg-green">
+        <div class="square bg-red pointer" onclick="$('#slider123').msg('toggle')">
+        </div>
+    </div>
+    <div style="height:280px;">
+        <div class="pet" data-behaviors-lazy="Docs.Demos.Lib.PetBehavior" data-voice-box="voiceBox" data-name="Turtle" data-type="Pet">
+            <input type="button" value="Walk" onclick="$(this).parent().msg('walk')" />
+            <input type="button" value="Do Business" onclick="$(this).parent().msg('doBusiness')" />
+            <input type="button" value="Check Box" onclick="$(this).parent().msg('checkBox')" /><br />
+            <img src="../images/turtle.gif" class="pointer" onclick="$(this).parent().msg('speak')" /><br />
+            <div style="height:20px;">
+                <span id="voiceBox" class="voice toggle-off"></span>
+            </div>
+        </div>
+
+        <div class="pet" data-behaviors-lazy="Docs.Demos.Lib.PetBehavior" data-voice-box="voiceBox2" data-name="Taboo" data-type="Dog">
+            <input type="button" value="Walk" onclick="$(this).parent().msg('walk')" />
+            <input type="button" value="Do Business" onclick="$(this).parent().msg('doBusiness')" />
+            <input type="button" value="Check Box" onclick="$(this).parent().msg('checkBox')" /><br />
+            <img src="../images/dog.gif" class="pointer" onclick="$(this).parent().msg('speak')" /><br />
+            <div style="height:20px;">
+                <span id="voiceBox2" class="voice toggle-off"></span>
+            </div>
+        </div>
+
+        <div class="pet" data-behaviors-lazy="Docs.Demos.Lib.PetBehavior" data-voice-box="voiceBox3" data-name="Linq" data-type="Cat">
+            <input type="button" value="Walk" onclick="$(this).parent().msg('walk')" />
+            <input type="button" value="Do Business" onclick="$(this).parent().msg('doBusiness')" />
+            <input type="button" value="Check Box" onclick="$(this).parent().msg('checkBox')" /><br />
+            <img src="../images/cat.gif" class="pointer" onclick="$(this).parent().msg('speak')" /><br />
+            <div style="height:20px;">
+                <span id="voiceBox3" class="voice toggle-off"></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="slider1" class="square mas slider" data-behaviors-lazy="Docs.Demos.Queueable.Toggler Docs.Demos.Queueable.Slider Docs.Demos.Queueable.SlideToggler"
+        data-slide-time="2000" data-slide-distance="200" data-toggle-class="bg-red bg-green">
+        <div class="square bg-red pointer toggle-on" onclick="$('#slider1').enqueueMsg('slideToggle').enqueueMsg('slideToggle').unqueue()">
+        </div>
+    </div>
+    <input type="button" value="Clone Square" onclick="$('.clonespace').msg('clone', 'slider1')" />
+    <input type="button" value="Message Sliders" onclick="$('.slider').msg('slideToggle')" />
+    <input type="button" value="Broadcast Sliders" onclick="$('.clonespace').broadcast('slideToggle')" />
+    <input type="button" value="Funky Slide" onclick="funkySlide()" />
+    <br /><br />
+    <div id="clonespace" class="clonespace" data-behaviors-eager="TestSpace.Cloner" >
+    </div>
+    <div id="clonespace2" class="clonespace" data-behaviors-eager="TestSpace.Cloner" >
+    </div>
+    <div id="clonespace3" class="clonespace" data-behaviors-eager="TestSpace.Cloner" >
+    </div>
+    <div id="clonespace4" class="clonespace" data-behaviors-eager="TestSpace.Cloner" >
+    </div>
+    <div id="clonespace5" class="clonespace" data-behaviors-eager="TestSpace.Cloner" >
+    </div>
+    <div id="clonespace6" class="clonespace" data-behaviors-eager="TestSpace.Cloner" >
+    </div>
+    <div id="clonespace7" class="clonespace" data-behaviors-eager="TestSpace.Cloner" >
+    </div>
+    <div id="clonespace8" class="clonespace" data-behaviors-eager="TestSpace.Cloner" >
+    </div>
+    <div id="clonespace9" class="clonespace" data-behaviors-eager="TestSpace.Cloner" >
+    </div> 
+</body>
+</html>

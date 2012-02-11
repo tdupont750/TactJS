@@ -1,0 +1,33 @@
+﻿<h3>
+    Features - Behaviors - Message and Broadcast Queue</h3>
+<hr />
+<p>
+    TactJS Behaviors provides a few useful extensions for creating and firing messages
+    in a particular order. Like events, a message queue is a collection of function
+    calls which are bound to an element and fired off in FIFO order. This allows you
+    to queue up messages and then fire them off in the order they were added to the
+    queue. This is especially useful in AJAX scripts, or anywhere you might need a setTimeout
+    to control the order of events. Anything that's "queueuable" can safely call "unqueue()"
+    when its action is complete and the next action will be fired.
+</p>
+<p>
+    Since TactJS behaviors use a messaging architecture, the only functions which
+    can be queued are messages or broadcasts. This is to keep behaviors streamlined,
+    and serves as a guide for development so that behaviors are created consistently.
+</p>
+<p>
+    "enqueue" and "unqueue" are chainable (like almost everything in TactJS and jQuery),
+    so queueing messages is very simple.
+</p>
+<pre>
+$(this).parent().enqueueMsg('slideRight').enqueueMsg('slideLeft').unqueue(); 
+</pre>
+<p>
+    "unqueue()" starts the queue, in this case sending the message "slideRight" to the
+    parent of $(this). When "slideRight" is complete, it will simply call $(_context).unqueue();
+    and the message "slideLeft" will be sent.
+</p>
+<p>
+    To see this in action, <a class="txt-white" href="demos.htm#/demos-behaviors-queues">
+        check out the demos page</a>.
+</p>

@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>TactJS :: Demos :: Message and Broadcast Queue</title>
+    <style type="text/css">
+        .square { height: 100px; width: 100px; }
+        .bg-red { background-color: Red; }
+        .bg-green { background-color: Green; }
+        .toggle-off { display: none; }
+        .toggle-on { display: block; }
+        .block { margin: 5px; float: left; }
+        .pointer { cursor: pointer; }
+        .clonespace { width: 110px; float: left; }
+        .mas { margin: 5px; }
+    </style>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery/liveQuery.js?v=1"></script>
+    <script type="text/javascript" src="scripts/core.js?v=1"></script>
+    <script type="text/javascript" src="scripts/events.js?v=1"></script>
+    <script type="text/javascript" src="scripts/bootloader.js?v=1"></script>
+    <script type="text/javascript" src="scripts/domdata.js?v=1"></script>
+    <script type="text/javascript" src="scripts/dependencies.js?v=1"></script>
+    <script type="text/javascript" src="scripts/behaviors.js?v=1"></script>
+    <script>
+        var funkySlide = function () {
+            $('.clonespace').each(function (index, clonespace) {
+                $('.slider', clonespace).each(function (index2, element) {
+                    setTimeout(function () {
+                        $(element).enqueueMsg('slideToggle').enqueueMsg('slideToggle').unqueue();
+                    }, (200 * index2));
+                });
+            });
+        };
+    </script>
+</head>
+<body>
+    <h1>
+        TactJS :: Message and Broadcast Queue</h1>
+    <h3>
+        Funky Squares
+    </h3>
+    <div id="slider1" class="square mas slider" data-behaviors-lazy="Docs.Demos.Queueable.Toggler Docs.Demos.Queueable.Slider Docs.Demos.Queueable.SlideToggler"
+        data-slide-time="2000" data-slide-distance="200" data-toggle-class="bg-red bg-green">
+        <div class="square bg-red pointer toggle-on" onclick="$('#slider1').enqueueMsg('slideToggle').enqueueMsg('slideToggle').unqueue()">
+        </div>
+    </div>
+    <input type="button" value="Clone Square" onclick="$('.clonespace').msg('clone', 'slider1')" />
+    <input type="button" value="Message Sliders" onclick="$('.slider').msg('slideToggle')" />
+    <input type="button" value="Broadcast Sliders" onclick="$('.clonespace').broadcast('slideToggle')" />
+    <input type="button" value="Funky Slide" onclick="funkySlide()" />
+    <br />
+    <br />
+    <div id="clonespace" class="clonespace" data-behaviors-eager="Docs.Demos.Cloner">
+    </div>
+    <div id="clonespace2" class="clonespace" data-behaviors-eager="Docs.Demos.Cloner">
+    </div>
+    <div id="clonespace3" class="clonespace" data-behaviors-eager="Docs.Demos.Cloner">
+    </div>
+    <div id="clonespace4" class="clonespace" data-behaviors-eager="Docs.Demos.Cloner">
+    </div>
+</body>
+</html>

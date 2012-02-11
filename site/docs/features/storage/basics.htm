@@ -1,0 +1,15 @@
+﻿<h3>
+    Features - Storage - Basics</h3>
+<hr>
+<p>
+    Simplifies using client side storage with jQuery.</p>
+<h4>
+    Example</h4>
+<pre>var key = 'ObjectKey';
+$.storage.local.setObject(key, {
+	message: 'Hello World'
+});
+
+var object = $.storage.local.getObject(key);
+$.assert.isNotNull(object);
+$.assert.areEqual('Hello World', object.message);</pre>

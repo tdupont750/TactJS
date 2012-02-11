@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Generic Poller</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../scripts/jquery/json2.js"></script>
+    <script type="text/javascript" src="../scripts/jquery/livequery.js"></script>
+    <script type="text/javascript" src="../scripts/core.js?v=12"></script>
+    <script type="text/javascript" src="../scripts/domdata.js?v=1"></script>
+    <script type="text/javascript" src="../scripts/Events.js?v=1"></script>
+    <script type="text/javascript" src="../scripts/Log.js?v=1"></script>
+    <script type="text/javascript" src="../scripts/BootLoader.js?v=1"></script>
+    <script type="text/javascript" src="../scripts/behaviors.js?v=1"></script>
+    <script type="text/javascript">
+    (function ($) {
+        $.types.ns('Docs');
+        Docs.DataPoll = $.types.define(function () {
+            var _context;
+            var _config;
+            var _active = true;
+            var _action;
+            var _method;
+            var _inactiveAfter = 30000;
+            var _lastActivity;
+            var _interval = 1000;
+
+            var _nextPoll = function () {
+                setTimeout(function () {
+                    if (_active) {
+                        var _sinceLastActivity = Math.ceil(new Date().getTime() - _lastActivity.getTime());
+                        if (_sinceLastActivity < _inactiveAfter) {
+                            $(_context).msg("poll");
+                        } else {
+                            _active = false;
+                        }
+                    }
+                }, _interval);
+            };
+
+            var _poll = function () {
+                $.ajax({
+                    url: _action,
+                    type: _method,                    
+                    success: function (response) {
+                        $(_context).broadcast("success", response);
+                        _nextPoll();
+                    },
+                    failure: function (response) {
+                        $(_context).broadcast("failure", response);
+                        _nextPoll();
+                    }
+                });
+            };
+
+            var self = {
+                init: function (context, config) {
+                    _context = context;
+                    _config = $(_context).data();
+                    _inactiveAfter = _config.inactiveAfter;
+                    _interval = _config.interval;
+                    _action = _config.action;
+                    _method = _config.method;
+                    _context.onmousemove = function () { $(_context).msg('poke'); };
+                    _lastActivity = new Date();
+                    _poll();
+                },
+                poll: function () {
+                    _poll();
+                },
+                poke: function () {
+                    _lastActivity = new Date();
+                    if (!_active) {
+                        _active = true;
+                        _poll();
+                    }
+                }
+            };
+            return self;
+        });
+    })(jQuery);
+
+    (function ($) {
+        $.types.ns('Docs.Handler');
+        Docs.Handler.Html = $.types.define(function () {
+            var _context;            
+            var self = {
+                init: function (context) {
+                    _context = context;                    
+                },
+                success: function (data) {
+                    $(".htmlResult", _context).html(data);
+                }
+            };
+            return self;
+        });
+    })(jQuery);
+    
+    </script>
+</head>
+<body>
+
+<div data-behaviors-eager="Docs.DataPoll Docs.Handler.Html" data-method="GET" data-action="CurrentTime.htm" data-interval="1000" data-inactive-after="10000">
+    <div class="htmlResult">
+    
+    </div>
+</div>
+
+</body>
+</html>

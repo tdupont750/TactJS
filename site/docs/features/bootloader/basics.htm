@@ -1,0 +1,34 @@
+﻿<h3>
+    Features - Bootloader - Basics</h3>
+<hr>
+<p>
+    The TactJS bootloader retrieves scripts and files two ways.</p>
+<ol>
+    <li>Require By Type
+        <div class="ind10">
+            This is the method used when behaviors are loaded asyncronously. It converts a namespace
+            to a URL relative to _scriptsRoot and tries to load a .js file.
+        </div>
+    </li>
+    <li>Require
+        <div class="ind10">
+            This method accepts a URL to a script file and tries to load it.
+        </div>
+    </li>
+</ol>
+<p>
+    Both of these methods accept an "onLoaded" function which is called when the resource
+    is available. When behaviors are loaded through the bootloader, the onLoaded function
+    is the "init" method in the public space of a new instance of the behavior loaded,
+    and the context of that behavior is passed to init.
+</p>
+<p>
+    The bootloader is a coroutine for behaviors and we don't recomment using it directly
+    unless you absolutely have to. <a class="txt-white" href="demos.htm#/demos-behaviors-advanced">The advanced behaviors Animals demo</a> shows you how
+    you might use it if you need to though.
+</p>
+<p>
+    The bootloader is evolving! Future versions of TactJS will allow resources to
+    be declared as dependencies so that loading one script file or behavior sets off
+    a chain reaction, loading all the required scripts from one trigger.
+</p>

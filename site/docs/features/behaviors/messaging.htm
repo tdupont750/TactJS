@@ -1,0 +1,31 @@
+﻿<h3>
+    Features - Behaviors - Message and Broadcast</h3>
+<hr />
+<p>
+    The messaging architecture of TactJS behaviors allows you to make method calls
+    with parameters in a completely decoupled fashion. Sending messages or broadcasts
+    that affect elements with uninitialized behaviors (declared with the "lazy" modifier)
+    will cause those behaviors to be loaded through the bootloader before the action
+    in the message or broadcast is executed. Message and broadcast are the prefered
+    method for triggering or waking up behaviors that don't need to be initialized when
+    the page is rendered.
+</p>
+<ul>
+    <li><strong>message</strong>
+        <ul>
+            <li>When you send a message to an element, any behaviors declared on that element will
+                "respond" by executing the named method if they have it.</li>
+        </ul>
+    </li>
+    <li><strong>broadcast</strong>
+        <ul>
+            <li>A broadcast will send a message to all the children of the element that was broadcast
+                to, and is a quick way to send a message to multiple elements witht he same or different
+                behaviors. </li>
+        </ul>
+    </li>
+</ul>
+<p>
+    <a class="txt-white" href="demos.htm#/demos-behaviors-messaging">Check out the demos
+        page</a> for more on message and broadcast.
+</p>

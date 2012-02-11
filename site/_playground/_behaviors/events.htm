@@ -1,0 +1,201 @@
+﻿<h3>
+    Using Events in Behaviors</h3>
+<p>
+    Events or delegates function the way you would expect them to. An object method
+    subscribes to an event on another object which executes the subscriber methods when
+    the event fires. Here we'll go through an example of using events to enhance behaviors.</p>
+<p>
+    For this page we'll need to modify our previous behaviors, <strong>Docs.Demos.Toggler</strong>
+    and <strong>Docs.Demos.Slider</strong> so that they can fire events. These modifications
+    could be made to our original behaviors and not affect their functionality in the
+    other examples, but for the sake of this document, I'm going to reproduce them under
+    the new namespace <strong>Docs.Demos.Eventable</strong>
+</p>
+<p>
+    Here are our modified behaviors:</p>
+<h4>
+    Docs.Demos.Eventable.Toggler</h4>
+<pre>// Docs.Demos.Eventable.Toggler :: Toggles visibility of first child elements. 
+// Fires an event on toggle
+(function ($) {
+    $.types.ns('Docs.Demos.Eventable');
+    Docs.Demos.Eventable.Toggler = $.types.define(function () {
+        var _context;
+        var self = {
+            init: function (context) {
+                _context = context;                
+                if ($(_context).domdata().init)
+                    self.toggle();
+            },
+            toggle: function () {
+                $(_context).children().toggleClass("toggle-off toggle-on");
+                $(_context).events("onToggle").fire();
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+<h4>
+    Docs.Demos.Eventable.Slider</h4>
+<pre>// Docs.Demos.Eventable.Slider :: Slides the element a specified number of 
+// pixels left or right. Fires events for it's actions.
+(function ($) {
+    $.types.ns('Docs.Demos.Eventable');
+    Docs.Demos.Eventable.Slider = $.types.define(function () {
+        var _context;
+        var _data;
+        var _slideDistance;
+        var _slideTime;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _data = $(_context).domdata();
+                _slideDistance = (_data.slideDistance ? _data.slideDistance : 100);
+                _slideTime = (_data.slideTime ? _data.slideTime : 1000);                
+            },
+            slideRight: function () {
+                $(_context).animate({ marginLeft: '+=' + _slideDistance + 'px' }, 
+                    _slideTime, function () { 
+                        $(_context).events("onSlideRight").fire(); });
+            },
+            slideLeft: function () {
+                $(_context).animate({ marginLeft: '-=' + _slideDistance + 'px' }, 
+                    _slideTime, function () { 
+                        $(_context).events("onSlideLeft").fire(); });                
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+<p>
+    Note that <strong>toggle</strong>, <strong>slideRight</strong>, and <strong>slideLeft</strong>
+    all fire events. These events will fire whether or not there are any delegate functions
+    subscribed to those events. If delegates are never subscribed to these events, they
+    will never actually exist on the element and the "fire()" call will simply do nothing.
+</p>
+<p>
+    Let's look at an example of subscribing and unsibscribing events using <strong>Docs.Demos.Eventable.Toggler</strong>:</p>
+<pre>&lt;input type=&quot;button&quot; 
+    onclick=&quot;$(&#39;#eventToggle&#39;).eventSubscribe(&#39;onToggle&#39;,function(){alert(&#39;toggled&#39;);})&quot;
+    value=&quot;Add Delegate&quot; /&gt;
+&lt;input type=&quot;button&quot; 
+    onclick=&quot;$(&#39;#eventToggle&#39;).eventUnsubscribe(&#39;onToggle&#39;,function(){alert(&#39;toggled&#39;);})&quot;
+    value=&quot;Remove Delegate&quot; /&gt;
+&lt;div class=&quot;square mas&quot; data-behaviors-eager=&quot;Docs.Demos.Eventable.Toggler&quot; 
+    id=&quot;eventToggle&quot; &gt; 
+    &lt;div class=&quot;square bg-green pointer toggle-off&quot; 
+        onclick=&quot;$(this).parent().msg(&#39;toggle&#39;)&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;square bg-red pointer toggle-on&quot; 
+        onclick=&quot;$(this).parent().msg(&#39;toggle&#39;)&quot;&gt;
+    &lt;/div&gt;
+&lt;/div&gt;            
+            </pre>
+<p>
+    Click "Add Delegate" below, then click the square. You should see an alert box that
+    says "toggled." Click "Remove Delegate" and then click the square again and the
+    alert box will not appear.</p>
+<input type="button" onclick="$('#eventToggle').eventSubscribe('onToggle', function(){alert('toggled');})"
+    value="Add Delegate" />
+<input type="button" onclick="$('#eventToggle').eventUnsubscribe('onToggle', function(){alert('toggled');})"
+    value="Remove Delegate" />
+<div class="square mas" data-behaviors-eager="Docs.Demos.Eventable.Toggler" id="eventToggle">
+    <div class="square bg-green pointer toggle-off" onclick="$(this).parent().msg('toggle')">
+    </div>
+    <div class="square bg-red pointer toggle-on" onclick="$(this).parent().msg('toggle')">
+    </div>
+</div>
+<p>
+    When you click "Add Delegate", <strong>$.fn.eventSubscribe(eventName, fn)</strong>
+    will attempt to add a delegate (in this case <strong>function(){alert('toggled');}</strong>)
+    to the event "onToggle" on the element. If the event object does not yet exist on
+    the element it will create it. This means you never have to explicitly create an
+    event for a behavior or element; you simply subscribe to an event and fire it.
+</p>
+<p>
+    Clicking "Remove Delegate" call <strong>$.fn.eventUnsubscribe(eventName, fn)</strong>
+    which will remove the delegate that matches the function passed to it.</p>
+<h3>
+    Docs.Demos.Eventable.SlideToggle</h3>
+<p>
+    This behavior depends on the previous two behaviors to be declared on the element.
+    It uses the events on each to produce a new effect.</p>
+<pre>// Docs.Demos.Eventable.SlideToggler :: Slides the element a specified number of pixels
+// left or right and then toggles the first children.
+(function ($) {
+    if (!Docs.Demos.Eventable.Toggler) {
+        throw 'Initialization Error: Docs.Demos.Eventable.slideToggler 
+            requires Docs.Demos.Eventable.Toggler';
+    }
+    if (!Docs.Demos.Eventable.Slider) {
+        throw 'Initialization Error: Docs.Demos.Eventable.slideToggler 
+            requires Docs.Demos.Eventable.Slider';
+    }
+    $.types.ns('Docs.Demos.Eventable');
+    Docs.Demos.Eventable.SlideToggler = $.types.define(function () {
+        var _context;
+        var _lastSlideRight;
+
+        var toggleElement = function () {
+            $(_context).msg('toggle');
+        };
+        var setEvents = function () {
+            $(_context).eventUnsubscribe('onSlideRight', toggleElement);
+            $(_context).eventUnsubscribe('onSlideLeft', toggleElement);
+            $(_context).eventSubscribe('onSlideRight', toggleElement);
+            $(_context).eventSubscribe('onSlideLeft', toggleElement);
+        };
+
+        var self = {
+            init: function (context) {
+                _context = context;
+                _lastSlideRight = false;
+            },
+            slideToggle: function () {
+                setEvents();
+                if (_lastSlideRight) {
+                    $(_context).msg('slideLeft');
+                    _lastSlideRight = false;
+                } else {
+                    $(_context).msg('slideRight');
+                    _lastSlideRight = true;
+                }
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+<p>
+    Here we have a new self method called <strong>slideToggle</strong> which figures
+    out which direction to slide the element, and fires the appropriate message. It
+    also calls it's private method <strong>setEvents()</strong> which safely unsubscribes
+    and then resubscribes the <strong>toggleElement()</strong> method to "onSlideLeft"
+    and "onSlideRight" which are events fired by <strong>Docs.Demos.Eventable.Slider</strong></p>
+<p>
+    Here's the markup that uses our example. Notice that we added <strong>Docs.Demos.Eventable.SlideToggler</strong>
+    and changed the message on it's childrent from "toggle" to "slideToggle"</p>
+<pre>&lt;div class=&quot;square mas&quot; data-behaviors-lazy=&quot;Docs.Demos.Eventable.Toggler 
+    Docs.Demos.Eventable.Slider Docs.Demos.Eventable.SlideToggler&quot;
+    id=&quot;eventToggle&quot; data-slide-distance=&quot;200&quot; data-slide-time=&quot;2000&quot;&gt;
+    &lt;div class=&quot;square bg-green pointer toggle-off&quot; 
+        onclick=&quot;$(this).parent().msg(&#39;slideToggle&#39;)&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;square bg-red pointer toggle-on&quot; 
+        onclick=&quot;$(this).parent().msg(&#39;slideToggle&#39;)&quot;&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+<p>
+    Click the square below to see it in action.</p>
+<div class="square mas" data-behaviors-lazy="Docs.Demos.Eventable.Toggler Docs.Demos.Eventable.Slider Docs.Demos.Eventable.SlideToggler"
+    id="eventToggle" data-slide-distance="200" data-slide-time="2000">
+    <div class="square bg-green pointer toggle-off" onclick="$(this).parent().msg('slideToggle')">
+    </div>
+    <div class="square bg-red pointer toggle-on" onclick="$(this).parent().msg('slideToggle')">
+    </div>
+</div>
+<p>
+    This is also a good place to see the bootloader in action. Since SlideToggler isn't
+    used anywhere with data-init, you should be able to refresh the page, check the
+    source in Firebug or Chrome and only after clicking the square above should you
+    see the file <strong>Core/Docs/Eventable/SlideToggler.js</strong> load.
+</p>

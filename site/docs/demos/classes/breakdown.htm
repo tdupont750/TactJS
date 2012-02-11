@@ -1,0 +1,216 @@
+﻿<div class="span1 col1 right center">
+    <a class="center" href="downloads/demos/classes/create.zip">
+        <div class="download center">
+        </div>
+    </a>
+</div>
+<h3>
+    Demos - Objects & Inheritence - Breakdown</h3>
+<hr>
+<p>
+    TactJS tries to make creating objects as simple as possible by providing a few
+    familiar components of traditional objects in an easy to read, modular format. This
+    breakdown will go into excruciating detail on the parts of an object in TactJS.
+</p>
+<h4>
+    Creating an Object</h4>
+<p>
+    We recommend that you keep your individual objects in their own individual files.
+    This is a best practice for working with behaviors, and even though you <b>can</b>
+    have multiple objects of the same namespace (or different namespaces) in the same
+    file, we've found that in growing systems its much easier to maintain a larger number
+    of small files than it is to maintain several large files. Keeping objects separate
+    also helps reinforce the idea of low coupling.
+</p>
+<p>
+    Let's say we want to create a new object in the Docs.Demos namespace. The first
+    thing we'll do is open up our jQuery object to make our object safe for whatever
+    jquery shortcut might be used. This is a best practice for working with jQuery.
+</p>
+<pre>
+(function ($) { 
+    
+})(jQuery);
+</pre>
+<p>
+    Next, we'll define our namespace. Every object in the same namespace will start
+    out by defining the same namespace, and that's ok. By always defining the namespace
+    of an object, we ensure that the namespace is always available.
+</p>
+<pre>
+(function ($) { 
+    // Define a namespace
+    $.types.ns("Docs.Demos");
+})(jQuery);
+</pre>
+<p>
+    Now we'll define our empty class.
+</p>
+<pre>
+(function ($) { 
+    // Define a namespace
+    $.types.ns("Docs.Demos");
+    // Define the Pet class.
+    Docs.Demos.Pet = $.types.define(function() {
+        
+    });
+})(jQuery);
+</pre>
+<p>
+    Any class you create will likely require a public space: the properties and methods
+    which can be called by ouside objects and functions. In TactJS, the convention
+    is to call that public space "self" because when you call the public methods of
+    an object from within that same object you end up with "self.methodName()" which
+    is descriptive of the action. If you choose, you may change "self" to be whatever
+    you like.
+</p>
+<p>
+    Here we add the public space, "self."
+</p>
+<pre>
+(function ($) { 
+    // Define a namespace
+    $.types.ns("Docs.Demos");
+    // Define the Pet class.
+    Docs.Demos.Pet = $.types.define(function() {
+        // Public Members
+	    var self = {
+
+        };
+        return self;
+    });
+})(jQuery);
+</pre>
+<p>
+    "return self;" is what makes "self" a public interface for our class.
+</p>
+<p>
+    Now let's add a function to "self." Since this is a pet, it likely should be walked
+    regularly, so we'll give our pet class a "walk()" function.
+</p>
+<pre>
+(function ($) { 
+    // Define a namespace
+    $.types.ns("Docs.Demos");
+    // Define the Pet class.
+    Docs.Demos.Pet = $.types.define(function() {
+        // Public Members
+	    var self = {
+            walk: function(){
+            }
+        };
+        return self;
+    });
+})(jQuery);
+</pre>
+<p>
+    Private members are any variables or functions which are declared inside the object,
+    but outside of "self." The convention we prefer is to prefix any private members
+    with an underscore, '_' and place them above "self" in the object such that the
+    order is:
+    <ol>
+        <li>Private Variables</li>
+        <li>Private Functions</li>
+        <li>Self</li>
+    </ol>
+</p>
+<p>
+    Let's have walk() track the number of times this pet object has been walked in a
+    private member called _walkCount.
+</p>
+<pre>
+(function ($) { 
+    // Define a namespace
+    $.types.ns("Docs.Demos");
+    // Define the Pet class.
+    Docs.Demos.Pet = $.types.define(function() {
+        // Private Members
+        var _walkCount = 0;
+
+        // Public Members
+	    var self = {
+            walk: function(){
+                _walkCount++;
+                return "Pet has been walked "
+                    + _walkCount
+                    + " time(s) today.";
+            }
+        };
+        return self;
+    });
+})(jQuery);
+</pre>
+<p>
+    Now that we have an object that can do something, let's declare a new instance of
+    it and take it for a spin.
+</p>
+<pre>
+    // Instantiate a pet object.
+    var pet = new Docs.Demos.Pet();
+</pre>
+<p>
+    Now let's walk our new pet twice...
+</p>
+<pre>
+    // Call the public Walk method
+    pet.walk(); // Pet has been walked 1 time(s) today.
+    pet.walk(); // Pet has been walked 2 time(s) today.
+</pre>
+<p>
+    That's great! Now, what if we want to give our pet a name? We could create a public
+    member to store it and set that member after we create each pet, but then anyone
+    could name our pets, and we might forget to name a few ourselves. Instead, let's
+    give the Docs.Demos.Pet object a constructor, and store the name as a private member.
+    Let's also change our "walk()" function to reflect our pet's names.
+</p>
+<pre>
+(function ($) { 
+    // Define a namespace
+    $.types.ns("Docs.Demos");
+    // Define the Pet class.
+    Docs.Demos.Pet = $.types.define(function(name) {
+        // Private Members
+        var _name = name
+        var _walkCount = 0;
+
+        // Public Members
+	    var self = {
+            walk: function(){
+                _walkCount++;
+                return  _name
+                    + " has been walked "
+                    + _walkCount
+                    + " time(s) today.";
+            }
+        };
+        return self;
+    });
+})(jQuery);
+</pre>
+<p>
+    Notice that the definition line of our object changed to <b>"Docs.Demos.Pet = $.types.define(function(name)
+        {"</b>. Passing arguments to the object (function()) we define gives us a constructor.
+    We can have any number of arguments in that constructor, and because this is javascript
+    they don't always have to be defined so keep that in mind when you create objects
+    with this type of constructor.
+</p>
+<p>
+    Now let's create two new pets and name them. Then we'll take them each out for a
+    walk...
+</p>
+<pre>
+    // Instantiate pet objects.
+    var taboo = new Docs.Demos.Pet("Taboo");
+    var aurora = new Docs.Demos.Pet("Aurora");
+
+    // Call the public Walk method
+    taboo.walk(); // Taboo has been walked 1 time(s) today.
+    aurora.walk(); // Aurora has been walked 1 time(s) today.
+
+    // Call the Walk method again to see the counts change.
+    taboo.walk(); // Taboo has been walked 2 time(s) today.
+    aurora.walk(); // Aurora has been walked 2 time(s) today.
+</pre>
+<p>
+    And that's how a simple object is created with TactJS!
+</p>

@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>TactJS :: Demos :: DOM Data</title>
+    <style type="text/css">
+        .square { height: 100px; width: 100px; }
+        .bg-red { background-color: Red; }
+        .bg-green { background-color: Green; }
+        .toggle-off { display: none; }
+        .toggle-on { display: block; }
+        .block { margin: 5px; float: left; }
+        .pointer { cursor: pointer; }
+    </style>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery/liveQuery.js?v=1"></script>
+    <script type="text/javascript" src="scripts/core.js?v=1"></script>
+    <script type="text/javascript" src="scripts/events.js?v=1"></script>
+    <script type="text/javascript" src="scripts/bootloader.js?v=1"></script>
+    <script type="text/javascript" src="scripts/domdata.js?v=1"></script>
+    <script type="text/javascript" src="scripts/behaviors.js?v=1"></script>
+</head>
+<body>
+    <h1>
+        TactJS :: DOM Data</h1>
+    <h3>
+        Basic DOM Data
+    </h3>
+    <h4>
+        Slider 1</h4>
+    <input type="button" onclick="$('#slideElement').msg('slideLeft')" value="Slide Left" />
+    <input type="button" onclick="$('#slideElement').msg('slideRight')" value="Slide Right" />
+    <div class="square mas" data-behaviors-lazy="Docs.Demos.Slider" data-slide-distance="200"
+        data-slide-time="2000" id="slideElement">
+        <div class="square bg-red pointer">
+        </div>
+    </div>
+    <h4>
+        Slider 2</h4>
+    <input type="button" onclick="$('#slideElementLong').msg('slideLeft')" value="Slide Left" />
+    <input type="button" onclick="$('#slideElementLong').msg('slideRight')" value="Slide Right" />
+    <div class="square mas" data-behaviors-lazy="Docs.Demos.Slider" data-slide-distance="400"
+        data-slide-time="4000" id="slideElementLong">
+        <div class="square bg-red pointer">
+        </div>
+    </div>
+    <hr />
+    <h3>
+        Using Different Prefixes
+    </h3>
+    <input type="button" onclick="$('#slideElementLong2').msg('slideLeft')" value="Slide Left" />
+    <input type="button" onclick="$('#slideElementLong2').msg('slideRight')" value="Slide Right" />
+    <div class="square mas" data-behaviors-lazy="Docs.Demos.RightSlider Docs.Demos.LeftSlider"
+        rightslider-slide-distance="400" rightslider-slide-time="4000" leftslider-slide-distance="200"
+        leftslider-slide-time="2000" id="slideElementLong2">
+        <div class="square bg-red pointer">
+        </div>
+    </div>
+    <hr />
+    <h3>
+        Getting Data Recursively
+    </h3>
+    <input type="button" onclick="$('#slideElementLong3').msg('slideLeft')" value="Slide Left" />
+    <input type="button" onclick="$('#slideElementLong3').msg('slideRight')" value="Slide Right" />
+    <div class="square mas" data-behaviors-lazy="Docs.Demos.DataSlider" data-slide-distance="400"
+        id="slideElementLong3">
+        <div class="square bg-red pointer" data-slide-time="4000">
+        </div>
+    </div>
+</body>
+</html>

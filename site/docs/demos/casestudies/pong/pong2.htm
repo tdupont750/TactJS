@@ -1,0 +1,68 @@
+﻿<style type="text/css">
+    .court { width: 410px; }
+    .scoreboard { height: 55px; width: 400px; }
+    .score { float: left; width: 200px; text-align: center; }
+    .playerName { font-size: 16px; }
+    .scoreValue { font-size: 30px; font-weight: bold; }
+    .pongField { background-color: #000; height: 300px; width: 400px; border: solid 5px #ccc; }
+    .pongPaddle { background-color: #fff; height: 50px; width: 10px; }
+    .pongBall { background-color: #fff; height: 10px; width: 10px; position: absolute; }
+</style>
+<div class="span1 col1 right center">
+    <a class="center" href="downloads/casestudies/pong/pong2.zip">
+        <div class="download center">
+        </div>
+    </a>
+</div>
+<h3>
+    Demos - Case Study :: Pong - Iteration 2 :: Class Library
+</h3>
+<hr />
+<p>
+    This iteration adds a class library which our behaviors act against. Things like
+    size and position tracking for moveable entities, and some basic movements are controlled
+    by the class library with some of the game rules remaining in the behaviors for
+    the time being.
+</p>
+<p>
+    I haven't implemented any more features yet, but with the beginnings of a library
+    to work against I can just about start doing that. The next iteration will complete
+    the library structure, and move most of our core game logic (i.e. business logic)
+    into the library where it belongs. This ought to leave our behaviors as fairly straight-forward
+    shells which do very little on their own except make calls to the library.
+</p>
+<hr />
+<div id="court3" class="court center" data-behaviors-lazy="Pong2.UI.Court" data-initial-direction="right">
+    <div class="scoreboard">
+        <div class="score js-player1">
+            <div class="playerName">
+                Player 1
+            </div>
+            <div class="scoreValue" data-behaviors-lazy="Pong2.UI.Updatable" data-key="player1">
+                0
+            </div>
+        </div>
+        <div class="score js-player2">
+            <div class="playerName">
+                Player 2
+            </div>
+            <div class="scoreValue" data-behaviors-lazy="Pong2.UI.Updatable" data-key="player2">
+                0
+            </div>
+        </div>
+    </div>
+    <div class="pongField" onmouseover="$(this).broadcast('activate', $(this).offset().top, this);"
+        onmouseout="$(this).broadcast('deactivate');">
+        <div class="pongPaddle js-player1" data-behaviors-lazy="Pong2.UI.Paddle" data-controllable="true"
+            data-animation-speed="2" data-side="left">
+        </div>
+        <div class="pongBall" data-behaviors-lazy="Pong2.UI.Ball" data-speed="1600" data-animation-speed="20">
+        </div>
+        <div class="pongPaddle js-player2" data-behaviors-lazy="Pong2.UI.Paddle" data-controllable="true"
+            data-animation-speed="2" data-side="right">
+        </div>
+    </div>
+</div>
+<script>
+    $("#court3").broadcast("wakeup");
+</script>

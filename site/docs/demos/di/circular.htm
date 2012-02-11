@@ -1,0 +1,45 @@
+﻿<h3>
+    Demos - Dependency Injection - Circular Dependencies</h3>
+<hr>
+<p>
+    Tact query will resolve circular references by only instantiating one of a dependant type. This means that in the case of a circular reference Tact.Query will follow a heirarchical lifetime model.</p>
+<h4>
+    Defining circular classes.</h4>
+<p>Class D depends on class E, and class E depends on class D.</p>
+<pre>Tact.DI.D = $.types.define(function() {
+    var _d;
+    var self = {
+        e : new Tact.Dependency('e'),
+        setD : function(d) { _d = d; },
+        getD : function() { return _d; }
+    };
+    return self;
+});
+
+Tact.DI.E = $.types.define(function() {
+    var _e;
+    var self = {
+        d : new Tact.Dependency('d'),
+        setE : function(e) { _e = e; },
+        getE : function() { return _e; }
+    };
+    return self;
+});
+
+// Circular
+$.ioc.register('d', Tact.DI.D);
+$.ioc.register('e', Tact.DI.E);</pre>
+<h4>
+    Resolving a circular reference.</h4>
+<p>Notice that when 'd' resolves it will have a reference to e, and that instance of e will have a reference back to d. There will only have been two classes instantiated and they will have references to each other.</p>
+<pre>var d = $.ioc.resolve('d');
+
+$.assert.notNull(d);
+$.assert.isTrue(d.is(Tact.DI.D));
+
+$.assert.notNull(d.e);
+$.assert.isTrue(d.e.is(Tact.DI.E));
+
+$.assert.notNull(d.e.d);
+$.assert.isTrue(d.e.d.is(Tact.DI.D));
+$.assert.isTrue(d === d.e.d);</pre>

@@ -1,0 +1,43 @@
+﻿<h3>
+    API - Static - BootLoader</h3>
+<hr>
+<h4>
+    $.bootloader</h4>
+    <br />
+<br />
+<h3>
+    API - Static - BootLoader - caching</h3>
+<hr>
+<h4>
+    $.bootloader.caching(allowCache)</h4>
+<p>
+    @description Sets the allow cache flag.<br>
+    @param {boolean} allowCache
+</p>
+<h3>
+    API - Static - BootLoader - require</h3>
+<hr>
+<h4>
+    $.bootloader.require(src, onLoaded)</h4>
+<p>
+    @description Lazy loads a script by the passed in source.<br>
+    @param {string} src<br>
+    <span class="tab">The full or relative path to the script to be loaded.</span><br>
+    @param {function} onLoaded<br>
+    <span class="tab">A function that will be invoked once the script has finished loading
+        on the page.</span>
+</p>
+<h3>
+    API - Static - BootLoader - requireByType</h3>
+<hr>
+<h4>
+    $.bootloader.requireByType(typeName, onLoaded)</h4>
+<p>
+    @description Lazy loads a script by the passed in type.<br>
+    @param {string} typeName<br>
+    <span class="tab">The name & namespace of the class to load. Must correspond to file-system
+        such that "Docs.Toggler" can be found at "Scripts/TactJS/Docs/Toggler.js</span><br>
+    @param {function} onLoaded<br>
+    <span class="tab">A function that will be invoked once the script has finished loading
+        on the page.</span>
+</p>

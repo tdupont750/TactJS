@@ -1,0 +1,52 @@
+﻿<h3>
+    API - Classes - Queue</h3>
+<hr>
+<h4>
+    Tact.Queue</h4>
+<p>
+    @class<br>
+    @description A simple FIFO queue for functions</p>
+<h4>
+    Example</h4>
+<pre>var queue = new Tact.Queue();
+
+queue.push(function(args) {
+	alert('Queue function fired with: ' + arg);
+});
+
+queue.pop('Stuff!'); // Queue function fired with: Stuff!</pre>
+<h3>
+    API - Classes - Queue - constructor</h3>
+<hr>
+<h4>
+    new Tact.Queue()</h4>
+<p>
+    @constructor
+</p>
+<h3>
+    API - Classes - Queue - push</h3>
+<hr>
+<h4>
+    Tact.Queue.push(fn)</h4>
+<p>
+    @description Add a function to the end of the queue.<br>
+    @param {function} fn
+</p>
+<h3>
+    API - Classes - Queue - pop</h3>
+<hr>
+<h4>
+    Tact.Queue.pop(args)</h4>
+<p>
+    @description Invoke the function at the top of the queue with arguments.<br>
+    @param {misc} args
+</p>
+<h3>
+    API - Classes - Queue - count</h3>
+<hr>
+<h4>
+    Tact.Queue.count()</h4>
+<p>
+    @description Gets the current queue length.<br>
+    @returns {number}
+</p>

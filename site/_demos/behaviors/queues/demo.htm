@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>TactJS :: Demos :: Message and Broadcast Queue</title>
+    <style type="text/css">
+        .square { height: 100px; width: 100px; }
+        .bg-red { background-color: Red; }
+        .bg-green { background-color: Green; }
+        .toggle-off { display: none; }
+        .toggle-on { display: block; }
+        .block { margin: 5px; float: left; }
+        .pointer { cursor: pointer; }
+    </style>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery/liveQuery.js?v=1"></script>
+    <script type="text/javascript" src="scripts/core.js?v=1"></script>
+    <script type="text/javascript" src="scripts/events.js?v=1"></script>
+    <script type="text/javascript" src="scripts/bootloader.js?v=1"></script>
+    <script type="text/javascript" src="scripts/domdata.js?v=1"></script>
+    <script type="text/javascript" src="scripts/behaviors.js?v=1"></script>
+</head>
+<body>
+    <h1>
+        TactJS :: Message and Broadcast Queue</h1>
+    <h3>
+        Queueing messages (click the square)
+    </h3>
+    <div class="square mas" data-behaviors-lazy="Docs.Demos.Queueable.Slider" data-slide-time="2000"
+        data-slide-distance="200">
+        <div class="square bg-red pointer" onclick="$(this).parent().enqueueMsg('slideRight').enqueueMsg('slideLeft').unqueue()">
+        </div>
+    </div>
+    <hr />
+    <h3>
+        Queueing broadcasts
+    </h3>
+    <input type="button" value="queue broadcasts" onclick="$('#squareContainer').enqueueBroadcast('slideRight').enqueueBroadcast('slideLeft').unqueue().unqueue()" />
+    <div id="squareContainer">
+        <div class="square mas block" data-behaviors-lazy="Docs.Demos.Queueable.Slider" data-slide-time="2000"
+            data-slide-distance="200">
+            <div class="square bg-red pointer">
+            </div>
+        </div>
+        <div class="square mas block" data-behaviors-lazy="Docs.Demos.Queueable.Slider" data-slide-time="2000"
+            data-slide-distance="200">
+            <div class="square bg-red pointer">
+            </div>
+        </div>
+        <div class="square mas block" data-behaviors-lazy="Docs.Demos.Queueable.Slider" data-slide-time="2000"
+            data-slide-distance="200">
+            <div class="square bg-red pointer">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

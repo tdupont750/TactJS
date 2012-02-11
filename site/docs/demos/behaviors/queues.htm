@@ -1,0 +1,111 @@
+﻿<div class="span1 col1 right center">
+    <a class="center" href="downloads/demos/behaviors/queues.zip">
+        <div class="download center">
+        </div>
+    </a>
+</div>
+<h3>
+    Demos - Behaviors - Using the Message Queue</h3>
+<hr />
+<p>
+    Sometimes you may want a little extra control over when messages or broadcasts are
+    fired off. For this you can take advantage of <strong>$.Tact.Queue</strong> and the
+    extensions <strong>$.fn.enqueueMsg</strong> , <strong>$.fn.enqueueBroadcast</strong>,
+    and <strong>$.fn.unqueue</strong>.</p>
+<p>
+    For these examples I'm going to use slightly modified versions of <strong>Docs.Demos.Eventable.Toggler</strong>,
+    and <strong>Docs.Demos.Eventable.Slider</strong>. The modifications made would not
+    affect any of the previous examples, but for the sake of clarity I'm going to put
+    these new versions in the namespace <strong>Docs.Demos.Queueable</strong>.</p>
+<h3>
+    Docs.Demos.Queueable.Toggler</h3>
+<pre>// Docs.Demos.Queueable.Toggler :: Toggles visibility of first child elements. 
+// Fires an event on toggle, and unqueues.
+(function ($) {
+    $.types.ns('Docs.Demos.Queueable');
+    Docs.Demos.Queueable.Toggler = $.types.define(function () {
+        var _context;
+        var _config;
+        var _toggleClass;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _config = $(_context).domdata();
+                _toggleClass = (_config.toggleClass ? _config.toggleClass : 
+                    "toggle-off toggle-on");
+                if (_config.init)
+                    self.toggle();
+            },
+            toggle: function () {
+                $(_context).children().toggleClass(_toggleClass);
+                $(_context).eventFire("onToggle").unqueue();
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+<p>
+    There is one additional change to this behavior. I've added the DOM data property
+    <strong>toggleClass</strong> so that I can specify which class or classes I want
+    to toggle</p>
+<h3>
+    Docs.Demos.Queueable.Slider</h3>
+<pre>// Docs.Demos.Queueable.Slider :: Slides the element a specified number of pixels 
+// left or right. Fires events for it's actions, and unqueues
+(function ($) {
+    $.types.ns('Docs.Demos.Queueable');
+    Docs.Demos.Queueable.Slider = $.types.define(function () {
+        var _context;
+        var _data;
+        var _slideDistance;
+        var _slideTime;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _data = $(_context).domdata();
+                _slideDistance = (_data.slideDistance ? _data.slideDistance : 100);
+                _slideTime = (_data.slideTime ? _data.slideTime : 1000);
+            },
+            slideRight: function () {
+                $(_context).animate({ marginLeft: '+=' + _slideDistance + 'px' }, 
+                    _slideTime, function () { 
+                        $(_context).eventFire("onSlideRight").unqueue(); });
+            },
+            slideLeft: function () {
+                $(_context).animate({ marginLeft: '-=' + _slideDistance + 'px' }, 
+                    _slideTime, function () { 
+                        $(_context).eventFire("onSlideLeft").unqueue(); });
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+<p>
+    Notice the addition of calls to <strong>$(_element).unqueue()</strong>. After each
+    method is invoked, <strong>unqueue()</strong> will attempt to invoke the next method
+    in the queue. The inclusion of these calls is safe in the case of an empty queue,
+    and allows the queue to continue running.</p>
+<p>
+    Here's the markup for our first example using only <strong>Docs.Demos.Queueable.Slider</strong>:
+</p>
+<pre>&lt;div class=&quot;square mas&quot; data-behaviors-lazy=&quot;Docs.Demos.Queueable.Slider&quot; 
+    data-slide-time=&quot;2000&quot; data-slide-distance=&quot;200&quot;&gt;
+    &lt;div class=&quot;square bg-red pointer&quot; 
+        onclick=&quot;$(this).parent().enqueueMsg(&#39;slideRight&#39;)
+            .enqueueMsg(&#39;slideLeft&#39;).unqueue()&quot; /&gt;
+&lt;/div&gt;            
+            </pre>
+<p>
+    Here we use <strong>enqueueMsg()</strong> to queue up a couple of messages, followed
+    immediately by a call to <strong>unqueue()</strong> to start the queue.</p>
+<p>
+    When you click the square below you should see it move right, and then left.</p>
+<div class="square mas" data-behaviors-lazy="Docs.Demos.Queueable.Slider" data-slide-time="2000"
+    data-slide-distance="200">
+    <div class="square bg-red pointer" onclick="$(this).parent().enqueueMsg('slideRight').enqueueMsg('slideLeft').unqueue()">
+    </div>
+</div>
+<p>
+    Now that we're familiar with the major reafures of behaviors, let's <a class="txt-white" href="demos.htm#/demos-behaviors-together" data-behaviors-lazy="Docs.HashLink"
+        onclick="$(this).msg('click')"><strong>put it all together</strong></a>....
+</p>

@@ -1,0 +1,41 @@
+﻿<h3>
+    Features - Classes - Inheritence</h3>
+<hr>
+<p>
+    Extending subclasses is simple.</p>
+<h4>
+    Example</h4>
+<pre>// Define a namespace
+$.types.ns("Tact");
+
+// See Tact.Pet definition in the "Class Declaration" section
+
+// Extend Pet to create Cat
+Tact.Cat = $.types.extend(Tact.Pet, function(name) {
+	
+	// Private Members
+	var _speak = "Meow";
+	
+	// Public Members (Will inherit all of Pet's public members.)
+	var self = {
+		speak: function() {
+			return "The Cat says '" + _speak + "'.";
+		},
+		speakAndWalk: function() {
+			var speak = self.speak();
+			// self.Walk is inherited from Pet
+			var walk = self.walk();
+			return speak + ' ' + walk;
+		}
+	};
+	
+	return self;
+});
+
+// Instantiate a cat object.
+var cat = new Tact.Cat("Linq");
+
+cat.speak();        // The Cat says 'Meow'.
+cat.walk();         // Linq has been walked 1 time(s) today.
+cat.speakAndWalk(); // The Cat says 'Meow'. Linq has been walked 2 time(s) today.
+</pre>

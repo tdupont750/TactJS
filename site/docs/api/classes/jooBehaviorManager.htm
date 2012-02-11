@@ -1,0 +1,81 @@
+﻿<h3>
+    API - Classes - BehaviorManager</h3>
+<hr>
+<h4>
+    Tact.BehaviorManager</h4>
+<p>
+    @class<br>
+    @description Collection of elements that provides an interface to access behavior
+    functionality.
+</p>
+<h3>
+    API - Classes - BehaviorManager - constructor</h3>
+<hr>
+<h4>
+    new Tact.BehaviorManager(els)</h4>
+<p>
+    @constructor<br>
+    @param {jQuery} els
+</p>
+<h3>
+    API - Classes - BehaviorManager - msg</h3>
+<hr>
+<h4>
+    Tact.BehaviorManager.msg(cmd)</h4>
+<p>
+    @description Invokes specified method on behaviors attached to elements in the collection.<br>
+    @param {string} cmd<br>
+    @returns {Tact.BehaviorManager}
+</p>
+<h3>
+    API - Classes - BehaviorManager - broadcast</h3>
+<hr>
+<h4>
+    Tact.BehaviorManager.broadcast(cmd)</h4>
+<p>
+    @description Invokes specified method on behaviors attached to elements, or their
+    children, in the collection.<br>
+    @param {string} cmd<br>
+    @returns {Tact.BehaviorManager}
+</p>
+<h3>
+    API - Classes - BehaviorManager - enqueueMsg</h3>
+<hr>
+<h4>
+    Tact.BehaviorManager.enqueueMsg(cmd)</h4>
+<p>
+    @description Queues a call to the specified method on behaviors attached to elements,
+    in the collection.<br>
+    @param {string} cmd<br>
+    @returns {Tact.BehaviorManager}
+</p>
+<h3>
+    API - Classes - BehaviorManager - enqueueBroadcast</h3>
+<hr>
+<h4>
+    Tact.BehaviorManager.enqueueBroadcast(cmd)</h4>
+<p>
+    @description Queues a call to the specified method on behaviors attached to elements,
+    or their children, in the collection.<br>
+    @param {string} cmd<br>
+    @returns {Tact.BehaviorManager}
+</p>
+<h3>
+    API - Classes - BehaviorManager - unqueue</h3>
+<hr>
+<h4>
+    Tact.BehaviorManager.unqueue()</h4>
+<p>
+    @description Pops and invokes the next queue msg or broadcast for behaviors associated
+    with the given element.<br>
+    @returns {Tact.BehaviorManager}
+</p>
+<h3>
+    API - Classes - BehaviorManager - queueLength</h3>
+<hr>
+<h4>
+    Tact.BehaviorManager.queueLength()</h4>
+<p>
+    @description Gets the length of the queue.<br>
+    @returns {number}
+</p>

@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>TactJS :: API Documentation</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery/json2.js"></script>
+    <script type="text/javascript" src="scripts/jquery/livequery.js"></script>
+    <script type="text/javascript" src="scripts/core.js?v=1"></script>
+    <script type="text/javascript" src="scripts/events.js?v=1"></script>
+    <script type="text/javascript" src="scripts/log.js?v=1"></script>
+    <script type="text/javascript" src="scripts/bootloader.js?v=1"></script>
+    <script type="text/javascript" src="scripts/domdata.js?v=1"></script>
+    <script type="text/javascript" src="scripts/behaviors.js?v=1"></script>
+    <script type="text/javascript" src="scripts/dependencies.js?v=12345"></script>
+    <link rel="stylesheet" href="styles/jqueryUI.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="styles/shared.css" type="text/css" media="all" />
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-28818516-1']);
+        _gaq.push(['_trackPageview']);
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</head>
+<body>
+    <div class="span0 center pal txt-white">
+        <div data-behaviors-eager="Docs.ContentLoader" data-load="true" data-content="docs/content/header.htm">
+        </div>
+        <div class="clear pal mas span0">
+            <!-- spacer -->
+        </div>
+        <div class="pal left span25">
+            <div class="accordion" data-behaviors-eager="Docs.Accordion" data-auto-height="false"
+                data-navigation="true" data-collapsible="false">
+                <h3>
+                    <a href="#">Static</a></h3>
+                <div>
+                    <ul class="none txt12" data-behaviors-eager="Docs.SectionSelector" data-load-content="true">
+                        <li class="pas" data-section="api-static-assert"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">Assert</span> </li>
+                        <li class="pas" data-section="api-static-behaviors"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">Behaviors</span> </li>
+                        <li class="pas" data-section="api-static-bootloader"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">Bootloader</span> </li>
+                        <li class="pas" data-section="api-static-class"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">Class</span> </li>
+                        <li class="pas" data-section="api-static-domdata"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">DOMData</span> </li>
+                        <li class="pas" data-section="api-static-ioc"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">IOC</span> </li>
+                        <li class="pas" data-section="api-static-log"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">Log</span> </li>
+                        <li class="pas" data-section="api-static-storage"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">Storage</span> </li>
+                        <li class="pas" data-section="api-static-testing"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">Testing</span> </li>
+                        <li class="pas" data-section="api-static-utilities"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">Utilities</span> </li>
+                    </ul>
+                </div>
+                <h3>
+                    <a href="#">Extensions</a></h3>
+                <div>
+                    <ul class="none txt12" data-behaviors-eager="Docs.SectionSelector" data-load-content="true">
+                        <li class="pas" data-section="api-extensions-primary"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">Primary</span> </li>
+                        <li class="pas" data-section="api-extensions-shortcuts"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">Shortcuts</span> </li>
+                    </ul>
+                </div>
+                <h3>
+                    <a href="#">Classes</a></h3>
+                <div>
+                    <ul class="none txt12" data-behaviors-eager="Docs.SectionSelector" data-load-content="true">
+                        <li class="pas" data-section="api-classes-behaviorcollection"><span class="txt-red">
+                            <b>&raquo;</b>&nbsp;</span><span class="link txt-white">Tact.BehaviorCollection</span>
+                        </li>
+                        <li class="pas" data-section="api-classes-behaviormanager"><span class="txt-red"><b>
+                            &raquo;</b>&nbsp;</span><span class="link txt-white">Tact.BehaviorManager</span>
+                        </li>
+                        <li class="pas" data-section="api-classes-dependency"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">Tact.Dependency</span> </li>
+                        <li class="pas" data-section="api-classes-event"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">Tact.Event</span> </li>
+                        <li class="pas" data-section="api-classes-eventcollection"><span class="txt-red"><b>
+                            &raquo;</b>&nbsp;</span><span class="link txt-white">Tact.EventCollection</span>
+                        </li>
+                        <li class="pas" data-section="api-classes-queue"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">Tact.Queue</span> </li>
+                        <li class="pas" data-section="api-classes-queuecollection"><span class="txt-red"><b>
+                            &raquo;</b>&nbsp;</span><span class="link txt-white">Tact.QueueCollection</span>
+                        </li>
+                        <li class="pas" data-section="api-classes-storage"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><span
+                            class="link txt-white">Tact.Storage</span> </li>
+                    </ul>
+                </div>
+            </div>
+            <br />
+            <br />
+            <span class="txt-white txt10">Google Ads</span>
+            <div class="bdr-white bol bg-black pal left span15">
+                <div class="center">
+                    <script type="text/javascript"><!--
+                        google_ad_client = "ca-pub-7625754809889439";
+                        /* Left Column Ad */
+                        google_ad_slot = "9980631033";
+                        google_ad_width = 125;
+                        google_ad_height = 125;
+                        //-->
+                    </script>
+                    <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div class="bdr-white bol bg-black pal right span65">
+            <div class="section" id="api-static-assert" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/static/assert.htm" data-load="true" style="display: block;">
+            </div>
+            <div class="section" id="api-static-behaviors" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/static/behaviors.htm">
+            </div>
+            <div class="section" id="api-static-bootloader" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/static/bootloader.htm">
+            </div>
+            <div class="section" id="api-static-class" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/static/class.htm">
+            </div>
+            <div class="section" id="api-static-domdata" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/static/domdata.htm">
+            </div>
+            <div class="section" id="api-static-ioc" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/static/ioc.htm">
+            </div>
+            <div class="section" id="api-static-log" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/static/log.htm">
+            </div>
+            <div class="section" id="api-static-storage" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/static/storage.htm">
+            </div>
+            <div class="section" id="api-static-testing" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/static/testing.htm">
+            </div>
+            <div class="section" id="api-static-utilities" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/static/utilities.htm">
+            </div>
+            <div class="section" id="api-extensions-primary" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/extensions/primary.htm">
+            </div>
+            <div class="section" id="api-extensions-shortcuts" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/extensions/shortcuts.htm">
+            </div>
+            <div class="section" id="api-classes-behaviorcollection" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/classes/jooBehaviorCollection.htm">
+            </div>
+            <div class="section" id="api-classes-behaviormanager" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/classes/jooBehaviorManager.htm">
+            </div>
+            <div class="section" id="api-classes-dependency" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/classes/jooDependency.htm">
+            </div>
+            <div class="section" id="api-classes-event" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/classes/jooEvent.htm">
+            </div>
+            <div class="section" id="api-classes-eventcollection" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/classes/jooEventCollection.htm">
+            </div>
+            <div class="section" id="api-classes-queue" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/classes/jooQueue.htm">
+            </div>
+            <div class="section" id="api-classes-queuecollection" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/classes/jooQueueCollection.htm">
+            </div>
+            <div class="section" id="api-classes-storage" data-behaviors-eager="Docs.ContentLoader"
+                data-content="docs/api/classes/jooStorage.htm">
+            </div>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear pal mas span0">
+            <!-- spacer -->
+        </div>
+        <div data-behaviors-eager="Docs.ContentLoader" data-load="true" data-content="docs/content/footer.htm">
+        </div>
+    </div>
+</body>
+</html>

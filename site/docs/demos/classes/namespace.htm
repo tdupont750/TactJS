@@ -1,0 +1,41 @@
+﻿<h3>
+   Demos - Objects & Inheritence - Namespacing</h3>
+<hr>
+<p>
+    Namespaces in TactJS work about the way you'd expect them to. They allow you to
+    create sections of related scripts and help organize your code-base. Thanks to the
+    bootloader, fully qualified objects declared as behaviors can even be loaded asychronously
+    when they're needed as long as the naming convention requirements in the file-system
+    or script repository are met.
+</p>
+<h4>
+    Defining a namespace</h4>
+<p>
+    Creating and using a new namespace is as simple as declaring it as in the following
+    example:
+</p>
+<pre>// Define a namespace
+$.types.ns("Docs.Demos");
+</pre>
+<p>
+    Namespaces can be a single word, or multiple words separated by a '.' and they can
+    be reused as often as you like so you can have many different classes under the
+    same namespace.
+</p>
+<h4>
+    Bootloader Conditions</h4>
+<p>
+    If you want to be able to load your classes or behaviors asynchronously via the
+    bootloader, your project's script folder must follow a certain pattern. It's pretty
+    simple: the namespace should correspond with a location in your scripts folder such
+    that the <b>"Docs.Demos.Namespace.ClassName"</b> object is located in the file at <b>"_scriptsRoot/docs/demos/namespace/classname.js"</b>
+</p>
+<p>
+    The bootloader defaults "_scriptsRoot" to "scripts/" but since it's a global variable, you can change it in the head of your document like so:
+</p>
+<pre>
+    _scriptsRoot = "../scripts/";
+</pre>
+<p>
+    For a working example of namespaces and the bootloader, download and explore our <a class="txt-white" href="#">Quickstart Guide</a>.
+</p>

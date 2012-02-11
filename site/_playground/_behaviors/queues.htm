@@ -1,0 +1,174 @@
+﻿<h3>
+    Message and Broadcast Queue</h3>
+<p>
+    Sometimes you may want a little extra control over when messages or broadcasts are
+    fired off. For this you can take advantage of <strong>$.Tact.Queue</strong> and the
+    extensions <strong>$.fn.enqueueMsg</strong> , <strong>$.fn.enqueueBroadcast</strong>,
+    and <strong>$.fn.unqueue</strong>.</p>
+<p>
+    For these examples I'm going to use slightly modified versions of <strong>Docs.Demos.Eventable.Toggler</strong>,
+    and <strong>Docs.Demos.Eventable.Slider</strong>. The modifications made would not
+    affect any of the previous examples, but for the sake of clarity I'm going to put
+    these new versions in the namespace <strong>Docs.Demos.Queueable</strong>.</p>
+<h3>
+    Docs.Demos.Queueable.Toggler</h3>
+<pre>// Docs.Demos.Queueable.Toggler :: Toggles visibility of first child elements. 
+// Fires an event on toggle, and unqueues.
+(function ($) {
+    $.types.ns('Docs.Demos.Queueable');
+    Docs.Demos.Queueable.Toggler = $.types.define(function () {
+        var _context;
+        var _config;
+        var _toggleClass;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _config = $(_context).domdata();
+                _toggleClass = (_config.toggleClass ? _config.toggleClass : 
+                    "toggle-off toggle-on");
+                if (_config.init)
+                    self.toggle();
+            },
+            toggle: function () {
+                $(_context).children().toggleClass(_toggleClass);
+                $(_context).eventFire("onToggle").unqueue();
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+<p>
+    There is one additional change to this behavior. I've added the DOM data property
+    <strong>toggleClass</strong> so that I can specify which class or classes I want
+    to toggle</p>
+<h3>
+    Docs.Demos.Queueable.Slider</h3>
+<pre>// Docs.Demos.Queueable.Slider :: Slides the element a specified number of pixels 
+// left or right. Fires events for it's actions, and unqueues
+(function ($) {
+    $.types.ns('Docs.Demos.Queueable');
+    Docs.Demos.Queueable.Slider = $.types.define(function () {
+        var _context;
+        var _data;
+        var _slideDistance;
+        var _slideTime;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _data = $(_context).domdata();
+                _slideDistance = (_data.slideDistance ? _data.slideDistance : 100);
+                _slideTime = (_data.slideTime ? _data.slideTime : 1000);
+            },
+            slideRight: function () {
+                $(_context).animate({ marginLeft: '+=' + _slideDistance + 'px' }, 
+                    _slideTime, function () { 
+                        $(_context).eventFire("onSlideRight").unqueue(); });
+            },
+            slideLeft: function () {
+                $(_context).animate({ marginLeft: '-=' + _slideDistance + 'px' }, 
+                    _slideTime, function () { 
+                        $(_context).eventFire("onSlideLeft").unqueue(); });
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+<p>
+    Notice the addition of calls to <strong>$(_element).unqueue()</strong>. After each
+    method is invoked, <strong>unqueue()</strong> will attempt to invoke the next method
+    in the queue. The inclusion of these calls is safe in the case of an empty queue,
+    and allows the queue to continue running.</p>
+<p>
+    Here's the markup for our first example using only <strong>Docs.Demos.Queueable.Slider</strong>:
+</p>
+<pre>&lt;div class=&quot;square mas&quot; data-behaviors-lazy=&quot;Docs.Demos.Queueable.Slider&quot; 
+    data-slide-time=&quot;2000&quot; data-slide-distance=&quot;200&quot;&gt;
+    &lt;div class=&quot;square bg-red pointer&quot; 
+        onclick=&quot;$(this).parent().enqueueMsg(&#39;slideRight&#39;)
+            .enqueueMsg(&#39;slideLeft&#39;).unqueue()&quot; /&gt;
+&lt;/div&gt;            
+            </pre>
+<p>
+    Here we use <strong>enqueueMsg()</strong> to queue up a couple of messages, followed
+    immediately by a call to <strong>unqueue()</strong> to start the queue.</p>
+<p>
+    When you click the square below you should see it move right, and then left.</p>
+<div class="square mas" data-behaviors-lazy="Docs.Demos.Queueable.Slider" data-slide-time="2000"
+    data-slide-distance="200">
+    <div class="square bg-red pointer" onclick="$(this).parent().enqueueMsg('slideRight').enqueueMsg('slideLeft').unqueue()">
+    </div>
+</div>
+<h3>
+    Putting It All Together</h3>
+<p>
+    Let's try a more complex example using <strong>Docs.Demos.Queueable.SlideToggler</strong>,
+    reproduced below for your convenience.</p>
+<h4>
+    Docs.Demos.Queueable.SlideToggler</h4>
+<pre>// Docs.Demos.Queueable.SlideToggler :: Slides the element a specified number of 
+// pixels left or right and then toggles the first children.
+(function ($) {
+    if (!Docs.Demos.Queueable.Toggler) {
+        throw 'Initialization Error: Docs.Demos.Queueable.slideToggler 
+            requires Docs.Demos.Queueable.Toggler';
+    }
+    if (!Docs.Demos.Queueable.Slider) {
+        throw 'Initialization Error: Docs.Demos.Queueable.slideToggler 
+            requires Docs.Demos.Queueable.Slider';
+    }
+    $.types.ns('Docs.Demos.Eventable');
+    Docs.Demos.Queueable.SlideToggler = $.types.define(function () {
+        var _context;
+        var _lastSlideRight;
+
+        var toggleElement = function () {
+            $(_context).msg('toggle');
+        };
+        var setEvents = function () {
+            $(_context).eventUnsubscribe('onSlideRight', toggleElement);
+            $(_context).eventUnsubscribe('onSlideLeft', toggleElement);
+            $(_context).eventSubscribe('onSlideRight', toggleElement);
+            $(_context).eventSubscribe('onSlideLeft', toggleElement);
+        };
+
+        var self = {
+            init: function (context) {
+                _context = context;
+                _lastSlideRight = false;
+            },
+            slideToggle: function () {
+                setEvents();
+                if (_lastSlideRight) {
+                    $(_context).msg('slideLeft');
+                    _lastSlideRight = false;
+                } else {
+                    $(_context).msg('slideRight');
+                    _lastSlideRight = true;
+                }
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+<p>
+    Since this behavior only makes message calls for other behaviors and wires up events,
+    it didn't need any modification to work with our new queueable versions of Toggler
+    and Slider. The only change was to the namespace for it's dependencies.</p>
+<p>
+    The following markup demonstrates the combined effect of messaging, DOM data, combined
+    behaviors, eventing, and queueing.</p>
+<pre>&lt;div class=&quot;square mas&quot; data-behaviors-lazy=&quot;Docs.Demos.Queueable.Toggler 
+    Docs.Demos.Queueable.Slider Docs.Demos.Queueable.SlideToggler&quot;
+    data-slide-time=&quot;2000&quot; data-slide-distance=&quot;200&quot; data-toggle-class=&quot;bg-red bg-green&quot;&gt;
+    &lt;div class=&quot;square bg-red pointer toggle-on&quot; 
+        onclick=&quot;$(this).parent().enqueueMsg(&#39;slideToggle&#39;)
+            .enqueueMsg(&#39;slideToggle&#39;).unqueue()&quot;&gt;
+    &lt;/div&gt;                
+&lt;/div&gt;</pre>
+<p>
+    Click the square below to see it in action.</p>
+<div class="square mas" data-behaviors-lazy="Docs.Demos.Queueable.Toggler Docs.Demos.Queueable.Slider Docs.Demos.Queueable.SlideToggler"
+    data-slide-time="2000" data-slide-distance="200" data-toggle-class="bg-red bg-green">
+    <div class="square bg-red pointer toggle-on" onclick="$(this).parent().enqueueMsg('slideToggle').enqueueMsg('slideToggle').unqueue()">
+    </div>
+</div>

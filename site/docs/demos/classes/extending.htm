@@ -1,0 +1,157 @@
+﻿<div class="span1 col1 right center">
+    <a class="center" href="downloads/demos/classes/extend.zip">
+        <div class="download center">
+        </div>
+    </a>
+</div>
+<h3>
+    Demos - Objects & Inheritence - Extending an Object</h3>
+<hr>
+<p>
+    Extending objects in TactJS is very simple. Let's take a look at a simple Docs.Demos.Pet
+    object...
+</p>
+<pre>
+(function ($) { 
+    // Define a namespace
+    $.types.ns("Docs.Demos");
+    // Define the Pet class.
+    Docs.Demos.Pet = $.types.define(function(name) {
+        // Private Members
+        var _name = name
+        var _walkCount = 0;
+
+        // Public Members
+	    var self = {
+            walk: function(){
+                _walkCount++;
+                return  _name
+                    + " has been walked "
+                    + _walkCount
+                    + " time(s) today.";
+            }
+        };
+        return self;
+    });
+})(jQuery);
+</pre>
+<p>
+    Now let's create a Docs.Demos.Dog object which will extend Docs.Demos.Pet and have
+    it's own distinct method "speak()" which is not part of the Docs.Demos.Pet object.
+</p>
+<pre>
+(function ($) { 
+    // Define a namespace
+    $.types.ns("Docs.Demos");
+    // Define the Dog class.
+    Docs.Demos.Dog = $.types.extend(Docs.Demos.Pet, function(name) {
+        // Private Members
+        var _speak = "Woof!";
+
+        // Public Members
+	    var self = {
+            speak: function(){
+                return name + " says " + _speak;
+            }
+        };
+        return self;
+    });
+})(jQuery);
+</pre>
+<p>
+    Notice the line, <b>"Docs.Demos.Dog = $.types.extend(Docs.Demos.Pet, function(name)
+        {"</b> where we use $.types.extend and pass in the class we wish to extend as
+    the first parameter. The extended class Docs.Demos.Pet will be accessed through
+    the "self.superclass" keyword, but only its public methods will be available to
+    Docs.Demos.Dog. The private members in the superclass are therefor more appropriately
+    described as "internal" for the purposes of TactJS, and the only way to make these
+    members accessible would be to add accessors to the "self" of Docs.Demos.Pet.
+</p>
+<p>
+    Also note that "name" is part of the declaration of "Docs.Demos.Dog." In order for
+    the extended class to function properly, it's constructor contract must be maintained.
+    In this case, "name" will be passed to the constructor of the superclass of Docs.Demos.Dog
+    and stored as a private member. It will be this private member that is called upon
+    when the walk() command is invoked against Docs.Demos.Dog.
+</p>
+<p>
+    Now let's declare a new Docs.Demos.Dog object that we can command to walk and speak...
+</p>
+<pre>
+    // Instantiate a new Docs.Demos.Dog object
+    var dog = new Docs.Demos.Dog("Taboo");
+
+    // Invoke the speak and walk commands on dog
+    dog.speak(); // Taboo says Woof!
+    dog.walk(); // Taboo has been walked 1 time(s) today.
+</pre>
+<p>
+    That's all there is to it!
+</p>
+<p>
+    Now let's change Docs.Demos.Pet to provide an accessor to it's private "_name" member
+    so we can use it from the Docs.Demos.Dog object, or directly since it will be in
+    the object's public space.
+</p>
+<pre>
+(function ($) { 
+    (function ($) { 
+    // Define a namespace
+    $.types.ns("Docs.Demos");
+    // Define the Pet class.
+    Docs.Demos.Pet = $.types.define(function(name) {
+        // Private Members
+        var _name = name
+        var _walkCount = 0;
+
+        // Public Members
+	    var self = {
+            walk: function(){
+                _walkCount++;
+                return  _name
+                    + " has been walked "
+                    + _walkCount
+                    + " time(s) today.";
+            },
+            name: function(){
+                return _name;
+            }
+        };
+        return self;
+    });
+})(jQuery);
+</pre>
+<p>
+    Now we can change our Docs.Demos.Dog class to use the "name" accessor in its superclass...
+</p>
+<pre>
+(function ($) { 
+    // Define a namespace
+    $.types.ns("Docs.Demos");
+    // Define the Dog class.
+    Docs.Demos.Dog = $.types.extend(Docs.Demos.Pet, function(name) {
+        // Private Members
+        var _speak = "Woof!";
+
+        // Public Members
+	    var self = {
+            speak: function(){
+                return self.superclass.name() + " says " + _speak;
+            }
+        };
+        return self;
+    });
+})(jQuery);
+</pre>
+<p>
+    Our output for the example above should remain the same, but now our pet's name
+    is both stored and accessed from the same place in all cases.
+</p>
+<pre>
+    // Instantiate a new Docs.Demos.Dog object
+    var dog = new Docs.Demos.Dog("Taboo");
+
+    // Invoke the speak and walk commands on dog
+    dog.speak(); // Taboo says Woof!
+    dog.walk(); // Taboo has been walked 1 time(s) today.
+</pre>

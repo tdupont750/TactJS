@@ -1,0 +1,24 @@
+﻿<h3>
+    Features - Behaviors - Events</h3>
+<hr />
+<p>
+    Any element that has a behavior declared on it gets an event collection object added
+    to it. This event collection keeps track of anything that is subscribed to it, and
+    invokes any delegates when an event is fired.
+</p>
+<p>
+    In TactJS behaviors, there is no need to explicitly create events. Simply firing
+    an event is enough. Subscribing to events works the same way; you simply call eventSubscribe(eventName,
+    delegate) against an element. Here's how easy it is to subscribe, unsibscribe, and
+    fire events on TactJS behaviors:
+</p>
+<pre>
+$(_context).eventSubscribe('onToggle', toggleElement);
+$(_context).eventUnsubscribe('onToggle', toggleElement);
+$(_context).events('onToggle').fire();
+</pre>
+<p>
+    You don't have to have a behavior declared on an element to bind or subscribe to
+    an event on it. Any element will do, although we recommend sticking to element with
+    behaviors on them just because it should make your scripts easier to understand.
+</p>

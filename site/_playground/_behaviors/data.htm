@@ -1,0 +1,278 @@
+﻿<h3>
+    DOM Data and Behaviors</h3>
+<p>
+    DOM Data provides a mechanism for declaring default values that are passed to behaviors
+    on initialization. Simply adding a new attribute to the same element as the behavior
+    will make the value of that attribute accessible to the behaviors on the element.</p>
+<p>
+    To demonstrate DOM Data, let's look at a new behavior called <strong>Docs.Demos.Slider</strong>
+    which can consume DOM Data.</p>
+<h3>
+    Docs.Demos.Slider</h3>
+<pre>// Docs.Demos.Slider :: Slides the element a specified number of pixels left or right.
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.Slider = $.types.define(function () {
+        var _context;
+        var _data;
+        var _slideDistance;
+        var _slideTime;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _data = $(_context).domdata();
+                _slideDistance = (_data.slideDistance ? _data.slideDistance : 100);
+                _slideTime = (_data.slideTime ? _data.slideTime : 1000);
+            },
+            slideRight: function () {
+                $(_context).animate({ marginLeft: '+=' + _slideDistance + 'px' }, 
+                    _slideTime);
+            },
+            slideLeft: function () {
+                $(_context).animate({ marginLeft: '-=' + _slideDistance + 'px' }, 
+                    _slideTime);
+            }
+        };
+        return self;
+    });
+})(jQuery);           
+            </pre>
+<p>
+    This behavior has a couple of methods we can use to slide an element left or right
+    by a set number of pixes, over a set amount of time. Notice that in the <strong>init</strong>
+    method, we now set <strong>_data</strong>. It will contain values from all of the
+    attributes we add to the element with this behavior that start will <strong>data-</strong>
+    per the HTML5 spec.</p>
+<p>
+    You can see in the init method we also set <strong>_slideDistance</strong> and <strong>
+        _slideTime</strong> from <strong>_data.slideDistance</strong> and <strong>_data.slideDistance</strong>
+    respectively. Those names we dot off of <strong>_data</strong> correspond exactly
+    to the postfix for our "<strong>data-</strong>" attributes so we should have <strong>
+        data-slide-distance</strong> and <strong>data-slide-time</strong> declared on
+    our element to override the default values.
+</p>
+<p>
+    Now let's see how the markup for this might look.
+</p>
+<pre>&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElement&#39;).msg(&#39;slideRight&#39;)&quot; 
+    value=&quot;Slide Right&quot; /&gt;
+&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElement&#39;).msg(&#39;slideLeft&#39;)&quot; 
+    value=&quot;Slide Left&quot; /&gt;
+&lt;div class=&quot;square mas&quot; data-behavior=&quot;Docs.Demos.Slider&quot; data-slide-distance=&quot;200&quot; 
+    data-slide-time=&quot;2000&quot; id=&quot;slideElement&quot;&gt;
+    &lt;div class=&quot;square bg-red pointer&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+<input type="button" onclick="$('#slideElement').msg('slideLeft')" value="Slide Left" />
+<input type="button" onclick="$('#slideElement').msg('slideRight')" value="Slide Right" />
+<div class="square mas" data-behaviors-lazy="Docs.Demos.Slider" data-slide-distance="200"
+    data-slide-time="2000" id="slideElement">
+    <div class="square bg-red pointer">
+    </div>
+</div>
+<p>
+    So our values for <strong>data-slideDistance</strong> and <strong>data-slideTime</strong>
+    are set to 200 and 2000 respectively above. Let's set them to twice that to show
+    these values changing the way this behavior acts.
+</p>
+<pre>&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElementLong&#39;).msg(&#39;slideRight&#39;)&quot; 
+    value=&quot;Slide Right&quot; /&gt;
+&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElementLong&#39;).msg(&#39;slideLeft&#39;)&quot; 
+    value=&quot;Slide Left&quot; /&gt;
+&lt;div class=&quot;square mas&quot; data-behavior=&quot;Docs.Demos.Slider&quot; data-slide-distance=&quot;400&quot; 
+    data-slide-time=&quot;4000&quot; id=&quot;slideElementLong&quot;&gt;
+    &lt;div class=&quot;square bg-red pointer&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+<input type="button" onclick="$('#slideElementLong').msg('slideLeft')" value="Slide Left" />
+<input type="button" onclick="$('#slideElementLong').msg('slideRight')" value="Slide Right" />
+<div class="square mas" data-behaviors-lazy="Docs.Demos.Slider" data-slide-distance="400"
+    data-slide-time="4000" id="slideElementLong">
+    <div class="square bg-red pointer">
+    </div>
+</div>
+<p>
+    Up until now domdata has done nothing different than jQuery's data() feature. In
+    the above scenarios you could use either jQuery.data() or domdata() and the demos
+    would work.</p>
+<p>
+    There are two key featues of domdata that distinguish it from jQuery.data():
+</p>
+<ul>
+    <li><strong>Prefixing</strong>
+        <ul>
+            <li>The HTML5 spec specifies that data attributes on an element be prefixed with "data-"
+                which is what both jQuery data() and domdata() adhere to. Additionally, domdata
+                gives you the abitity to specify a prefix to gather data from which is useful when
+                you have a lot of parameters which apply to specific behaviors on an element. Using
+                different prefixes can make keeping track of your declared data a bit easier in
+                certain cases. </li>
+        </ul>
+    </li>
+    <li><strong>Recursion</strong>
+        <ul>
+            <li>domdata() allows you to get all the data from elements recursively down the dom
+                tree from the parent element. Using domdata, you can get all the values of anything
+                starting with a specified prefix from all children. You can even specify a depth
+                to resurse.</li>
+        </ul>
+    </li>
+</ul>
+<p>
+    Let's change our above examples to two separate behaviors called <strong>Docs.Demos.RightSlider</strong>
+    and <strong>Docs.Demos.LeftSlider</strong>
+</p>
+<h3>
+    Docs.Demos.RightSlider</h3>
+<pre>// Docs.Demos.RightSlider :: Slides the element a specified number of pixels right.
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.RightSlider = $.types.define(function () {
+        var _context;
+        var _data;
+        var _slideDistance;
+        var _slideTime;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _data = $(_context).domdata(false, 'rightslider');
+                _slideDistance = (_data.slideDistance ? _data.slideDistance : 100);
+                _slideTime = (_data.slideTime ? _data.slideTime : 1000);
+            },
+            slideRight: function () {
+                $(_context).animate({ marginLeft: '+=' + _slideDistance + 'px' }, 
+                    _slideTime);
+            }
+        };
+        return self;
+    });
+})(jQuery);
+            </pre>
+<h3>
+    Docs.Demos.LeftSlider</h3>
+<pre>// Docs.Demos.LeftSlider :: Slides the element a specified number of pixels left.
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.LeftSlider = $.types.define(function () {
+        var _context;
+        var _data;
+        var _slideDistance;
+        var _slideTime;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _data = $(_context).domdata(false, 'leftslider');
+                _slideDistance = (_data.slideDistance ? _data.slideDistance : 100);
+                _slideTime = (_data.slideTime ? _data.slideTime : 1000);
+            },
+            slideLeft: function () {
+                $(_context).animate({ marginLeft: '-=' + _slideDistance + 'px' }, 
+                    _slideTime);
+            }
+        };
+        return self;
+    });
+})(jQuery);
+            </pre>
+<p>
+    Notice the change to the init method in each behavior. Now we're passing parameters
+    to domdata(). <strong>False</strong> means we will not recursively aggregate data
+    from child elements. This could be true for full-depth recursion, or a number to
+    specify the depth of recursion. <strong>rightslider</strong> and <strong>leftslider</strong>
+    are the prefixes we can use to specify data attributes on our element which will
+    be used only be the behaviors looking for them. If we combine these behaviors on
+    the same element (more on combinining behaviors in the next section) we can specify
+    which attributes go with which behavior using different prefixes.
+</p>
+<p>
+    Let's see how this looks in markup:
+</p>
+<pre>&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElementLong2&#39;).msg(&#39;slideLeft&#39;)&quot; 
+    value=&quot;Slide Left&quot; /&gt;
+&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElementLong2&#39;).msg(&#39;slideRight&#39;)&quot; 
+    value=&quot;Slide Right&quot; /&gt;
+&lt;div class=&quot;square mas&quot; data-behaviors-lazy=&quot;Docs.Demos.RightSlider Docs.Demos.LeftSlider&quot; 
+    rightslider-slide-distance=&quot;400&quot; rightslider-slide-time=&quot;4000&quot; 
+    leftslider-slide-distance=&quot;200&quot; leftslider-slide-time=&quot;2000&quot; 
+    id=&quot;slideElementLong2&quot;&gt;
+    &lt;div class=&quot;square bg-red pointer&quot;&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+            </pre>
+<p>
+    This is a contrived example of course and only serves to demonstrate a very basic
+    application of specialized prefixes. Notice now we have different value for the
+    same variables under the two different prefixes. These will affect the way the square
+    behaves; in this case it will move 400 pixels to the right over 4 seconds, and 200
+    pixels to the left over two seconds when the Slide Left or Slide Right buttons are
+    clicked.
+</p>
+<input type="button" onclick="$('#slideElementLong2').msg('slideLeft')" value="Slide Left" />
+<input type="button" onclick="$('#slideElementLong2').msg('slideRight')" value="Slide Right" />
+<div class="square mas" data-behaviors-lazy="Docs.Demos.RightSlider Docs.Demos.LeftSlider"
+    rightslider-slide-distance="400" rightslider-slide-time="4000" leftslider-slide-distance="200"
+    leftslider-slide-time="2000" id="slideElementLong2">
+    <div class="square bg-red pointer">
+    </div>
+</div>
+<p>
+    To demonstrate recursion in domdata(), let's take a look at a slightly modified
+    version of Docs.Demos.Slider called <strong>Docs.Demos.DataSlider</strong>:
+</p>
+<h3>
+    Docs.Demos.DataSlider</h3>
+<pre>// Docs.Demos.Slider :: Slides the element a specified number of pixels left or right.
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.DataSlider = $.types.define(function () {
+        var _context;
+        var _data;
+        var _slideDistance;
+        var _slideTime;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _data = $(_context).domdata(true);
+                _slideDistance = (_data.slideDistance ? _data.slideDistance : 100);
+                _slideTime = (_data.slideTime ? _data.slideTime : 1000);
+            },
+            slideRight: function () {
+                $(_context).animate({ marginLeft: '+=' + _slideDistance + 'px' }, 
+                    _slideTime);
+            },
+            slideLeft: function () {
+                $(_context).animate({ marginLeft: '-=' + _slideDistance + 'px' }, 
+                    _slideTime);
+            }
+        };
+        return self;
+    });
+})(jQuery);
+            </pre>
+<p>
+    Now that we've specified that we want to recursivly gather data, we will have access
+    to the data- attributes of all the children of our element through a single call
+    to domdata(true). This means we can declare our data on the markup in any children.
+    Below is an example. Notice that the data-slide-time is declared on a child of the
+    element on which Docs.Demos.DataSlider is instantiated.
+</p>
+<pre>&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElementLong3&#39;).msg(&#39;slideLeft&#39;)&quot; 
+    value=&quot;Slide Left&quot; /&gt;
+&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElementLong3&#39;).msg(&#39;slideRight&#39;)&quot; 
+    value=&quot;Slide Right&quot; /&gt;
+&lt;div class=&quot;square mas&quot; data-behaviors-lazy=&quot;Docs.Demos.DataSlider&quot; 
+    data-slide-distance=&quot;400&quot; id=&quot;slideElementLong3&quot;&gt;
+    &lt;div class=&quot;square bg-red pointer&quot; data-slide-time=&quot;4000&quot;&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+            </pre>
+<input type="button" onclick="$('#slideElementLong3').msg('slideLeft')" value="Slide Left" />
+<input type="button" onclick="$('#slideElementLong3').msg('slideRight')" value="Slide Right" />
+<div class="square mas" data-behaviors-lazy="Docs.Demos.DataSlider" data-slide-distance="400"
+    id="slideElementLong3">
+    <div class="square bg-red pointer" data-slide-time="4000">
+    </div>
+</div>
+<p>
+    Again, it bears mentioning that this is a contrived example only to demonstrate
+    what is possible with domdata. It is recommended that you try to avoid the need
+    to use these features, but they are very valuable when they are called for.
+</p>

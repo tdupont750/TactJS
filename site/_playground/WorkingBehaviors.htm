@@ -1,0 +1,1038 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>TactJS :: Working With Behaviors</title>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css"
+        type="text/css" media="all">
+    <style>
+        .api ul { list-style-type: none; }
+        .api pre { padding-left: 40px; }
+        .api h4 { padding-left: 20px; }
+        .pointer { cursor: pointer; }
+        .square { height: 100px; width: 100px; }
+        .bg-red { background-color: Red; }
+        .bg-green { background-color: Green; }
+        .toggle-off { display: none; }
+        .toggle-on { display: block; }
+        .block { margin: 5px; float: left; }
+        .mas { margin: 5px; }
+    </style>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../scripts/jquery/json2.js"></script>
+    <script type="text/javascript" src="../scripts/jquery/livequery.js"></script>
+    <script type="text/javascript" src="../scripts/core.js?v=12"></script>
+    <script type="text/javascript" src="../scripts/domdata.js?v=1"></script>
+    <script type="text/javascript" src="../scripts/Events.js?v=1"></script>
+    <script type="text/javascript" src="../scripts/Log.js?v=1"></script>
+    <script type="text/javascript" src="../scripts/BootLoader.js?v=1"></script>
+    <script type="text/javascript" src="../scripts/behaviors.js?v=1"></script>
+    <script type="text/javascript">
+        _scriptsRoot = "../Scripts/";    
+    </script>
+</head>
+<body>
+    <div>
+        <p style="float: left; margin: 0px;">
+            <a href="../Documentation.htm">Code Documentation</a> | <a href="WorkingBehaviors.htm">
+                Working With Behaviors</a> | <a href="TestSpace.htm">Test Space</a>
+            <br />
+            <strong>Working With Behaviors</strong>
+        </p>
+        <p style="text-align: right; float: right; display: inline-block; margin: 0px;">
+            <a href="http://www.tomdupont.net/">www.tomdupont.net</a><br />
+            <a href="http://www.zachmayer.net/">www.zachmayer.net</a></p>
+        <div style="clear: both;">
+            <br />
+        </div>
+    </div>
+    <div data-behaviors-eager="Docs.Tabs" style="display: none;">
+        <ul>
+            <li><a href="#intro">Intro to Behaviors</a></li>
+            <li><a href="#msg">Message and Broadcast</a></li>
+            <li><a href="#data">Using DOM Data</a></li>
+            <li><a href="#combine">Combining Behaviors</a></li>
+            <li><a href="#event">Using Events</a></li>
+            <li><a href="#queue">Message Queue</a></li>
+        </ul>
+        <div id="intro" class="api">
+            <h3>
+                Behaviors in TactJS: An Introduction</h3>
+            <p>
+                In order to work with behaviors in TactJS it is first important to define a few
+                key terms.</p>
+            <ul>
+                <li><strong>Behavior</strong>
+                    <ul>
+                        <li>A behavior is a TactJS class that is declared in a webpage's markup and works
+                            as a closure which can be reused. It is typically declared in it's own file.</li>
+                    </ul>
+                </li>
+                <li><strong>Behavior Namespace</strong>
+                    <ul>
+                        <li>Behaviors are intended to use a namespace that reflects the actual location of the
+                            class in the website's script directory. This is so that the $.bootloader can find
+                            the behavior required by simply looking at it's declaration in markup. It also aides
+                            developers in discovering which behaviors are interacting with a peice of markup
+                            quickly, and where to find those behaviors in the web project.</li>
+                    </ul>
+                </li>
+                <li><strong>Message</strong>
+                    <ul>
+                        <li>In order to call a method in a behavior, a message can be sent targeting the element
+                            that behavior is declared on. Only the instance of the behavior on the targeted
+                            element will be affected.</li>
+                    </ul>
+                </li>
+                <li><strong>Broadcast</strong>
+                    <ul>
+                        <li>Broadcast is like message, except that it will target all the behaviors within the
+                            targeted element, sending the message to each of them.</li>
+                    </ul>
+                </li>
+                <li><strong>Container/Context</strong>
+                    <ul>
+                        <li>The element on which a behavior is declared. Behaviors are designed to only interact
+                            within their context so that the behavior can be reused with no interference</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>
+                Now let's look at a very basic behavior called <strong>Docs.Demos.Toggler</strong> which
+                has one method to toggle the visibility of first children inside it's container.</p>
+            <h3>
+                Docs.Demos.Toggler</h3>
+            <pre>// Docs.Demos.Toggler :: Toggles visibility of first child elements
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.Toggler = $.types.define(function () {
+        var _context;
+        var _config;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _config = $(_context).data();
+                if (_config.behaviorsEager)
+                    self.toggle();
+            },
+            toggle: function () {
+                $(_context).children().toggleClass("toggle-off toggle-on");
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+            <p>
+                This simple behavior has all the major pieces of any behavior.</p>
+            <ul>
+                <li><strong>$.types.ns("Name.Space")</strong>
+                    <ul>
+                        <li>Since behaviors are inteded to be loaded on demand, it's important that their namespace
+                            be declared with each class declaration so it is always available. The namespace
+                            must correspond to the location in the filesystem where the behavior can be found.
+                            In this case, the behavior is at "<strong>Core/Docs/Toggler.js</strong>" inside
+                            the script directory.</li>
+                    </ul>
+                </li>
+                <li><strong>_context</strong>
+                    <ul>
+                        <li>Used to store the context passed to the behavior instance when the behavior is parsed.</li>
+                    </ul>
+                </li>
+                <li><strong>self</strong>
+                    <ul>
+                        <li>The "public scope" for the behavior. Methods declared here can be invoked via message
+                            or broadcast. Typcally contains <strong>init</strong>.</li>
+                    </ul>
+                </li>
+                <li><strong>init</strong>
+                    <ul>
+                        <li>A special method in self invoked when the behavior is first initialized in the DOM.
+                            It is passed the behavior's context. Init is usually used to store the context and
+                            configuration data in a private scope variable and perform any required first load
+                            actions. If the element uses "data-behaviors-eager" then init will be run as soon
+                            as the element on which it is declared is added to the DOM.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>
+                There are two ways to declare a behavior on an element.
+                <ul>
+                    <li><strong>data-behaviors-lazy</strong>
+                        <ul>
+                            <li>This attribute name indicates that the behaviors on this element will only be loaded
+                                once they are requested via a message or broadcast to the element. This also means
+                                that if the behavior scripts are not already on the page, the bootloader will wait
+                                until the element receives a message to load the required scripts. </li>
+                        </ul>
+                    </li>
+                    <li><strong>data-behaviors-eager</strong>
+                        <ul>
+                            <li>Using this attribute tells the behaviors to load their required scripts through
+                                the bootloader (if necessecary), and run their <strong>init</strong> methods as
+                                soon as the element is added to the DOM.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </p>
+            <p>
+                Now let's see how to declare <strong>Docs.Demos.Toggler</strong> on an element with both
+                <strong>data-behaviors-lazy</strong> and <strong>data-behaviors-eager</strong></p>
+            <pre>&lt;div class=&quot;square mas&quot; div data-behaviors-lazy=&quot;Docs.Demos.Toggler&quot;&gt;
+    &lt;div class=&quot;bg-green square pointer toggle-off&quot; &gt;&lt;/div&gt;
+    &lt;div class=&quot;bg-red square pointer toggle-on&quot; &gt;&lt;/div&gt;
+&lt;/div&gt;                
+            </pre>
+            <div class="square mas" data-behaviors-lazy="Docs.Demos.Toggler">
+                <div class="bg-green square pointer toggle-off">
+                </div>
+                <div class="bg-red square pointer toggle-on">
+                </div>
+            </div>
+            <p>
+                Which produces this red square. Because we used <strong>data-behaviors-lazy</strong>,
+                nothing has changed from the original markup because the behavior has not yet been
+                initialized.</p>
+            <p>
+                Let's see what happens when we change the markup to use <strong>data-behaviors-eager</strong>...
+            </p>
+            <pre>&lt;div class=&quot;square mas&quot; data-behaviors-eager=&quot;Docs.Demos.Toggler&quot; &gt;
+    &lt;div class=&quot;bg-green square pointer toggle-off&quot; &gt;&lt;/div&gt;
+    &lt;div class=&quot;bg-red square pointer toggle-on&quot; &gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+            <div class="square mas" data-behaviors-eager="Docs.Demos.Toggler">
+                <div class="bg-green square pointer toggle-off">
+                </div>
+                <div class="bg-red square pointer toggle-on">
+                </div>
+            </div>
+            <p>
+                Viola! The elements are toggled in the init method, and now we see a green square!
+                Next let's look at <strong>message</strong> and <strong>broadcast</strong></p>
+        </div>
+        <div id="msg" class="api">
+            <h3>
+                Message and Broadcast</h3>
+            <p>
+                Message and broadcast are easy ways to interact with behaviors on specific elements
+                with very low coupling.
+            </p>
+            <ul>
+                <li><strong>message</strong>
+                    <ul>
+                        <li>Sending a message ($.fn.msg(cmd)) to an element with uninitialized behaviors will
+                            load and initialize all the behaviors on that element, and then send the message
+                            to the newly initialized behaviors.</li>
+                    </ul>
+                </li>
+                <li><strong>broadcast</strong>
+                    <ul>
+                        <li>Like message, sending a broadcast ($.fn.broadcast(cmd)) to an element will load
+                            and initialize all the behaviors on that element. It will also load and initialize
+                            all the behaviors on child elements and send the broadcast to them as well.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>
+                Let's take another look at <strong>Docs.Demos.Toggler</strong>...
+            </p>
+            <h3>
+                Message</h3>
+            <p>
+                Here we'll continue to use our <strong>Docs.Demos.Toggler</strong> class:</p>
+            <pre>// Docs.Demos.Toggler :: Toggles visibility of first child elements
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.Toggler = $.types.define(function () {
+        var _context;
+        var _config;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _config = $(_context).data();
+                if (_config.behaviorsEager)
+                    self.toggle();
+            },
+            toggle: function () {
+                $(_context).children().toggleClass("toggle-off toggle-on");
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+            <p>
+                Notice the method <strong>toggle</strong> in the behavior's self. When we send a
+                message or broadcast of <strong>"toggle"</strong> to an element with <strong>Docs.Demos.Toggler</strong>,
+                we will invoke the <strong>toggle</strong> method for that element.
+            </p>
+            <p>
+                Here's the markup we'll use to see message work. Notice that there is <strong></strong>
+                no data-init="true"</strong> on the element. When a message is sent to an element
+                with a behavior declared on it, that behavior is loaded onto the page via the bootloader,
+                and then the behavior is initialized on the element, and only then is the message
+                sent. Of course, if the behavior's script file is already loaded, that step will
+                be skipped, likewise if the behavior has already been initialized.
+            </p>
+            <pre>&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#toggleOnClick&#39;).msg(&#39;toggle&#39;)&quot; value=&quot;Toggle Single Element&quot; /&gt;            
+&lt;div class=&quot;square mas&quot; data-behaviors-eager=&quot;Docs.Demos.Toggler&quot; id=&quot;toggleOnClick&quot;&gt;
+    &lt;div class=&quot;bg-green square pointer toggle-off&quot; &gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;bg-red square pointer toggle-on&quot;&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+            </pre>
+            <input type="button" onclick="$('#toggleOnClick').msg('toggle')" value="Toggle Single Element" />
+            <div class="square mas" data-behaviors-lazy="Docs.Demos.Toggler" id="toggleOnClick">
+                <div class="bg-green square pointer toggle-off">
+                </div>
+                <div class="bg-red square pointer toggle-on">
+                </div>
+            </div>
+            <h3>
+                Broadcast</h3>
+            <p>
+                The only difference between message and broadcast is that broadcast will also send
+                a message to all the children of the element that is broadcast to. To demonstrate,
+                we'll create several of the toggler-squares as above inside a div which does <strong>
+                    not</strong> need a behavior in order for broadcast to work. Since broadcast
+                leverages message to do it's work, the same rules for loading behavior js files
+                and initialization apply. Broadcast will load the required behavior js files onto
+                the page and initialize the behaviors on their elements if necessary</p>
+            <pre>&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#toggleBroadcast&#39;).broadcast(&#39;toggle&#39;)&quot; value=&quot;Toggle Multiple Elements&quot; /&gt;
+&lt;div id=&quot;toggleBroadcast&quot;&gt;
+    &lt;div class=&quot;square block&quot; data-behaviors-lazy=&quot;Docs.Demos.Toggler&quot; class=&quot;block&quot;&gt;
+        &lt;div class=&quot;bg-green square pointer toggle-off&quot;&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;bg-red square pointer toggle-on&quot;&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;square block&quot; data-behaviors-lazy=&quot;Docs.Demos.Toggler&quot; class=&quot;block&quot;&gt;
+        &lt;div class=&quot;bg-green square pointer toggle-off&quot;&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;bg-red square pointer toggle-on&quot;&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;square block&quot; data-behaviors-lazy=&quot;Docs.Demos.Toggler&quot; class=&quot;block&quot;&gt;
+        &lt;div class=&quot;bg-green square pointer toggle-off&quot;&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;bg-red square pointer toggle-on&quot;&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;            
+            </pre>
+            <input type="button" onclick="$('#toggleBroadcast').broadcast('toggle')" value="Toggle Multiple Elements" />
+            <div id="toggleBroadcast">
+                <div class="square block" data-behaviors-lazy="Docs.Demos.Toggler" class="block">
+                    <div class="bg-green square pointer toggle-off">
+                    </div>
+                    <div class="bg-red square pointer toggle-on">
+                    </div>
+                </div>
+                <div class="square block" data-behaviors-lazy="Docs.Demos.Toggler" class="block">
+                    <div class="bg-green square pointer toggle-off">
+                    </div>
+                    <div class="bg-red square pointer toggle-on">
+                    </div>
+                </div>
+                <div class="square block" data-behaviors-lazy="Docs.Demos.Toggler" class="block">
+                    <div class="bg-green square pointer toggle-off">
+                    </div>
+                    <div class="bg-red square pointer toggle-on">
+                    </div>
+                </div>
+            </div>
+            <div style="clear: both;">
+            </div>
+        </div>
+        <div id="data" class="api">
+            <h3>
+                DOM Data and Behaviors</h3>
+            <p>
+                DOM Data provides a mechanism for declaring default values that are passed to behaviors
+                on initialization. Simply adding a new attribute to the same element as the behavior
+                will make the value of that attribute accessible to the behaviors on the element.</p>
+            <p>
+                To demonstrate DOM Data, let's look at a new behavior called <strong>Docs.Demos.Slider</strong>
+                which can consume DOM Data.</p>
+            <h3>
+                Docs.Demos.Slider</h3>
+            <pre>// Docs.Demos.Slider :: Slides the element a specified number of pixels left or right.
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.Slider = $.types.define(function () {
+        var _context;
+        var _data;
+        var _slideDistance;
+        var _slideTime;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _data = $(_context).domdata();
+                _slideDistance = (_data.slideDistance ? _data.slideDistance : 100);
+                _slideTime = (_data.slideTime ? _data.slideTime : 1000);
+            },
+            slideRight: function () {
+                $(_context).animate({ marginLeft: '+=' + _slideDistance + 'px' }, _slideTime);
+            },
+            slideLeft: function () {
+                $(_context).animate({ marginLeft: '-=' + _slideDistance + 'px' }, _slideTime);
+            }
+        };
+        return self;
+    });
+})(jQuery);           
+            </pre>
+            <p>
+                This behavior has a couple of methods we can use to slide an element left or right
+                by a set number of pixes, over a set amount of time. Notice that in the <strong>init</strong>
+                method, we now set <strong>_data</strong>. It will contain values from all of the
+                attributes we add to the element with this behavior that start will <strong>data-</strong>
+                per the HTML5 spec.</p>
+            <p>
+                You can see in the init method we also set <strong>_slideDistance</strong> and <strong>
+                    _slideTime</strong> from <strong>_data.slideDistance</strong> and <strong>_data.slideDistance</strong>
+                respectively. Those names we dot off of <strong>_data</strong> correspond exactly
+                to the postfix for our "<strong>data-</strong>" attributes so we should have <strong>
+                    data-slide-distance</strong> and <strong>data-slide-time</strong> declared on
+                our element to override the default values.
+            </p>
+            <p>
+                Now let's see how the markup for this might look.
+            </p>
+            <pre>&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElement&#39;).msg(&#39;slideRight&#39;)&quot; value=&quot;Slide Right&quot; /&gt;
+&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElement&#39;).msg(&#39;slideLeft&#39;)&quot; value=&quot;Slide Left&quot; /&gt;
+&lt;div class=&quot;square mas&quot; data-behavior=&quot;Docs.Demos.Slider&quot; data-slide-distance=&quot;200&quot; data-slide-time=&quot;2000&quot; id=&quot;slideElement&quot;&gt;
+    &lt;div class=&quot;square bg-red pointer&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+            <input type="button" onclick="$('#slideElement').msg('slideLeft')" value="Slide Left" />
+            <input type="button" onclick="$('#slideElement').msg('slideRight')" value="Slide Right" />
+            <div class="square mas" data-behaviors-lazy="Docs.Demos.Slider" data-slide-distance="200"
+                data-slide-time="2000" id="slideElement">
+                <div class="square bg-red pointer">
+                </div>
+            </div>
+            <p>
+                So our values for <strong>data-slideDistance</strong> and <strong>data-slideTime</strong>
+                are set to 200 and 2000 respectively above. Let's set them to twice that to show
+                these values changing the way this behavior acts.
+            </p>
+            <pre>&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElementLong&#39;).msg(&#39;slideRight&#39;)&quot; value=&quot;Slide Right&quot; /&gt;
+&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElementLong&#39;).msg(&#39;slideLeft&#39;)&quot; value=&quot;Slide Left&quot; /&gt;
+&lt;div class=&quot;square mas&quot; data-behavior=&quot;Docs.Demos.Slider&quot; data-slide-distance=&quot;400&quot; data-slide-time=&quot;4000&quot; id=&quot;slideElementLong&quot;&gt;
+    &lt;div class=&quot;square bg-red pointer&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+            <input type="button" onclick="$('#slideElementLong').msg('slideLeft')" value="Slide Left" />
+            <input type="button" onclick="$('#slideElementLong').msg('slideRight')" value="Slide Right" />
+            <div class="square mas" data-behaviors-lazy="Docs.Demos.Slider" data-slide-distance="400"
+                data-slide-time="4000" id="slideElementLong">
+                <div class="square bg-red pointer">
+                </div>
+            </div>
+            <p>
+                Up until now domdata has done nothing different than jQuery's data() feature. In
+                the above scenarios you could use either jQuery.data() or domdata() and the demos
+                would work.</p>
+            <p>
+                There are two key featues of domdata that distinguish it from jQuery.data():
+            </p>
+            <ul>
+                <li><strong>Prefixing</strong>
+                    <ul>
+                        <li>The HTML5 spec specifies that data attributes on an element be prefixed with "data-"
+                            which is what both jQuery data() and domdata() adhere to. Additionally, domdata
+                            gives you the abitity to specify a prefix to gather data from which is useful when
+                            you have a lot of parameters which apply to specific behaviors on an element. Using
+                            different prefixes can make keeping track of your declared data a bit easier in
+                            certain cases. </li>
+                    </ul>
+                </li>
+                <li><strong>Recursion</strong>
+                    <ul>
+                        <li>domdata() allows you to get all the data from elements recursively down the dom
+                            tree from the parent element. Using domdata, you can get all the values of anything
+                            starting with a specified prefix from all children. You can even specify a depth
+                            to resurse.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>
+                Let's change our above examples to two separate behaviors called <strong>Docs.Demos.RightSlider</strong>
+                and <strong>Docs.Demos.LeftSlider</strong>
+            </p>
+            <h3>
+                Docs.Demos.RightSlider</h3>
+            <pre>// Docs.Demos.RightSlider :: Slides the element a specified number of pixels right.
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.RightSlider = $.types.define(function () {
+        var _context;
+        var _data;
+        var _slideDistance;
+        var _slideTime;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _data = $(_context).domdata(false, 'rightslider');
+                _slideDistance = (_data.slideDistance ? _data.slideDistance : 100);
+                _slideTime = (_data.slideTime ? _data.slideTime : 1000);
+            },
+            slideRight: function () {
+                $(_context).animate({ marginLeft: '+=' + _slideDistance + 'px' }, _slideTime);
+            }
+        };
+        return self;
+    });
+})(jQuery);
+            </pre>
+            <h3>
+                Docs.Demos.LeftSlider</h3>
+            <pre>// Docs.Demos.LeftSlider :: Slides the element a specified number of pixels left.
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.LeftSlider = $.types.define(function () {
+        var _context;
+        var _data;
+        var _slideDistance;
+        var _slideTime;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _data = $(_context).domdata(false, 'leftslider');
+                _slideDistance = (_data.slideDistance ? _data.slideDistance : 100);
+                _slideTime = (_data.slideTime ? _data.slideTime : 1000);
+            },
+            slideLeft: function () {
+                $(_context).animate({ marginLeft: '-=' + _slideDistance + 'px' }, _slideTime);
+            }
+        };
+        return self;
+    });
+})(jQuery);
+            </pre>
+            <p>
+                Notice the change to the init method in each behavior. Now we're passing parameters
+                to domdata(). <strong>False</strong> means we will not recursively aggregate data
+                from child elements. This could be true for full-depth recursion, or a number to
+                specify the depth of recursion. <strong>rightslider</strong> and <strong>leftslider</strong>
+                are the prefixes we can use to specify data attributes on our element which will
+                be used only be the behaviors looking for them. If we combine these behaviors on
+                the same element (more on combinining behaviors in the next section) we can specify
+                which attributes go with which behavior using different prefixes.
+            </p>
+            <p>
+                Let's see how this looks in markup:
+            </p>
+            <pre>&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElementLong2&#39;).msg(&#39;slideLeft&#39;)&quot; value=&quot;Slide Left&quot; /&gt;
+&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElementLong2&#39;).msg(&#39;slideRight&#39;)&quot; value=&quot;Slide Right&quot; /&gt;
+&lt;div class=&quot;square mas&quot; data-behaviors-lazy=&quot;Docs.Demos.RightSlider Docs.Demos.LeftSlider&quot; rightslider-slide-distance=&quot;400&quot;
+    rightslider-slide-time=&quot;4000&quot; leftslider-slide-distance=&quot;200&quot; leftslider-slide-time=&quot;2000&quot; id=&quot;slideElementLong2&quot;&gt;
+    &lt;div class=&quot;square bg-red pointer&quot;&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+            </pre>
+            <p>
+                This is a contrived example of course and only serves to demonstrate a very basic
+                application of specialized prefixes. Notice now we have different value for the
+                same variables under the two different prefixes. These will affect the way the square
+                behaves; in this case it will move 400 pixels to the right over 4 seconds, and 200
+                pixels to the left over two seconds when the Slide Left or Slide Right buttons are
+                clicked.
+            </p>
+            <input type="button" onclick="$('#slideElementLong2').msg('slideLeft')" value="Slide Left" />
+            <input type="button" onclick="$('#slideElementLong2').msg('slideRight')" value="Slide Right" />
+            <div class="square mas" data-behaviors-lazy="Docs.Demos.RightSlider Docs.Demos.LeftSlider" rightslider-slide-distance="400"
+                rightslider-slide-time="4000" leftslider-slide-distance="200" leftslider-slide-time="2000"
+                id="slideElementLong2">
+                <div class="square bg-red pointer">
+                </div>
+            </div>
+            <p>
+                To demonstrate recursion in domdata(), let's take a look at a slightly modified
+                version of Docs.Demos.Slider called <strong>Docs.Demos.DataSlider</strong>:
+            </p>
+            <h3>
+                Docs.Demos.DataSlider</h3>
+            <pre>// Docs.Demos.Slider :: Slides the element a specified number of pixels left or right.
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.DataSlider = $.types.define(function () {
+        var _context;
+        var _data;
+        var _slideDistance;
+        var _slideTime;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _data = $(_context).domdata(true);
+                _slideDistance = (_data.slideDistance ? _data.slideDistance : 100);
+                _slideTime = (_data.slideTime ? _data.slideTime : 1000);
+            },
+            slideRight: function () {
+                $(_context).animate({ marginLeft: '+=' + _slideDistance + 'px' }, _slideTime);
+            },
+            slideLeft: function () {
+                $(_context).animate({ marginLeft: '-=' + _slideDistance + 'px' }, _slideTime);
+            }
+        };
+        return self;
+    });
+})(jQuery);
+            </pre>
+            <p>
+                Now that we've specified that we want to recursivly gather data, we will have access
+                to the data- attributes of all the children of our element through a single call
+                to domdata(true). This means we can declare our data on the markup in any children.
+                Below is an example. Notice that the data-slide-time is declared on a child of the
+                element on which Docs.Demos.DataSlider is instantiated.
+            </p>
+            <pre>&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElementLong3&#39;).msg(&#39;slideLeft&#39;)&quot; value=&quot;Slide Left&quot; /&gt;
+&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#slideElementLong3&#39;).msg(&#39;slideRight&#39;)&quot; value=&quot;Slide Right&quot; /&gt;
+&lt;div class=&quot;square mas&quot; data-behaviors-lazy=&quot;Docs.Demos.DataSlider&quot; data-slide-distance=&quot;400&quot;
+    id=&quot;slideElementLong3&quot;&gt;
+    &lt;div class=&quot;square bg-red pointer&quot; data-slide-time=&quot;4000&quot;&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+            </pre>
+            <input type="button" onclick="$('#slideElementLong3').msg('slideLeft')" value="Slide Left" />
+            <input type="button" onclick="$('#slideElementLong3').msg('slideRight')" value="Slide Right" />
+            <div class="square mas" data-behaviors-lazy="Docs.Demos.DataSlider" data-slide-distance="400"
+                id="slideElementLong3">
+                <div class="square bg-red pointer" data-slide-time="4000">
+                </div>
+            </div>
+            <p>
+                Again, it bears mentioning that this is a contrived example only to demonstrate
+                what is possible with domdata. It is recommended that you try to avoid the need
+                to use these features, but they are very valuable when they are called for.
+            </p>
+        </div>
+        <div id="combine" class="api">
+            <h3>
+                Combine Multiple Behaviors on the Same Element</h3>
+            <p>
+                Here we'll comebine the slide and toggle behaviors from the previous pages. Here
+                they are again for reference:
+            </p>
+            <h4>
+                Docs.Demos.Toggler</h4>
+            <pre>// Docs.Demos.Toggler :: Toggles visibility of first child elements
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.Toggler = $.types.define(function () {
+        var _context;
+        var _config;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _config = $(_context).data();
+                if (_config.behaviorsEager)
+                    self.toggle();
+            },
+            toggle: function () {
+                $(_context).children().toggleClass("toggle-off toggle-on");
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+            <h4>
+                Docs.Demos.Slider</h4>
+            <pre>// Docs.Demos.Slider :: Slides the element a specified number of pixels left or right.
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.Slider = $.types.define(function () {
+        var _context;
+        var _data;
+        var _slideDistance;
+        var _slideTime;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _data = $(_context).domdata();
+                _slideDistance = (_data.slideDistance ? _data.slideDistance : 100);
+                _slideTime = (_data.slideTime ? _data.slideTime : 1000);
+            },
+            slideRight: function () {
+                $(_context).animate({ marginLeft: '+=' + _slideDistance + 'px' }, _slideTime);
+            },
+            slideLeft: function () {
+                $(_context).animate({ marginLeft: '-=' + _slideDistance + 'px' }, _slideTime);
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+            <p>
+                Here's the markup we'll use to demonstrate these behaviors combined on one element.</p>
+            <pre>&lt;div class=&quot;square mas&quot; data-behaviors-lazy=&quot;Docs.Demos.Toggler Docs.Demos.Slider&quot; id=&quot;togglerSlider&quot; data-slide-distance=&quot;200&quot; data-slide-time=&quot;2000&quot;&gt;
+    &lt;div class=&quot;bg-green square pointer toggle-off&quot; onclick=&quot;$(this).parent().msg(&#39;toggle&#39;).msg(&#39;slideLeft&#39;)&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;bg-red square pointer toggle-on&quot; onclick=&quot;$(this).parent().msg(&#39;toggle&#39;).msg(&#39;slideRight&#39;)&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;           
+            </pre>
+            <p>
+                Click the red square below to see the demo in action.</p>
+            <div class="square mas" data-behaviors-lazy="Docs.Demos.Toggler Docs.Demos.Slider" id="togglerSlider"
+                data-slide-distance="200" data-slide-time="2000">
+                <div class="bg-green square pointer toggle-off" onclick="$(this).parent().msg('toggle').msg('slideLeft')">
+                </div>
+                <div class="bg-red square pointer toggle-on" onclick="$(this).parent().msg('toggle').msg('slideRight')">
+                </div>
+            </div>
+            <p>
+                Note that the order behaviors are declared makes a difference. The behaviors will
+                be loaded by the bootloader in the same order they are declared, and likewise, the
+                behaviors will be initialized in the same order they are declared. If you have a
+                behavior which depends on another behavior on the same element, be sure to declare
+                the dependant behavior last.
+            </p>
+        </div>
+        <div id="event" class="api">
+            <h3>
+                Using Events in Behaviors</h3>
+            <p>
+                Events or delegates function the way you would expect them to. An object method
+                subscribes to an event on another object which executes the subscriber methods when
+                the event fires. Here we'll go through an example of using events to enhance behaviors.</p>
+            <p>
+                For this page we'll need to modify our previous behaviors, <strong>Docs.Demos.Toggler</strong>
+                and <strong>Docs.Demos.Slider</strong> so that they can fire events. These modifications
+                could be made to our original behaviors and not affect their functionality in the
+                other examples, but for the sake of this document, I'm going to reproduce them under
+                the new namespace <strong>Docs.Demos.Eventable</strong>
+            </p>
+            <p>
+                Here are our modified behaviors:</p>
+            <h4>
+                Docs.Demos.Eventable.Toggler</h4>
+            <pre>// Docs.Demos.Eventable.Toggler :: Toggles visibility of first child elements. Fires an event on toggle
+(function ($) {
+    $.types.ns('Docs.Demos.Eventable');
+    Docs.Demos.Eventable.Toggler = $.types.define(function () {
+        var _context;
+        var self = {
+            init: function (context) {
+                _context = context;                
+                if ($(_context).domdata().init)
+                    self.toggle();
+            },
+            toggle: function () {
+                $(_context).children().toggleClass("toggle-off toggle-on");
+                $(_context).events("onToggle").fire();
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+            <h4>
+                Docs.Demos.Eventable.Slider</h4>
+            <pre>// Docs.Demos.Eventable.Slider :: Slides the element a specified number of pixels left or right. Fires events for it's actions.
+(function ($) {
+    $.types.ns('Docs.Demos.Eventable');
+    Docs.Demos.Eventable.Slider = $.types.define(function () {
+        var _context;
+        var _data;
+        var _slideDistance;
+        var _slideTime;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _data = $(_context).domdata();
+                _slideDistance = (_data.slideDistance ? _data.slideDistance : 100);
+                _slideTime = (_data.slideTime ? _data.slideTime : 1000);                
+            },
+            slideRight: function () {
+                $(_context).animate({ marginLeft: '+=' + _slideDistance + 'px' }, _slideTime, function () { $(_context).events("onSlideRight").fire(); });
+            },
+            slideLeft: function () {
+                $(_context).animate({ marginLeft: '-=' + _slideDistance + 'px' }, _slideTime, function () { $(_context).events("onSlideLeft").fire(); });                
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+            <p>
+                Note that <strong>toggle</strong>, <strong>slideRight</strong>, and <strong>slideLeft</strong>
+                all fire events. These events will fire whether or not there are any delegate functions
+                subscribed to those events. If delegates are never subscribed to these events, they
+                will never actually exist on the element and the "fire()" call will simply do nothing.
+            </p>
+            <p>
+                Let's look at an example of subscribing and unsibscribing events using <strong>Docs.Demos.Eventable.Toggler</strong>:</p>
+            <pre>&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#eventToggle&#39;).eventSubscribe(&#39;onToggle&#39;, function(){alert(&#39;toggled&#39;);})&quot;
+    value=&quot;Add Delegate&quot; /&gt;
+&lt;input type=&quot;button&quot; onclick=&quot;$(&#39;#eventToggle&#39;).eventUnsubscribe(&#39;onToggle&#39;, function(){alert(&#39;toggled&#39;);})&quot;
+    value=&quot;Remove Delegate&quot; /&gt;
+&lt;div class=&quot;square mas&quot; data-behaviors-eager=&quot;Docs.Demos.Eventable.Toggler&quot; id=&quot;eventToggle&quot; &gt;
+    &lt;div class=&quot;square bg-green pointer toggle-off&quot; onclick=&quot;$(this).parent().msg(&#39;toggle&#39;)&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;square bg-red pointer toggle-on&quot; onclick=&quot;$(this).parent().msg(&#39;toggle&#39;)&quot;&gt;
+    &lt;/div&gt;
+&lt;/div&gt;            
+            </pre>
+            <p>
+                Click "Add Delegate" below, then click the square. You should see an alert box that
+                says "toggled." Click "Remove Delegate" and then click the square again and the
+                alert box will not appear.</p>
+            <input type="button" onclick="$('#eventToggle').eventSubscribe('onToggle', function(){alert('toggled');})"
+                value="Add Delegate" />
+            <input type="button" onclick="$('#eventToggle').eventUnsubscribe('onToggle', function(){alert('toggled');})"
+                value="Remove Delegate" />
+            <div class="square mas" data-behaviors-eager="Docs.Demos.Eventable.Toggler" id="eventToggle" >
+                <div class="square bg-green pointer toggle-off" onclick="$(this).parent().msg('toggle')">
+                </div>
+                <div class="square bg-red pointer toggle-on" onclick="$(this).parent().msg('toggle')">
+                </div>
+            </div>
+            <p>
+                When you click "Add Delegate", <strong>$.fn.eventSubscribe(eventName, fn)</strong>
+                will attempt to add a delegate (in this case <strong>function(){alert('toggled');}</strong>)
+                to the event "onToggle" on the element. If the event object does not yet exist on
+                the element it will create it. This means you never have to explicitly create an
+                event for a behavior or element; you simply subscribe to an event and fire it.
+            </p>
+            <p>
+                Clicking "Remove Delegate" call <strong>$.fn.eventUnsubscribe(eventName, fn)</strong>
+                which will remove the delegate that matches the function passed to it.</p>
+            <h3>
+                Docs.Demos.Eventable.SlideToggle</h3>
+            <p>
+                This behavior depends on the previous two behaviors to be declared on the element.
+                It uses the events on each to produce a new effect.</p>
+            <pre>// Docs.Demos.Eventable.SlideToggler :: Slides the element a specified number of pixels left or right and then toggles the first children.
+(function ($) {
+    if (!Docs.Demos.Eventable.Toggler) {
+        throw 'Initialization Error: Docs.Demos.Eventable.slideToggler requires Docs.Demos.Eventable.Toggler';
+    }
+    if (!Docs.Demos.Eventable.Slider) {
+        throw 'Initialization Error: Docs.Demos.Eventable.slideToggler requires Docs.Demos.Eventable.Slider';
+    }
+    $.types.ns('Docs.Demos.Eventable');
+    Docs.Demos.Eventable.SlideToggler = $.types.define(function () {
+        var _context;
+        var _lastSlideRight;
+
+        var toggleElement = function () {
+            $(_context).msg('toggle');
+        };
+        var setEvents = function () {
+            $(_context).eventUnsubscribe('onSlideRight', toggleElement);
+            $(_context).eventUnsubscribe('onSlideLeft', toggleElement);
+            $(_context).eventSubscribe('onSlideRight', toggleElement);
+            $(_context).eventSubscribe('onSlideLeft', toggleElement);
+        };
+
+        var self = {
+            init: function (context) {
+                _context = context;
+                _lastSlideRight = false;
+            },
+            slideToggle: function () {
+                setEvents();
+                if (_lastSlideRight) {
+                    $(_context).msg('slideLeft');
+                    _lastSlideRight = false;
+                } else {
+                    $(_context).msg('slideRight');
+                    _lastSlideRight = true;
+                }
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+            <p>
+                Here we have a new self method called <strong>slideToggle</strong> which figures
+                out which direction to slide the element, and fires the appropriate message. It
+                also calls it's private method <strong>setEvents()</strong> which safely unsubscribes
+                and then resubscribes the <strong>toggleElement()</strong> method to "onSlideLeft"
+                and "onSlideRight" which are events fired by <strong>Docs.Demos.Eventable.Slider</strong></p>
+            <p>
+                Here's the markup that uses our example. Notice that we added <strong>Docs.Demos.Eventable.SlideToggler</strong>
+                and changed the message on it's childrent from "toggle" to "slideToggle"</p>
+            <pre>&lt;div class=&quot;square mas&quot; data-behaviors-lazy=&quot;Docs.Demos.Eventable.Toggler Docs.Demos.Eventable.Slider Docs.Demos.Eventable.SlideToggler&quot;
+    id=&quot;eventToggle&quot; data-slide-distance=&quot;200&quot; data-slide-time=&quot;2000&quot;&gt;
+    &lt;div class=&quot;square bg-green pointer toggle-off&quot; onclick=&quot;$(this).parent().msg(&#39;slideToggle&#39;)&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;square bg-red pointer toggle-on&quot; onclick=&quot;$(this).parent().msg(&#39;slideToggle&#39;)&quot;&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+            <p>
+                Click the square below to see it in action.</p>
+            <div class="square mas" data-behaviors-lazy="Docs.Demos.Eventable.Toggler Docs.Demos.Eventable.Slider Docs.Demos.Eventable.SlideToggler"
+                id="eventToggle" data-slide-distance="200" data-slide-time="2000">
+                <div class="square bg-green pointer toggle-off" onclick="$(this).parent().msg('slideToggle')">
+                </div>
+                <div class="square bg-red pointer toggle-on" onclick="$(this).parent().msg('slideToggle')">
+                </div>
+            </div>
+            <p>
+                This is also a good place to see the bootloader in action. Since SlideToggler isn't
+                used anywhere with data-init, you should be able to refresh the page, check the
+                source in Firebug or Chrome and only after clicking the square above should you
+                see the file <strong>Core/Docs/Eventable/SlideToggler.js</strong> load.
+            </p>
+        </div>
+        <div id="queue" class="api">
+            <h3>
+                Message and Broadcast Queue</h3>
+            <p>
+                Sometimes you may want a little extra control over when messages or broadcasts are
+                fired off. For this you can take advantage of <strong>$.Tact.Queue</strong> and the
+                extensions <strong>$.fn.enqueueMsg</strong> , <strong>$.fn.enqueueBroadcast</strong>,
+                and <strong>$.fn.unqueue</strong>.</p>
+            <p>
+                For these examples I'm going to use slightly modified versions of <strong>Docs.Demos.Eventable.Toggler</strong>,
+                and <strong>Docs.Demos.Eventable.Slider</strong>. The modifications made would not affect
+                any of the previous examples, but for the sake of clarity I'm going to put these
+                new versions in the namespace <strong>Docs.Demos.Queueable</strong>.</p>
+            <h3>
+                Docs.Demos.Queueable.Toggler</h3>
+            <pre>// Docs.Demos.Queueable.Toggler :: Toggles visibility of first child elements. Fires an event on toggle, and unqueues.
+(function ($) {
+    $.types.ns('Docs.Demos.Queueable');
+    Docs.Demos.Queueable.Toggler = $.types.define(function () {
+        var _context;
+        var _config;
+        var _toggleClass;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _config = $(_context).domdata();
+                _toggleClass = (_config.toggleClass ? _config.toggleClass : "toggle-off toggle-on");
+                if (_config.init)
+                    self.toggle();
+            },
+            toggle: function () {
+                $(_context).children().toggleClass(_toggleClass);
+                $(_context).eventFire("onToggle").unqueue();
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+            <p>
+                There is one additional change to this behavior. I've added the DOM data property
+                <strong>toggleClass</strong> so that I can specify which class or classes I want
+                to toggle</p>
+            <h3>
+                Docs.Demos.Queueable.Slider</h3>
+            <pre>// Docs.Demos.Queueable.Slider :: Slides the element a specified number of pixels left or right. Fires events for it's actions, and unqueues
+(function ($) {
+    $.types.ns('Docs.Demos.Queueable');
+    Docs.Demos.Queueable.Slider = $.types.define(function () {
+        var _context;
+        var _data;
+        var _slideDistance;
+        var _slideTime;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _data = $(_context).domdata();
+                _slideDistance = (_data.slideDistance ? _data.slideDistance : 100);
+                _slideTime = (_data.slideTime ? _data.slideTime : 1000);
+            },
+            slideRight: function () {
+                $(_context).animate({ marginLeft: '+=' + _slideDistance + 'px' }, _slideTime, function () { $(_context).eventFire("onSlideRight").unqueue(); });
+            },
+            slideLeft: function () {
+                $(_context).animate({ marginLeft: '-=' + _slideDistance + 'px' }, _slideTime, function () { $(_context).eventFire("onSlideLeft").unqueue(); });
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+            <p>
+                Notice the addition of calls to <strong>$(_element).unqueue()</strong>. After each
+                method is invoked, <strong>unqueue()</strong> will attempt to invoke the next method
+                in the queue. The inclusion of these calls is safe in the case of an empty queue,
+                and allows the queue to continue running.</p>
+            <p>
+                Here's the markup for our first example using only <strong>Docs.Demos.Queueable.Slider</strong>:
+            </p>
+            <pre>&lt;div class=&quot;square mas&quot; data-behaviors-lazy=&quot;Docs.Demos.Queueable.Slider&quot; data-slide-time=&quot;2000&quot; data-slide-distance=&quot;200&quot;&gt;
+    &lt;div class=&quot;square bg-red pointer&quot; onclick=&quot;$(this).parent().enqueueMsg(&#39;slideRight&#39;).enqueueMsg(&#39;slideLeft&#39;).unqueue()&quot; /&gt;
+&lt;/div&gt;            
+            </pre>
+            <p>
+                Here we use <strong>enqueueMsg()</strong> to queue up a couple of messages, followed
+                immediately by a call to <strong>unqueue()</strong> to start the queue.</p>
+            <p>
+                When you click the square below you should see it move right, and then left.</p>
+            <div class="square mas" data-behaviors-lazy="Docs.Demos.Queueable.Slider" data-slide-time="2000"
+                data-slide-distance="200">
+                <div class="square bg-red pointer" onclick="$(this).parent().enqueueMsg('slideRight').enqueueMsg('slideLeft').unqueue()">
+                </div>
+            </div>
+            <h3>
+                Putting It All Together</h3>
+            <p>
+                Let's try a more complex example using <strong>Docs.Demos.Queueable.SlideToggler</strong>,
+                reproduced below for your convenience.</p>
+            <h4>
+                Docs.Demos.Queueable.SlideToggler</h4>
+            <pre>// Docs.Demos.Queueable.SlideToggler :: Slides the element a specified number of pixels left or right and then toggles the first children.
+(function ($) {
+    if (!Docs.Demos.Queueable.Toggler) {
+        throw 'Initialization Error: Docs.Demos.Queueable.slideToggler requires Docs.Demos.Queueable.Toggler';
+    }
+    if (!Docs.Demos.Queueable.Slider) {
+        throw 'Initialization Error: Docs.Demos.Queueable.slideToggler requires Docs.Demos.Queueable.Slider';
+    }
+    $.types.ns('Docs.Demos.Eventable');
+    Docs.Demos.Queueable.SlideToggler = $.types.define(function () {
+        var _context;
+        var _lastSlideRight;
+
+        var toggleElement = function () {
+            $(_context).msg('toggle');
+        };
+        var setEvents = function () {
+            $(_context).eventUnsubscribe('onSlideRight', toggleElement);
+            $(_context).eventUnsubscribe('onSlideLeft', toggleElement);
+            $(_context).eventSubscribe('onSlideRight', toggleElement);
+            $(_context).eventSubscribe('onSlideLeft', toggleElement);
+        };
+
+        var self = {
+            init: function (context) {
+                _context = context;
+                _lastSlideRight = false;
+            },
+            slideToggle: function () {
+                setEvents();
+                if (_lastSlideRight) {
+                    $(_context).msg('slideLeft');
+                    _lastSlideRight = false;
+                } else {
+                    $(_context).msg('slideRight');
+                    _lastSlideRight = true;
+                }
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+            <p>
+                Since this behavior only makes message calls for other behaviors and wires up events,
+                it didn't need any modification to work with our new queueable versions of Toggler
+                and Slider. The only change was to the namespace for it's dependencies.</p>
+            <p>
+                The following markup demonstrates the combined effect of messaging, DOM data, combined
+                behaviors, eventing, and queueing.</p>
+            <pre>&lt;div class=&quot;square mas&quot; data-behaviors-lazy=&quot;Docs.Demos.Queueable.Toggler Docs.Demos.Queueable.Slider Docs.Demos.Queueable.SlideToggler&quot;
+    data-slide-time=&quot;2000&quot; data-slide-distance=&quot;200&quot; data-toggle-class=&quot;bg-red bg-green&quot;&gt;
+    &lt;div class=&quot;square bg-red pointer toggle-on&quot; onclick=&quot;$(this).parent().enqueueMsg(&#39;slideToggle&#39;).enqueueMsg(&#39;slideToggle&#39;).unqueue()&quot;&gt;
+    &lt;/div&gt;                
+&lt;/div&gt;</pre>
+            <p>
+                Click the square below to see it in action.</p>
+            <div class="square mas" data-behaviors-lazy="Docs.Demos.Queueable.Toggler Docs.Demos.Queueable.Slider Docs.Demos.Queueable.SlideToggler"
+                data-slide-time="2000" data-slide-distance="200" data-toggle-class="bg-red bg-green">
+                <div class="square bg-red pointer toggle-on" onclick="$(this).parent().enqueueMsg('slideToggle').enqueueMsg('slideToggle').unqueue()">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

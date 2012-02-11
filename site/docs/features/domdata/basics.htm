@@ -1,0 +1,19 @@
+﻿<h3>
+    Features - DOM Data - Basics</h3>
+<hr>
+<p>
+    Adds ability to recusively read complex data from DOM elements to jQuery.</p>
+<h4>
+    Example HTML</h4>
+<pre>&lt;div id=&quot;tester&quot; data-id=&quot;123&quot;&gt;
+    &lt;span data-userid=&quot;456&quot;&gt;User: Tom&lt;/span&gt;
+    &lt;span data-date=&quot;11/11/11&quot;&gt;Created: Friday&lt;/span&gt;
+    &lt;span data-meta=&quot;{hasMeta:true, value:&#39;meta meta!&#39;}&quot;&gt;Has Meta: True&lt;/span&gt;
+&lt;/div&gt;</pre>
+<h4>
+    Example Script</h4>
+<pre>var data = $('#tester').domdata(1);
+data.id;           // 123
+data.userid;       // 456
+data.date;         // 11/11/11
+data.meta.hasMeta; // true</pre>

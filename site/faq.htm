@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>TactJS :: FAQ</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery/json2.js"></script>
+    <script type="text/javascript" src="scripts/jquery/livequery.js"></script>
+    <script type="text/javascript" src="scripts/core.js?v=1"></script>
+    <script type="text/javascript" src="scripts/events.js?v=1"></script>
+    <script type="text/javascript" src="scripts/log.js?v=1"></script>
+    <script type="text/javascript" src="scripts/bootloader.js?v=1"></script>
+    <script type="text/javascript" src="scripts/domdata.js?v=1"></script>
+    <script type="text/javascript" src="scripts/behaviors.js?v=1"></script>
+    <script type="text/javascript" src="scripts/dependencies.js?v=12345"></script>
+    <link rel="stylesheet" href="styles/jqueryUI.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="styles/shared.css" type="text/css" media="all" />
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-28818516-1']);
+        _gaq.push(['_trackPageview']);
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</head>
+<body>
+    <div class="span0 center pal txt-white">
+        <div data-behaviors-eager="Docs.ContentLoader" data-load="true" data-content="docs/content/header.htm">
+        </div>
+        <div class="clear pal mas span0">
+            <!-- spacer -->
+        </div>
+        <div class="left">
+            <div class="bdr-white bol bg-black pal span25">
+                <h2>
+                    <span class="txt-red"><b>&raquo;</b></span> Questions</h2>
+                <hr class="bdr-gray" />
+                <ul class="none pam">
+                    <li class="pas"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><a class="txt-white"
+                        href="#what">What is TactJS?</a></li>
+                    <li class="pas"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><a class="txt-white"
+                        href="#why">Why use TactJS?</a></li>
+                    <li class="pas"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><a class="txt-white"
+                        href="#javascript">What's wrong with JavaScript?</a></li>
+                    <li class="pas"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><a class="txt-white"
+                        href="#oo">Why Object Oriented?</a></li>
+                    <li class="pas"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><a class="txt-white"
+                        href="#implement">How do I implement TactJS?</a></li>
+                    <li class="pas"><span class="txt-red"><b>&raquo;</b>&nbsp;</span><a class="txt-white"
+                        href="#compatability">Browser Compatability</a></li>
+                </ul>
+            </div>
+            <br />
+            <br />
+            <span class="txt-white txt10">Google Ads</span>
+            <div class="bdr-white bol bg-black pal span25">
+                <div class="center">
+                    <script type="text/javascript"><!--
+                        google_ad_client = "ca-pub-7625754809889439";
+                        /* demo ad */
+                        google_ad_slot = "1865772852";
+                        google_ad_width = 250;
+                        google_ad_height = 250;
+                        //-->
+                    </script>
+                    <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div class="bdr-white bol bg-black pal right span6">
+            <h2 id="what">
+                <span class="txt-red"><b>&raquo;</b></span> What is TactJS?</h2>
+            <hr class="bdr-gray" />
+            <p>
+                TactJS is a micro-framework which provides mechanisms for writing object-oriented
+                javscript. Additionally, features like namespacing, behaviors, and an intelligent
+                bootloader reinforce a style of javascript development that yields readable, maintainable,
+                and above all discoverable code.
+            </p>
+            <br />
+            <h2 id="why">
+                <span class="txt-red"><b>&raquo;</b></span> Why use TactJS?</h2>
+            <hr class="bdr-gray" />
+            <p>
+                The features in TactJS give developers a way to use object-oriented practices
+                in the way they create scripts, and at the same time reinforce a mental framework
+                around writing javascript that produces highly cohesive, and very low coupled code.
+                That means better script libraries with modular components which can be reused,
+                combined, and extended to create flexible, maintainable, and discoverable systems.
+            </p>
+            <h2 id="javascript">
+                <span class="txt-red"><b>&raquo;</b></span> What's Wrong with JavaScript?</h2>
+            <hr class="bdr-gray" />
+            <p>
+                In our experience front-end javascript development is approached by most developers
+                with a bit of distate. Javascript by nature does not lend itself to a particular
+                style or methodology and so most systems, especially those developed and maintained
+                by multiple developers tend to become cluttered and difficult to manage over a very
+                short period of time. The more complex the UI, the more convoluted the scripts become
+                and that tends to make developers even more reluctant to want to do things like
+                test, refactor, or modify existing scripts. That means more scripts are created,
+                and the clutter continues to pile up. One-off scripts, hacks, and kludges form a
+                barrier to productivity, and eventually front-end development on a project becomes
+                a thoroughly unenjoyable chore because of highly coupled, and incomplehensible code.
+            </p>
+            <h2 id="oo">
+                <span class="txt-red"><b>&raquo;</b></span> Why Object-Oriented?</h2>
+            <hr class="bdr-gray" />
+            <p>
+                The mantra of object-oriented development is high cohesion and low coupling. The
+                idea that code should work in such a way that it doesn't depend on the specifics
+                of it's implementation is why object-oriented development became so popular in the
+                first place. Javascript is great because it doesn't tie a developer to a particular
+                paradigm, and that flexibility means it's incredibly easy to write code that follows
+                multiple patterns and practices in the same space. That gets to be a problem very
+                quickly because too many developers treat javascript development without the consideration
+                it requires to write really good scripts. By introducing a clean method for creating
+                object-oriented systems to javascript that allows developers to more consistently
+                achieve the goals of high cohesion and low coupling, projects become much easier
+                to manage, test, and change even for developers who had nothing to do with the original
+                implementation.
+            </p>
+            <h2 id="implement">
+                <span class="txt-red"><b>&raquo;</b></span> How do I implement TactJS?</h2>
+            <hr class="bdr-gray" />
+            <p>
+                TactJS is a collection of (nearly) independent features which can be mixed and
+                matched to suit the needs of your particular project, all running on the latest
+                version of JQuery. Just reference the features you want to use, then take a look
+                at the Features and API pages for examples and guides on how to write code with
+                TactJS.
+            </p>
+            <h2 id="compatability">
+                <span class="txt-red"><b>&raquo;</b></span> Browser Compatability</h2>
+            <hr class="bdr-gray" />
+            <p>
+                TactJS's class.extend relies on ECMAScript 5's <a class="txt-white" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/defineProperty"
+                    target="_blank">object.defineProperty</a> method. This means that if you are
+                using object inheritance you will be limited to only the latest browsers, otherwise
+                Tact.Query will the support Internet Explorer 8.</p>
+            <p>
+                (Using class.extend) Internet Explorer 9 and greater.<br>
+                (Not using class.extend) Internet Explorer 8 and greater.<br>
+                Mozilla Firefox 3.5 and greater.<br>
+                Google Chrome 5 and greater.</p>
+        </div>
+        <div class="clear pal mas span0">
+            <!-- spacer -->
+        </div>
+        <div data-behaviors-eager="Docs.ContentLoader" data-load="true" data-content="docs/content/footer.htm">
+        </div>
+    </div>
+</body>
+</html>

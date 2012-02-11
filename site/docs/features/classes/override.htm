@@ -1,0 +1,65 @@
+﻿<h3>
+    Features - Classes - Member Overrides</h3>
+<hr>
+<p>
+    Override members on extended classes is simple: all public method are virtual.</p>
+<h4>
+    Example</h4>
+<pre>$.types.ns("Tact");
+
+Tact.Enterprise = $.types.define(function() {
+	_captain = "Jonathan Archer";
+
+	var self = {
+		captain: function() {
+			return _captain;
+		}
+	};
+	
+	return self;
+});
+
+var enterprise = new Tact.Enterprise();
+enterprise.captain(); // Jonathan Archer
+
+Tact.StarTrek = $.types.extend(Tact.Enterprise, function() {
+	_captain = "James T. Kirk";
+
+	var self = {
+		captain: function() {
+			return _captain;
+		},
+		previousCaptain: function() {
+			return self.superclass.captain();
+		}
+	};
+	
+	return self;
+});
+
+var original = new Tact.StarTrek();
+original.captain();         // James T. Kirk
+original.previousCaptain(); // Jonathan Archer
+
+Tact.NextGeneration = $.types.extend(Tact.StarTrek, function() {
+	_captain = "Jean-Luc Picard";
+
+	var self = {
+		captain: function() {
+			return _captain;
+		},
+		previousCaptain: function() {
+			return self.superclass.captain();
+		},
+		previousPreviousCaptain: function() {
+			return self.superclass.previousCaptain();
+		}
+	};
+	
+	return self;
+});
+
+var nextGen = new Tact.NextGeneration();
+nextGen.captain();                 // Jean-Luc Picard
+nextGen.previousCaptain();         // James T. Kirk
+nextGen.previousPreviousCaptain(); // Jonathan Archer</pre>

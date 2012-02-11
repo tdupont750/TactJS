@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>TactJS :: Case Study :: Pong :: Iteration 1</title>
+    <style type="text/css">
+        .court { width: 410px; }
+        .scoreboard { height: 55px; width: 400px; }
+        .score { float: left; width: 200px; text-align: center; }
+        .playerName { font-size: 16px; }
+        .scoreValue { font-size: 30px; font-weight: bold; }
+        .pongField { background-color: #000; height: 300px; width: 400px; border: solid 5px #ccc; }
+        .pongPaddle { background-color: #fff; height: 50px; width: 10px; }
+        .pongBall { background-color: #fff; height: 10px; width: 10px; }
+    </style>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery/liveQuery.js?v=1"></script>
+    <script type="text/javascript" src="scripts/core.js?v=1"></script>
+    <script type="text/javascript" src="scripts/events.js?v=1"></script>
+    <script type="text/javascript" src="scripts/bootloader.js?v=1"></script>
+    <script type="text/javascript" src="scripts/domdata.js?v=1"></script>
+    <script type="text/javascript" src="scripts/dependencies.js?v=1"></script>
+    <script type="text/javascript" src="scripts/behaviors.js?v=1"></script>
+</head>
+<body>
+    <h1>
+        TactJS :: Case Study :: Pong</h1>
+    <h3>
+        Iteration 1
+    </h3>
+    <div id="court1" class="court" data-behaviors-eager="Pong1.UI.Court">
+        <div class="scoreboard">
+            <div class="score js-player1">
+                <div class="playerName">
+                    Player 1
+                </div>
+                <div class="scoreValue" data-behaviors-eager="Pong1.UI.Updatable" data-key="player1">
+                    0
+                </div>
+            </div>
+            <div class="score js-player2">
+                <div class="playerName">
+                    Player 2
+                </div>
+                <div class="scoreValue" data-behaviors-eager="Pong1.UI.Updatable" data-key="player2">
+                    0
+                </div>
+            </div>
+        </div>
+        <div class="pongField" onmouseover="$(this).broadcast('activate');" onmouseout="$(this).broadcast('deactivate');">
+            <div class="pongPaddle js-player1" data-behaviors-eager="Pong1.UI.Paddle" data-controllable="true">
+            </div>
+            <div class="pongBall" data-behaviors-eager="Pong1.UI.Ball" data-initial-direction="left"
+                data-speed="1600">
+            </div>
+            <div class="pongPaddle js-player2" data-behaviors-eager="Pong1.UI.Paddle" data-controllable="true">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

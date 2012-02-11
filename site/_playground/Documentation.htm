@@ -1,0 +1,1750 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>TactJS :: Documentation</title>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    
+	<script type="text/javascript" src="scripts/jquery/json2.js"></script>
+    <script type="text/javascript" src="scripts/jquery/livequery.js"></script>
+	
+	<script type="text/javascript" src="scripts/core.js?v=1"></script>
+    <script type="text/javascript" src="scripts/events.js?v=1"></script>
+    <script type="text/javascript" src="scripts/log.js?v=1"></script>
+    <script type="text/javascript" src="scripts/bootloader.js?v=1"></script>
+    <script type="text/javascript" src="scripts/domdata.js?v=1"></script>
+    <script type="text/javascript" src="scripts/behaviors.js?v=1"></script>
+    <script type="text/javascript" src="scripts/dependencies.js?v=12345"></script> 
+
+    <!-- PONG2 CASE STUDY OBJECTS -->    
+    <script type="text/javascript" src="scripts/pong2/lib/util/Position.js?v=12"></script>
+    <script type="text/javascript" src="scripts/pong2/lib/util/Move.js?v=1234"></script>
+    <script type="text/javascript" src="scripts/pong2/lib/game/Entity.js?v=12"></script> 
+    <script type="text/javascript" src="scripts/pong2/lib/game/Ball.js?v=123"></script> 
+    <script type="text/javascript" src="scripts/pong2/lib/game/Paddle.js?v=1234"></script> 
+    <script type="text/javascript" src="scripts/pong2/lib/game/Field.js?v=12"></script>  
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" type="text/css" media="all">
+	<link rel="stylesheet" href="styles/shared.css" type="text/css" media="all">
+	<script>	    
+		$.types.ns('Tact.Docs');
+		Tact.Docs.SectionSelector = $.types.define(function () {
+		    var _el;
+		    var _config;
+		    var onClick = function (e) {
+		        var id = $(e.target).data('section');
+		        $(_el).parents('.accordion').siblings('.content').children().hide();
+		        if (_config.loadContent) {
+		            $('#' + id).msg("load", function () { $('#' + id).show(); });
+		        } else {
+		            $('#' + id).show();
+		        }
+		    };
+
+		    var self = {
+		        init: function (el) {
+		            _el = el;
+		            _config = $(_el).data();
+		            $(el).find('li').click(onClick);
+		        }
+		    };
+
+		    return self;
+		});
+	</script>
+</head>
+<body>
+    <div class="container">
+	<div>
+		<h1 style="float: left; margin: 0px;">TactJS :: Documentation</h1>
+        <p style="text-align: right; float: right; display: inline-block; margin: 0px;">
+            <a href="http://www.tomdupont.net/">www.TomDupont.net</a><br />
+            <a href="http://www.zachmayer.net/">www.ZachMayer.net</a></p>
+        <div class="clear">
+            <br />
+        </div>
+    </div>
+	<div class="tabs" data-behaviors-eager="Docs.Tabs" >
+		<ul>
+			<li><a href="#features">Features</a></li>
+			<li><a href="#api" onclick="$('#api').broadcast('wakeup');$(this).removeAttr('onclick');">API</a></li>
+			<li><a href="#versions">Versions</a></li>
+			<li><a href="#about">About</a></li>
+		</ul>
+		
+		<div id="features">
+			<div class="content">
+				<div class="section" id="features-classes-basics" style="display: initial">
+					<h3>Features - Classes - Class Declaration</h3>
+					<hr>
+					<p>A simple way to define classes that allows for type checking and polymorphism.</p>
+					<h4>Example</h4>
+<pre>// Define a namespace
+$.types.ns("Tact");
+
+// Define the Pet class.
+Tact.Pet = $.types.define(function(name) {
+
+	// Private Members
+	var _name = name;
+	var _walkCount = 0;
+
+	// Public Members
+	var self = {
+		walk : function() {
+			_walkCount++;
+			return _name
+				+ " has been walked "
+				+ _walkCount
+				+ " time(s) today.";
+		};
+	};
+
+	return self;
+});
+
+// Instantiate a pet object.
+var pet = new Tact.Pet("Taboo");
+
+// Call the public Walk method
+pet.walk(); // Taboo has been walked 1 time(s) today.
+pet.walk(); // Taboo has been walked 2 time(s) today.</pre>
+				</div>
+				<div class="section" id="features-classes-inherit">
+					<h3>Features - Classes - Inheritence</h3>
+					<hr>
+					<p>Extending subclasses is simple.</p>
+					<h4>Example</h4>
+<pre>// Define a namespace
+$.types.ns("Tact");
+
+// See Tact.Pet definition in the "Class Declaration" section
+
+// Extend Pet to create Cat
+Tact.Cat = $.types.extend(Tact.Pet, function(name) {
+	
+	// Private Members
+	var _speak = "Meow";
+	
+	// Public Members (Will inherit all of Pet's public members.)
+	var self = {
+		speak: function() {
+			return "The Cat says '" + _speak + "'.";
+		},
+		speakAndWalk: function() {
+			var speak = self.speak();
+			// self.Walk is inherited from Pet
+			var walk = self.walk();
+			return speak + ' ' + walk;
+		}
+	};
+	
+	return self;
+});
+
+// Instantiate a cat object.
+var cat = new Tact.Cat("Linq");
+
+cat.speak();        // The Cat says 'Meow'.
+cat.walk();         // Linq has been walked 1 time(s) today.
+cat.speakAndWalk(); // The Cat says 'Meow'. Linq has been walked 2 time(s) today.
+</pre>
+				</div>
+				<div class="section" id="features-classes-typecheck">
+					<h3>Features - Classes - Type Checking</h3>
+					<hr>
+					<p>Type checking is built into class definitions.</p>
+					<h4>Example</h4>
+<pre>$.types.ns("Tact");
+
+Tact.Mammal = $.types.define(function() {
+	var self = {
+		breathsAir : true
+	};
+	return self;
+});
+
+Tact.Poodle = $.types.extend(Tact.Mammal, function() {
+	var self = {
+		isCute : true
+	};
+	return self;
+});
+
+Tact.Monkey = $.types.extend(Tact.Mammal, function() {
+	var self = {
+		usesTools : true
+	};
+	return self;
+});
+
+Tact.Human = $.types.extend(Tact.Monkey, function() {
+	var self = {
+		usesJooQuery : true
+	};
+	return self;
+});
+
+var mammal = new Tact.Mammal();
+mammal.is(Tact.Mammal); // true
+mammal.is(Tact.Poodle); // false
+mammal.is(Tact.Monkey); // false
+mammal.is(Tact.Human);  // false
+
+var poodle = new Tact.Poodle();
+poodle.is(Tact.Mammal); // true
+poodle.is(Tact.Poodle); // true
+poodle.is(Tact.Monkey); // false
+poodle.is(Tact.Human);  // false
+
+var monkey = new Tact.Monkey();
+monkey.is(Tact.Mammal); // true
+monkey.is(Tact.Poodle); // false
+monkey.is(Tact.Monkey); // true
+monkey.is(Tact.Human);  // false
+
+var human = new Tact.Human();
+human.is(Tact.Mammal); // true
+human.is(Tact.Poodle); // false
+human.is(Tact.Monkey); // true
+human.is(Tact.Human);  // true</pre>
+				</div>
+				<div class="section" id="features-classes-override">
+					<h3>Features - Classes - Member Overrides</h3>
+					<hr>
+					<p>Override members on extended classes is simple: all public method are virtual.</p>
+					<h4>Example</h4>
+<pre>$.types.ns("Tact");
+
+Tact.Enterprise = $.types.define(function() {
+	_captain = "Jonathan Archer";
+
+	var self = {
+		captain: function() {
+			return _captain;
+		}
+	};
+	
+	return self;
+});
+
+var enterprise = new Tact.Enterprise();
+enterprise.captain(); // Jonathan Archer
+
+Tact.StarTrek = $.types.extend(Tact.Enterprise, function() {
+	_captain = "James T. Kirk";
+
+	var self = {
+		captain: function() {
+			return _captain;
+		},
+		previousCaptain: function() {
+			return self.superclass.captain();
+		}
+	};
+	
+	return self;
+});
+
+var original = new Tact.StarTrek();
+original.captain();         // James T. Kirk
+original.previousCaptain(); // Jonathan Archer
+
+Tact.NextGeneration = $.types.extend(Tact.StarTrek, function() {
+	_captain = "Jean-Luc Picard";
+
+	var self = {
+		captain: function() {
+			return _captain;
+		},
+		previousCaptain: function() {
+			return self.superclass.captain();
+		},
+		previousPreviousCaptain: function() {
+			return self.superclass.previousCaptain();
+		}
+	};
+	
+	return self;
+});
+
+var nextGen = new Tact.NextGeneration();
+nextGen.captain();                 // Jean-Luc Picard
+nextGen.previousCaptain();         // James T. Kirk
+nextGen.previousPreviousCaptain(); // Jonathan Archer</pre>
+				</div>
+
+                <div class="section" id="features-behaviors-intro" data-behaviors-lazy="Docs.ContentLoader" data-content="docs/behaviors/intro.htm"></div>
+                <div class="section" id="features-behaviors-messaging"  data-behaviors-lazy="Docs.ContentLoader" data-content="docs/behaviors/messaging.htm"></div>
+                <div class="section" id="features-behaviors-data"  data-behaviors-lazy="Docs.ContentLoader" data-content="docs/behaviors/data.htm"></div>
+                <div class="section" id="features-behaviors-combine"  data-behaviors-lazy="Docs.ContentLoader" data-content="docs/behaviors/combine.htm"></div>
+                <div class="section" id="features-behaviors-events"  data-behaviors-lazy="Docs.ContentLoader" data-content="docs/behaviors/events.htm"></div>
+                <div class="section" id="features-behaviors-queues"  data-behaviors-lazy="Docs.ContentLoader" data-content="docs/behaviors/queues.htm"></div>
+                <div class="section" id="features-behaviors-advanced"  data-behaviors-lazy="Docs.ContentLoader" data-content="docs/behaviors/advanced.htm"></div>
+				
+				<div class="section" id="features-domdata-basics">
+					<h3>Features - DOM Data - Basics</h3>
+					<hr>
+					<p>Adds ability to recusively read complex data from DOM elements to jQuery.</p>
+					<h4>Example HTML</h4>
+<pre>&lt;div id=&quot;tester&quot; data-id=&quot;123&quot;&gt;
+    &lt;span data-userid=&quot;456&quot;&gt;User: Tom&lt;/span&gt;
+    &lt;span data-date=&quot;11/11/11&quot;&gt;Created: Friday&lt;/span&gt;
+    &lt;span data-meta=&quot;{hasMeta:true, value:&#39;meta meta!&#39;}&quot;&gt;Has Meta: True&lt;/span&gt;
+&lt;/div&gt;</pre>
+					<h4>Example Script</h4>
+<pre>var data = $('#tester').domdata(1);
+data.id;           // 123
+data.userid;       // 456
+data.date;         // 11/11/11
+data.meta.hasMeta; // true</pre>
+				</div>
+				
+				<div class="section" id="features-di-basics">
+					<h3>Features - Dependency Injection - Basics</h3>
+					<hr>
+					<p>Adds dependency injection to jQuery. Add a Tact.Dependency object to the public interface of your class and it will be replaced by the desired mapping when you instantiate your class using the IOC resolve method.</p>
+					<h4>Example</h4>
+<pre>Tact.Cat = $.types.define(function() {
+	var self = {
+		box : new Tact.Dependency('IBox'),
+		doBusiness : function(a) { 
+			self.box.poop();
+		}
+	};
+	return self;
+});
+
+Tact.LitterBox = $.types.define(function() {
+	var _isStinky = false;
+	var self = {
+		poop : function() { 
+			_isStinky = true;
+		},
+		clean : function() {
+			_isStinky = false;
+		},
+		isStinky : function() {
+			return _isStinky;
+		}
+	};
+	return self;
+});
+
+$.ioc.register('IPet', Tact.Cat);
+$.ioc.register('IBox', Tact.LitterBox);
+
+var cat = $.ioc.resolve('IPet');
+cat.doBusiness();
+cat.box.isStinky(); // True</pre>
+				</div>
+				
+				<div class="section" id="features-storage-basics">
+					<h3>Features - Storage - Basics</h3>
+					<hr>
+					<p>Simplifies using client side storage with jQuery.</p>
+					<h4>Example</h4>
+<pre>var key = 'ObjectKey';
+$.storage.local.setObject(key, {
+	message: 'Hello World'
+});
+
+var object = $.storage.local.getObject(key);
+$.assert.isNotNull(object);
+$.assert.areEqual('Hello World', object.message);</pre>
+				</div>
+				
+				<div class="section" id="features-testing-basics">
+					<h3>Features - Testing - Basics</h3>
+					<hr>
+					<p>Adds unit testing capabilities to jQuery.</p>
+					<h4>Example</h4>
+<pre>$.testing.register('TactJS Testing', {
+    'Are Equal' : function () {
+        $.assert.areEqual('Equal', 'Equal');
+    },
+    'Not Equal' : function() {
+        $.assert.notEqual('Yes', 'No');
+    }
+});
+
+$.testing.runAll();</pre>
+				</div>
+
+                <div class="section" id="features-case-pong1"  data-behaviors-lazy="Docs.ContentLoader" data-content="docs/casestudy/pong1.htm"></div>
+                <div class="section" id="features-case-pong2"  data-behaviors-lazy="Docs.ContentLoader" data-content="docs/casestudy/pong2.htm"></div>
+			</div>
+			
+			<div class="accordion" data-behaviors-eager="Docs.Accordion" data-auto-height="false" data-navigation="true" data-collapsible="true">
+				<h3><a href="#">Classes</a></h3>
+				<div>
+					<ul data-behaviors-eager="Tact.Docs.SectionSelector">
+						<li data-section="features-classes-basics">Class Declaration</li>
+						<li data-section="features-classes-inherit">Inheritence</li>
+						<li data-section="features-classes-typecheck">Type Checking</li>
+						<li data-section="features-classes-override">Member Overrides</li>
+					</ul>
+				</div>
+				<h3><a href="#">Behaviors</a></h3>
+				<div>
+					<ul data-behaviors-eager="Tact.Docs.SectionSelector" data-load-content="true">
+						<li data-section="features-behaviors-intro">Intro</li>
+						<li data-section="features-behaviors-messaging">Message and Broadcast</li>
+						<li data-section="features-behaviors-data">Using DOM Data</li>
+						<li data-section="features-behaviors-combine">Combining Behaviors</li>
+						<li data-section="features-behaviors-events">Using Events</li>
+						<li data-section="features-behaviors-queues">Message Queue</li>
+                        <li data-section="features-behaviors-advanced">Advanced Behaviors</li>
+					</ul>
+				</div>
+				<h3><a href="#">BootLoader</a></h3>
+				<div>
+					<ul>
+						<li>Basics</li>
+					</ul>
+				</div>
+				<h3><a href="#">DOM Data</a></h3>
+				<div>
+					<ul data-behaviors-eager="Tact.Docs.SectionSelector">
+						<li data-section="features-domdata-basics">Basics</li>
+					</ul>
+				</div>
+				<h3><a href="#">Dependency Injection</a></h3>
+				<div>
+					<ul data-behaviors-eager="Tact.Docs.SectionSelector">
+						<li data-section="features-di-basics">Basics</li>
+					</ul>
+				</div>
+				<h3><a href="#">Client Side Storage</a></h3>
+				<div>
+					<ul data-behaviors-eager="Tact.Docs.SectionSelector">
+						<li data-section="features-storage-basics">Basics</li>
+					</ul>
+				</div>
+				<h3><a href="#">Unit Testing</a></h3>
+				<div>
+					<ul data-behaviors-eager="Tact.Docs.SectionSelector">
+						<li data-section="features-testing-basics">Basics</li>
+					</ul>
+				</div>
+                <h3><a href="#">Case Study</a></h3>
+				<div>
+					<ul data-behaviors-eager="Tact.Docs.SectionSelector" data-load-content="true">
+						<li data-section="features-case-pong1">Pong 1</li>
+                        <li data-section="features-case-pong2">Pong 2</li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="clear"></div>
+		</div>
+		
+		<div id="api">
+			<div class="content">
+				<div class="section" id="api-static-assert">
+					<h3>API - Static - Assert</h3>
+					<hr>
+					<h4>$.assert</h4>
+				</div>
+				<div class="section" id="api-static-assert-areEqual" style="display: initial">
+					<h3>API - Static - Assert - areEqual</h3>
+					<hr>
+					<h4>$.assert.areEqual(expected, actual, exact)</h4>
+					<p>
+						@description Assert values are equal.<br>
+						@param {mixed} expected<br>
+						@param {mixed} actual<br>
+						@param {boolean} exact (Optional, defaults to False)
+					</p>
+				</div>
+				<div class="section" id="api-static-assert-fail">
+					<h3>API - Static - Assert - fail</h3>
+					<hr>
+					<h4>$.assert.fail(msg)</h4>
+					<p>
+						@description Assert a failure.<br>
+						@param {string} msg
+					</p>
+				</div>
+				<div class="section" id="api-static-assert-isFalse">
+					<h3>API - Static - Assert - isFalse</h3>
+					<hr>
+					<h4>$.assert.isFalse(value)</h4>
+					<p>
+						@description Assert value is false.<br>
+						@param {boolean} value
+					</p>
+				</div>
+				<div class="section" id="api-static-assert-isNull">
+					<h3>API - Static - Assert - isNull</h3>
+					<hr>
+					<h4>$.assert.isNull(value)</h4>
+					<p>
+						@description Assert value is null.<br>
+						@param {object} value
+					</p>
+				</div>
+				<div class="section" id="api-static-assert-isTrue">
+					<h3>API - Static - Assert - isTrue</h3>
+					<hr>
+					<h4>$.assert.isTrue(value)</h4>
+					<p>
+						@description Assert value is true.<br>
+						@param {boolean} value
+					</p>
+				</div>
+				<div class="section" id="api-static-assert-notNull">
+					<h3>API - Static - Assert - notNull</h3>
+					<hr>
+					<h4>$.assert.notNull(value)</h4>
+					<p>
+						@description Assert value is not null.<br>
+						@param {object} value
+					</p>
+				</div>
+				<div class="section" id="api-static-assert-notEqual">
+					<h3>API - Static - Assert - notEqual</h3>
+					<hr>
+					<h4>$.assert.notEqual(expected, actual, exact)</h4>
+					<p>
+						@description Assert values are not equal.<br>
+						@param {mixed} expected<br>
+						@param {mixed} actual<br>
+						@param {boolean} exact (Optional, defaults to False)
+					</p>
+				</div>
+				
+				<div class="section" id="api-static-behaviors">
+					<h3>API - Static - Behaviors</h3>
+					<hr>
+					<h4>$.behaviors</h4>
+				</div>
+				<div class="section" id="api-static-behaviors-allFrom">
+					<h3>API - Static - Behaviors - allFrom</h3>
+					<hr>
+					<h4>$.behaviors.allFrom(elem)</h4>
+					<p>
+						@description <br>
+						@param {HTMLElement} elem
+					</p>
+				</div>
+				<div class="section" id="api-static-behaviors-broadcast">
+					<h3>API - Static - Behaviors - broadcast</h3>
+					<hr>
+					<h4>$.behaviors.broadcast(elem)</h4>
+					<p>
+						@description <br>
+						@param {HTMLElement} elem
+					</p>
+				</div>
+				<div class="section" id="api-static-behaviors-ensure">
+					<h3>API - Static - Behaviors - ensure</h3>
+					<hr>
+					<h4>$.behaviors.ensure(elem)</h4>
+					<p>
+						@description <br>
+						@param {HTMLElement} elem
+					</p>
+				</div>
+				<div class="section" id="api-static-behaviors-msg">
+					<h3>API - Static - Behaviors - msg</h3>
+					<hr>
+					<h4>$.behaviors.msg(el, cmd)</h4>
+					<p>
+						@description <br>
+						@param {HTMLElement} el<br>
+						@param {string} cmd
+					</p>
+				</div>
+				<div class="section" id="api-static-behaviors-parse">
+					<h3>API - Static - Behaviors - parse</h3>
+					<hr>
+					<h4>$.behaviors.parse(el, cmd)</h4>
+					<p>
+						@description <br>
+						@param {HTMLElement} el<br>
+						@param {string} cmd
+					</p>
+				</div>
+				
+				<div class="section" id="api-static-bootloader">
+					<h3>API - Static - BootLoader</h3>
+					<hr>
+					<h4>$.bootloader</h4>
+				</div>
+				<div class="section" id="api-static-bootloader-caching">
+					<h3>API - Static - BootLoader - caching</h3>
+					<hr>
+					<h4>$.bootloader.caching(allowCache)</h4>
+					<p>
+						@description Sets the allow cache flag.<br>
+						@param {boolean} allowCache
+					</p>
+				</div>
+				<div class="section" id="api-static-bootloader-require">
+					<h3>API - Static - BootLoader - require</h3>
+					<hr>
+					<h4>$.bootloader.require(src, onLoaded)</h4>
+					<p>
+						@description Lazy loads a script by the passed in source.<br>
+						@param {string} src<br>
+						<span class="tab">The full or relative path to the script to be loaded.</span><br>
+						@param {function} onLoaded<br>
+						<span class="tab">A function that will be invoked once the script has finished loading on the page.</span>
+					</p>
+				</div>
+				<div class="section" id="api-static-bootloader-requireByType">
+					<h3>API - Static - BootLoader - requireByType</h3>
+					<hr>
+					<h4>$.bootloader.requireByType(typeName, onLoaded)</h4>
+					<p>
+						@description Lazy loads a script by the passed in type.<br>
+						@param {string} typeName<br>
+						<span class="tab">The name & namespace of the class to load. Must correspond to file-system such that "Docs.Toggler" can be found at "Scripts/TactJS/Docs/Toggler.js</span><br>
+						@param {function} onLoaded<br>
+						<span class="tab">A function that will be invoked once the script has finished loading on the page.</span>
+					</p>
+				</div>
+				
+				<div class="section" id="api-static-class">
+					<h3>API - Static - Class</h3>
+					<hr>
+					<h4>$.types</h4>
+				</div>
+				<div class="section" id="api-static-class-define">
+					<h3>API - Static - Class - define</h3>
+					<hr>
+					<h4>$.types.define(declaration)</h4>
+					<p>
+						@description Define a class.<br>
+						@param {function} declaration<br>
+						@return {function} Class constructor.
+					</p>
+					<h4>Example</h4>
+<pre>$.types.ns("Tact");
+
+Tact.Pet = $.types.define(function(name) {
+	var _name = name;
+	var _walkCount = 0;
+	var self = {
+		walk : function() {
+			_walkCount++;
+			return name
+				+ " has been walked "
+				+ _walkCount
+				+ " time(s) today.";
+		};
+	};
+	return self;
+});
+
+var pet = new Tact.Pet("Taboo");
+pet.walk(); // Taboo has been walked 1 time(s) today.
+pet.walk(); // Taboo has been walked 2 time(s) today.</pre>
+				</div>
+				<div class="section" id="api-static-class-defineAsSingleton">
+					<h3>API - Static - Class - defineAsSingleton</h3>
+					<hr>
+					<h4>$.types.defineAsSingleton(declaration)</h4>
+					<p>
+						@description Define a singleton.<br>
+						@param {function} declaration<br>
+						@return {function} Singleton instance of class definition.
+					</p>
+				</div>
+				<div class="section" id="api-static-class-extend">
+					<h3>API - Static - Class - extend</h3>
+					<hr>
+					<h4>$.types.extend(superclass, declaration)</h4>
+					<p>
+						@description Define a class that inherits from a superclass.<br>
+						@param {function} superclass<br>
+						@param {function} declaration<br>
+						@return {function} Child class constructor.
+					</p>
+					<h4>Example</h4>
+<pre>Tact.Cat = $.types.extend(Tact.Pet, function(name) {
+	var _speak = "Meow";
+	var self = {
+		speak: function() {
+			return "The Cat says: " + _speak;
+		};
+	};
+	return self;
+});
+
+var cat = new Tact.Cat("Linq");
+cat.walk(); // Taboo has been walked 1 time(s) today.
+cat.speak(); // The Cat says: Meow</pre>
+				</div>
+				<div class="section" id="api-static-class-extendAsSingleton">
+					<h3>API - Static - Class - extendAsSingleton</h3>
+					<hr>
+					<h4>$.types.extendAsSingleton(superclass, declaration)</h4>
+					<p>
+						@description Define a singleton that inherits from a superclass.<br>
+						@param {function} superclass<br>
+						@param {function} declaration<br>
+						@return {function} Singleton instance of class extension.
+					</p>
+				</div>
+				<div class="section" id="api-static-class-is">
+					<h3>API - Static - Class - is</h3>
+					<hr>
+					<h4>$.types.is(object, type)</h4>
+					<p>
+						@description Type checks an object.<br>
+						@param {object} object<br>
+						@param {function} type<br>
+						@return {boolean} True if object is derivative of type.
+					</p>
+					<h4>Example</h4>
+<pre>var cat = new Tact.Cat("Linq");
+$.joo.isClass(cat, Tact.Pet); // true
+$.joo.isClass(cat, Tact.Cat); // true
+$.joo.isClass(cat, Tact.Dog); // false</pre>
+				</div>
+				<div class="section" id="api-static-class-ns">
+					<h3>API - Static - Class - ns</h3>
+					<hr>
+					<h4>$.types.ns(namespace)</h4>
+					<p>
+						@description Defines namespaces for object delcaration.<br>
+						@param {string} namespace<br>
+					</p>
+					<h4>Example</h4>
+<pre>$.types.ns("System.ComponentModel.DataAnnotations");</pre>
+				</div>
+				
+				<div class="section" id="api-static-domdata">
+					<h3>API - Static - DOM Data</h3>
+					<hr>
+					<h4>$.domdata</h4>
+				</div>
+				<div class="section" id="api-static-domdata-read">
+					<h3>API - Static - DOM Data - read</h3>
+					<hr>
+					<h4>$.domdata.read(elem, recursionLevel, attrPrefix)</h4>
+					<p>
+						@description Reads data from DOM element.<br>
+						@param {HtmlElement} elem<br>
+						@param {mixed} recursionLevel (Optional, defaults to false)<br>
+						<span class="tab">May be boolean or number.</span><br>
+						@param {string} attrPrefix (Optional, defaults to "data-")<br>
+						@returns {object}
+					</p>
+				</div>
+				
+				<div class="section" id="api-static-ioc">
+					<h3>API - Static - IOC</h3>
+					<hr>
+					<h4>$.ioc</h4>
+				</div>
+				<div class="section" id="api-static-ioc-register">
+					<h3>API - Static - IOC - register</h3>
+					<hr>
+					<h4>$.ioc.register(alias, type, singleton)</h4>
+					<p>
+						@description Registers a type with the container.<br>
+						@param {string} alias<br>
+						@param {function} type<br>
+						@param {boolean} singleton (Optional, defaults to False)
+					</p>
+				</div>
+				<div class="section" id="api-static-ioc-resolve">
+					<h3>API - Static - IOC - resolve</h3>
+					<hr>
+					<h4>$.ioc.resolve(alias)</h4>
+					<p>
+						@description Resolve a type by alias<br>
+						@param {string} alias<br>
+						@return {Object} Instance of request type.
+					</p>
+				</div>
+				
+				<div class="section" id="api-static-log">
+					<h3>API - Static - Log</h3>
+					<hr>
+					<h4>$.log</h4>
+				</div>
+				<div class="section" id="api-static-log-write">
+					<h3>API - Static - Log - write</h3>
+					<hr>
+					<h4>$.log.write(msg)</h4>
+					<p>
+						@description Log a message.<br>
+						@param {string} msg
+					</p>
+					<h4>Example</h4>
+					<pre>$.log.write('Hello world!');</pre>
+				</div>
+				<div class="section" id="api-static-log-onWrite">
+					<h3>API - Static - Log - onWrite</h3>
+					<hr>
+					<h4>$.log.onWrite</h4>
+					<p>
+						@property Event that fires when a log is written.<br>
+						@type Tact.Event
+					</p>
+				</div>
+				
+				<div class="section" id="api-static-storage">
+					<h3>API - Static - Storage</h3>
+					<hr>
+					<h4>$.storage</h4>
+				</div>
+				<div class="section" id="api-static-storage-default">
+					<h3>API - Static - Storage - default</h3>
+					<hr>
+					<h4>$.storage.default</h4>
+					<p>
+						@property The default storage container.<br>
+						<span class="tab">Defaults to local.</span><br>
+						@type Tact.Storage
+					</p>
+				</div>
+				<div class="section" id="api-static-storage-local">
+					<h3>API - Static - Storage - local</h3>
+					<hr>
+					<h4>$.storage.local</h4>
+					<p>
+						@property Stores data in local storage.<br>
+						<span class="tab">Will persist between browsing sessions.</span><br>
+						@type Tact.Storage
+					</p>
+				</div>
+				<div class="section" id="api-static-storage-session">
+					<h3>API - Static - Storage - session</h3>
+					<hr>
+					<h4>$.storage.session</h4>
+					<p>
+						@property Stores data in session storage.<br>
+						<span class="tab">Will NOT persist between browsing sessions.</span><br>
+						@type Tact.Storage
+					</p>
+				</div>
+				
+				<div class="section" id="api-static-testing">
+					<h3>API - Static - Testing</h3>
+					<hr>
+					<h4>$.testing</h4>
+				</div>
+				<div class="section" id="api-static-testing-register">
+					<h3>API - Static - Testing - register</h3>
+					<hr>
+					<h4>$.testing.register(fixture, tests)</h4>
+					<p>
+						@description Register a test fixture.<br>
+						@param {string} fixture<br>
+						@param {object} tests
+					</p>
+				</div>
+				<div class="section" id="api-static-testing-runAll">
+					<h3>API - Static - Testing - runAll</h3>
+					<hr>
+					<h4>$.testing.runAll(fixture, tests)</h4>
+					<p>
+						@description Run all test fixtures.
+					</p>
+				</div>
+				<div class="section" id="api-static-testing-runFixture">
+					<h3>API - Static - Testing - runFixture</h3>
+					<hr>
+					<h4>$.testing.runFixture(fixture)</h4>
+					<p>
+						@description Run a specific test fixture.<br>
+						@param {string} fixture
+					</p>
+				</div>
+				<div class="section" id="api-static-testing-runMethod">
+					<h3>API - Static - Testing - runMethod</h3>
+					<hr>
+					<h4>$.testing.runMethod(fixture, name)</h4>
+					<p>
+						@description Run a specific test in a fixture.<br>
+						@param {string} fixture<br>
+					</p>
+				</div>
+				
+				<div class="section" id="api-static-utilities">
+					<h3>API - Static - Utilities</h3>
+					<hr>
+					<h4>$.utilities</h4>
+				</div>
+				<div class="section" id="api-static-utilities-clone">
+					<h3>API - Static - Utilities - clone</h3>
+					<hr>
+					<h4>$.utilities.clone(source)</h4>
+					<p>
+						@description Clone an object or array.<br>
+						@param {object} source<br>
+						@returns {object} Clone of source.
+					</p>
+					<h4>Example</h4>
+<pre>var myCow = {
+	says: 'Moo',
+	isBig: true
+};
+var yourCow = $.joo.clone(myCow);
+
+var myStuff = [1, true, 'meh'];
+var yourStuff = $.joo.clone(myStuff);</pre>
+				</div>
+				<div class="section" id="api-static-utilities-delegate">
+					<h3>API - Static - Utilities - delegate</h3>
+					<hr>
+					<h4>$.utilities.createDelegate(fn, scope)</h4>
+					<p>
+						@description reates a delegate that preserves scope.<br>
+						@param {function} fn<br>
+						@param {object} scope<br>
+						@returns {function} delegate
+					</p>
+				</div>
+				
+				<div class="section" id="api-extensions-primary">
+					<h3>API - Extensions - Primary</h3>
+					<hr>
+					<h4>Primary Extensions</h4>
+				</div>
+				<div class="section" id="api-extensions-primary-behaviors">
+					<h3>API - Extensions - Primary - behaviors</h3>
+					<hr>
+					<h4>$.fn.behaviors()</h4>
+					<p>
+						@description Returns a collection manager that provides an interface to access behavior functionality.<br>
+						@returns {Tact.BehaviorManager}
+					</p>
+				</div>
+				<div class="section" id="api-extensions-primary-domdata">
+					<h3>API - Extensions - Primary - domdata</h3>
+					<hr>
+					<h4>$.fn.domdata(recursionLevel, attrPrefix)</h4>
+					<p>
+						@description Reads data from DOM element.<br>
+						@param {mixed} recursionLevel (Optional, defaults to false)<br>
+						<span class="tab">May be boolean or number.</span><br>
+						@param {string} attrPrefix (Optional, defaults to "data-")<br>
+						@returns {object}
+					</p>
+				</div>
+				<div class="section" id="api-extensions-primary-events">
+					<h3>API - Extensions - Primary - events</h3>
+					<hr>
+					<h4>$.fn.events(eventName)</h4>
+					<p>
+						@description Gets an event that is bound to an element.<br>
+						@param {string} eventName<br>
+						@returns {Tact.Event}
+					</p>
+				</div>
+				<div class="section" id="api-extensions-primary-queue">
+					<h3>API - Extensions - Primary - queues</h3>
+					<hr>
+					<h4>$.fn.queues(queueName)</h4>
+					<p>
+						@description Gets a queue that is bound to an element.<br>
+						@param {string} queueName<br>
+						@returns {Tact.Queue}
+					</p>
+				</div>
+				
+				<div class="section" id="api-extensions-shortcuts">
+					<h3>API - Extensions - Shortcuts</h3>
+					<hr>
+					<h4>Shortcut Extensions</h4>
+				</div>
+				<div class="section" id="api-extensions-shortcuts-msg">
+					<h3>API - Extensions - Shortcuts - msg</h3>
+					<hr>
+					<h4>$.fn.msg(cmd)</h4>
+					<p>
+						@description Invokes specified method on behaviors attached to elements in the collection.<br>
+						@param {string} cmd<br>
+						@returns {jQuery}
+					</p>
+				</div>
+				<div class="section" id="api-extensions-shortcuts-broadcast">
+					<h3>API - Extensions - Shortcuts - broadcast</h3>
+					<hr>
+					<h4>$.fn.broadcast(cmd)</h4>
+					<p>
+						@description Invokes specified method on behaviors attached to elements, or their children, in the collection.<br>
+						@param {string} cmd<br>
+						@returns {jQuery}
+					</p>
+				</div>
+				<div class="section" id="api-extensions-shortcuts-enqueueMsg">
+					<h3>API - Extensions - Shortcuts - enqueueMsg</h3>
+					<hr>
+					<h4>$.fn.enqueueMsg(cmd)</h4>
+					<p>
+						@description Queues a call to the specified method on behaviors attached to elements, in the collection.<br>
+						@param {string} cmd<br>
+						@returns {jQuery}
+					</p>
+				</div>
+				<div class="section" id="api-extensions-shortcuts-enqueueBroadcast">
+					<h3>API - Extensions - Shortcuts - enqueueBroadcast</h3>
+					<hr>
+					<h4>$.fn.enqueueBroadcast(cmd)</h4>
+					<p>
+						@description Queues a call to the specified method on behaviors attached to elements, or their children, in the collection.<br>
+						@param {string} cmd<br>
+						@returns {jQuery}
+					</p>
+				</div>
+				<div class="section" id="api-extensions-shortcuts-unqueue">
+					<h3>API - Extensions - Shortcuts - unqueue</h3>
+					<hr>
+					<h4>$.fn.unqueue(cmd)</h4>
+					<p>
+						@description Pops and invokes the next queue msg or broadcast for behaviors associated with the given element.
+						@returns {jQuery}
+					</p>
+				</div>
+				<div class="section" id="api-extensions-shortcuts-behaviorQueueLength">
+					<h3>API - Extensions - Shortcuts - behaviorQueueLength</h3>
+					<hr>
+					<h4>$.fn.behaviorQueueLength()</h4>
+					<p>
+						@description Gets the length of the queue.<br>
+						@returns {number}
+					</p>
+				</div>
+				<div class="section" id="api-extensions-shortcuts-eventFire">
+					<h3>API - Extensions - Shortcuts - eventFire</h3>
+					<hr>
+					<h4>$.fn.eventFire(eventName)</h4>
+					<p>
+						@description <br>
+						@param {string} eventName<br>
+						@returns {jQuery}
+					</p>
+				</div>
+				<div class="section" id="api-extensions-shortcuts-eventMaxCount">
+					<h3>API - Extensions - Shortcuts - eventMaxCount</h3>
+					<hr>
+					<h4>$.fn.eventMaxCount(eventName)</h4>
+					<p>
+						@description <br>
+						@param {string} eventName<br>
+						@returns {number}
+					</p>
+				</div>
+				<div class="section" id="api-extensions-shortcuts-eventSubscribe">
+					<h3>API - Extensions - Shortcuts - eventSubscribe</h3>
+					<hr>
+					<h4>$.fn.eventSubscribe(eventName, delegate)</h4>
+					<p>
+						@description <br>
+						@param {string} eventName<br>
+						@param {string} delegate<br>
+						@returns {jQuery}
+					</p>
+				</div>
+				<div class="section" id="api-extensions-shortcuts-eventUnsubscribe">
+					<h3>API - Extensions - Shortcuts - eventUnsubscribe</h3>
+					<hr>
+					<h4>$.fn.eventUnsubscribe(eventName, delegate)</h4>
+					<p>
+						@description <br>
+						@param {string} eventName<br>
+						@param {string} delegate<br>
+						@returns {jQuery}
+					</p>
+				</div>
+				<div class="section" id="api-extensions-shortcuts-queueMaxCount">
+					<h3>API - Extensions - Shortcuts - queueMaxCount</h3>
+					<hr>
+					<h4>$.fn.queueMaxCount(queueName)</h4>
+					<p>
+						@description <br>
+						@param {string} queueName<br>
+						@returns {number}
+					</p>
+				</div>
+				<div class="section" id="api-extensions-shortcuts-queuePop">
+					<h3>API - Extensions - Shortcuts - queuePop</h3>
+					<hr>
+					<h4>$.fn.queuePop(queueName)</h4>
+					<p>
+						@description <br>
+						@param {string} queueName<br>
+						@returns {jQuery}
+					</p>
+				</div>
+				<div class="section" id="api-extensions-shortcuts-queuePush">
+					<h3>API - Extensions - Shortcuts - queuePush</h3>
+					<hr>
+					<h4>$.fn.queuePush(queueName, delegate)</h4>
+					<p>
+						@description <br>
+						@param {string} queueName<br>
+						@param {string} delegate<br>
+						@returns {jQuery}
+					</p>
+				</div>
+				
+				<div class="section" id="api-classes-behaviormanager">
+					<h3>API - Classes - BehaviorManager</h3>
+					<hr>
+					<h4>Tact.BehaviorManager</h4>
+					<p>
+						@class<br>
+						@description Collection of elements that provides an interface to access behavior functionality.
+					</p>
+				</div>
+				<div class="section" id="api-classes-behaviormanager-constructor">
+					<h3>API - Classes - BehaviorManager - constructor</h3>
+					<hr>
+					<h4>new Tact.BehaviorManager(els)</h4>
+					<p>
+						@constructor<br>
+						@param {jQuery} els
+					</p>
+				</div>
+				<div class="section" id="api-classes-behaviormanager-msg">
+					<h3>API - Classes - BehaviorManager - msg</h3>
+					<hr>
+					<h4>Tact.BehaviorManager.msg(cmd)</h4>
+					<p>
+						@description Invokes specified method on behaviors attached to elements in the collection.<br>
+						@param {string} cmd<br>
+						@returns {Tact.BehaviorManager}
+					</p>
+				</div>
+				<div class="section" id="api-classes-behaviormanager-broadcast">
+					<h3>API - Classes - BehaviorManager - broadcast</h3>
+					<hr>
+					<h4>Tact.BehaviorManager.broadcast(cmd)</h4>
+					<p>
+						@description Invokes specified method on behaviors attached to elements, or their children, in the collection.<br>
+						@param {string} cmd<br>
+						@returns {Tact.BehaviorManager}
+					</p>
+				</div>
+				<div class="section" id="api-classes-behaviormanager-enqueueMsg">
+					<h3>API - Classes - BehaviorManager - enqueueMsg</h3>
+					<hr>
+					<h4>Tact.BehaviorManager.enqueueMsg(cmd)</h4>
+					<p>
+						@description Queues a call to the specified method on behaviors attached to elements, in the collection.<br>
+						@param {string} cmd<br>
+						@returns {Tact.BehaviorManager}
+					</p>
+				</div>
+				<div class="section" id="api-classes-behaviormanager-enqueueBroadcast">
+					<h3>API - Classes - BehaviorManager - enqueueBroadcast</h3>
+					<hr>
+					<h4>Tact.BehaviorManager.enqueueBroadcast(cmd)</h4>
+					<p>
+						@description Queues a call to the specified method on behaviors attached to elements, or their children, in the collection.<br>
+						@param {string} cmd<br>
+						@returns {Tact.BehaviorManager}
+					</p>
+				</div>
+				<div class="section" id="api-classes-behaviormanager-unqueue">
+					<h3>API - Classes - BehaviorManager - unqueue</h3>
+					<hr>
+					<h4>Tact.BehaviorManager.unqueue()</h4>
+					<p>
+						@description Pops and invokes the next queue msg or broadcast for behaviors associated with the given element.<br>
+						@returns {Tact.BehaviorManager}
+					</p>
+				</div>
+				<div class="section" id="api-classes-behaviormanager-queueLength">
+					<h3>API - Classes - BehaviorManager - queueLength</h3>
+					<hr>
+					<h4>Tact.BehaviorManager.queueLength()</h4>
+					<p>
+						@description Gets the length of the queue.<br>
+						@returns {number}
+					</p>
+				</div>
+				
+				<div class="section" id="api-classes-behaviorcollection">
+					<h3>API - Classes - BehaviorCollection</h3>
+					<hr>
+					<h4>Tact.BehaviorCollection</h4>
+					<p>
+						@class<br>
+						@description Collection class for behaviors that provides an interface to access behavior functionality.
+					</p>
+				</div>
+				<div class="section" id="api-classes-behaviorcollection-constructor">
+					<h3>API - Classes - BehaviorCollection - constructor</h3>
+					<hr>
+					<h4>new Tact.BehaviorCollection.(container)</h4>
+					<p>
+						@constructor<br>
+						@param {object} container
+					</p>
+				</div>
+				<div class="section" id="api-classes-behaviorcollection-addBehavior">
+					<h3>API - Classes - BehaviorCollection - addBehavior</h3>
+					<hr>
+					<h4>Tact.BehaviorCollection.addBehavior(type, instance)</h4>
+					<p>
+						@description<br>
+						@param {string} type<br>
+						@param {object} instance
+					</p>
+				</div>
+				<div class="section" id="api-classes-behaviorcollection-touchBehavior">
+					<h3>API - Classes - BehaviorCollection - touchBehavior</h3>
+					<hr>
+					<h4>Tact.BehaviorCollection.touchBehavior(type)</h4>
+					<p>
+						@description<br>
+						@param {string} type
+					</p>
+				</div>
+				<div class="section" id="api-classes-behaviorcollection-allFrom">
+					<h3>API - Classes - BehaviorCollection - allFrom</h3>
+					<hr>
+					<h4>Tact.BehaviorCollection.allFrom()</h4>
+					<p>
+						@description Gets the length of the queue.<br>
+						@returns {array}
+					</p>
+				</div>
+				
+				<div class="section" id="api-classes-dependancy">
+					<h3>API - Classes - Dependancy</h3>
+					<hr>
+					<h4>Tact.Dependancy</h4>
+					<p>@class<br>
+					@description Represents A Dependency</p>
+				</div>
+				<div class="section" id="api-classes-dependancy-constructor">
+					<h3>API - Classes - Dependancy - constructor</h3>
+					<hr>
+					<h4>new Tact.Dependency(alias)</h4>
+					<p>
+						@constructor<br>
+						@param {string} alias
+					</p>
+				</div>
+				<div class="section" id="api-classes-dependancy-resolve">
+					<h3>API - Classes - Dependancy - resolve</h3>
+					<hr>
+					<h4>Tact.Dependency.resolve(type)</h4>
+					<p>
+						@description Resolves dependency, automatically invoked during parent resolution.<br>
+						@param {function} type
+					</p>
+				</div>
+				
+				<div class="section" id="api-classes-event">
+					<h3>API - Classes - Event</h3>
+					<hr>
+					<h4>Tact.Event</h4>
+					<p>@class<br>
+					@description Handles Events</p>
+					<h4>Example</h4>
+<pre>var event = new Tact.Event();
+
+event.subscribe(function(arg) {
+	alert('Event was fired with: ' + arg);
+});
+
+event.fire('Stuff!'); // Event was fired with: Stuff!</pre>
+				</div>
+				<div class="section" id="api-classes-event-constructor">
+					<h3>API - Classes - Event - constructor</h3>
+					<hr>
+					<h4>new Tact.Event()</h4>
+					<p>
+						@constructor
+					</p>
+				</div>
+				<div class="section" id="api-classes-event-subscribe">
+					<h3>API - Classes - Event - subscribe</h3>
+					<hr>
+					<h4>Tact.Event.subscribe(delegate)</h4>
+					<p>
+						@description Add a callback delegate.<br>
+						@param {function} delegate
+					</p>
+				</div>
+				<div class="section" id="api-classes-event-unsubscribe">
+					<h3>API - Classes - Event - unsubscribe</h3>
+					<hr>
+					<h4>Tact.Event.unsubscribe(delegate)</h4>
+					<p>
+						@description Remove a callback delegate.<br>
+						@param {function} delegate
+					</p>
+				</div>
+				<div class="section" id="api-classes-event-fire">
+					<h3>API - Classes - Event - fire</h3>
+					<hr>
+					<h4>Tact.Event.fire(arguments)</h4>
+					<p>
+						@description Fire event, invoking all registered delegates.
+					</p>
+				</div>
+				<div class="section" id="api-classes-event-count">
+					<h3>API - Classes - Event - subscriptionCount</h3>
+					<hr>
+					<h4>Tact.Event.subscriptionCount()</h4>
+					<p>
+						@description Returns the number of handlers subscribed to the event.
+						@returns {number}
+					</p>
+				</div>
+				
+				<div class="section" id="api-classes-eventcollection">
+					<h3>API - Classes - EventCollection</h3>
+					<hr>
+					<h4>Tact.EventCollection</h4>
+					<p>
+						@class<br>
+						@description Handles Events
+					</p>
+				</div>
+				<div class="section" id="api-classes-eventcollection-constructor">
+					<h3>API - Classes - EventCollection - constructor</h3>
+					<hr>
+					<h4>new Tact.EventCollection(els, name)</h4>
+					<p>
+						@constructor<br>
+						@param {jQuery} els<br>
+						@param {string} name
+					</p>
+				</div>
+				<div class="section" id="api-classes-eventcollection-getByIndex">
+					<h3>API - Classes - EventCollection - getByIndex</h3>
+					<hr>
+					<h4>Tact.EventCollection.getByIndex(index)</h4>
+					<p>
+						@description<br>
+						@param {number} index<br>
+						@returns {Tact.Event}
+					</p>
+				</div>
+				<div class="section" id="api-classes-eventcollection-subscribe">
+					<h3>API - Classes - EventCollection - subscribe</h3>
+					<hr>
+					<h4>Tact.EventCollection.subscribe(delegate)</h4>
+					<p>
+						@description <br>
+						@param {function} delegate<br>
+						@returns {Tact.EventCollection}
+					</p>
+				</div>
+				<div class="section" id="api-classes-eventcollection-unsubscribe">
+					<h3>API - Classes - EventCollection - unsubscribe</h3>
+					<hr>
+					<h4>Tact.EventCollection.unsubscribe(delegate)</h4>
+					<p>
+						@description <br>
+						@param {function} delegate<br>
+						@returns {Tact.EventCollection}
+					</p>
+				</div>
+				<div class="section" id="api-classes-eventcollection-fire">
+					<h3>API - Classes - EventCollection - fire</h3>
+					<hr>
+					<h4>Tact.EventCollection.fire()</h4>
+					<p>
+						@description <br>
+						@returns {Tact.EventCollection}
+					</p>
+				</div>
+				<div class="section" id="api-classes-eventcollection-maxCount">
+					<h3>API - Classes - EventCollection - maxCount</h3>
+					<hr>
+					<h4>Tact.EventCollection.maxCount()</h4>
+					<p>
+						@description <br>
+						@returns {number}
+					</p>
+				</div>
+				
+				<div class="section" id="api-classes-storage">
+					<h3>API - Classes - Storage</h3>
+					<hr>
+					<h4>Tact.Storage</h4>
+					<p>@class<br>
+					@description Wraps a storage mechanism</p>
+				</div>
+				<div class="section" id="api-classes-storage-constructor">
+					<h3>API - Classes - Storage - constructor</h3>
+					<hr>
+					<h4>new Tact.Storage(store)</h4>
+					<p>
+						@constructor<br>
+						@param {object} store
+					</p>
+				</div>
+				<div class="section" id="api-classes-storage-clear">
+					<h3>API - Classes - Storage - clear</h3>
+					<hr>
+					<h4>Tact.Storage.clear()</h4>
+					<p>
+						@description Clears the storage.
+					</p>
+				</div>
+				<div class="section" id="api-classes-storage-getItem">
+					<h3>API - Classes - Storage - getItem</h3>
+					<hr>
+					<h4>Tact.Storage.getItem(key)</h4>
+					<p>
+						@description Gets an item by key.<br>
+						@param {string} key<br>
+						@return {string}
+					</p>
+				</div>
+				<div class="section" id="api-classes-storage-getObject">
+					<h3>API - Classes - Storage - getObject</h3>
+					<hr>
+					<h4>Tact.Storage.getObject(key)</h4>
+					<p>
+						@description Gets an object by key.<br>
+						@param {string} key<br>
+						@return {object}
+					</p>
+				</div>
+				<div class="section" id="api-classes-storage-removeItem">
+					<h3>API - Classes - Storage - removeItem</h3>
+					<hr>
+					<h4>Tact.Storage.removeItem(key, doGet)</h4>
+					<p>
+						@description Removes an item from storage.<br>
+						@param {string} key<br>
+						@param {boolean} doGet (Optional)<br>
+						@return {string}
+					</p>
+				</div>
+				<div class="section" id="api-classes-storage-removeObject">
+					<h3>API - Classes - Storage - removeObject</h3>
+					<hr>
+					<h4>Tact.Storage.removeObject(key, doGet)</h4>
+					<p>
+						@description Removes an object from storage.<br>
+						@param {string} key<br>
+						@param {boolean} doGet (Optional)<br>
+						@return {object}
+					</p>
+				</div>
+				<div class="section" id="api-classes-storage-setItem">
+					<h3>API - Classes - Storage - setItem</h3>
+					<hr>
+					<h4>Tact.Storage.setItem(key, value)</h4>
+					<p>
+						@description Sets an item by key.<br>
+						@param {string} key<br>
+						@param {string} value
+					</p>
+				</div>
+				<div class="section" id="api-classes-storage-setObject">
+					<h3>API - Classes - Storage - setObject</h3>
+					<hr>
+					<h4>Tact.Storage.setObject(key, value)</h4>
+					<p>
+						@description Sets an object by key.<br>
+						@param {string} key<br>
+						@param {object} value
+					</p>
+				</div>
+				
+				<div class="section" id="api-classes-queue">
+					<h3>API - Classes - Queue</h3>
+					<hr>
+					<h4>Tact.Queue</h4>
+					<p>@class<br>
+					@description A simple FIFO queue for functions</p>
+					<h4>Example</h4>
+<pre>var queue = new Tact.Queue();
+
+queue.push(function(args) {
+	alert('Queue function fired with: ' + arg);
+});
+
+queue.pop('Stuff!'); // Queue function fired with: Stuff!</pre>
+				</div>
+				<div class="section" id="api-classes-queue-constructor">
+					<h3>API - Classes - Queue - constructor</h3>
+					<hr>
+					<h4>new Tact.Queue()</h4>
+					<p>
+						@constructor
+					</p>
+				</div>
+				<div class="section" id="api-classes-queue-push">
+					<h3>API - Classes - Queue - push</h3>
+					<hr>
+					<h4>Tact.Queue.push(fn)</h4>
+					<p>
+						@description Add a function to the end of the queue.<br>
+						@param {function} fn
+					</p>
+				</div>
+				<div class="section" id="api-classes-queue-pop">
+					<h3>API - Classes - Queue - pop</h3>
+					<hr>
+					<h4>Tact.Queue.pop(args)</h4>
+					<p>
+						@description Invoke the function at the top of the queue with arguments.<br>
+						@param {misc} args
+					</p>
+				</div>
+				<div class="section" id="api-classes-queue-count">
+					<h3>API - Classes - Queue - count</h3>
+					<hr>
+					<h4>Tact.Queue.count()</h4>
+					<p>
+						@description Gets the current queue length.<br>
+						@returns {number}
+					</p>
+				</div>
+				
+				<div class="section" id="api-classes-queuecollection">
+					<h3>API - Classes - QueueCollection</h3>
+					<hr>
+					<h4>Tact.QueueCollection</h4>
+					<p>
+						@class<br>
+						@description Handles a collection of elements and manages queues stored on their DOM elements.
+					</p>
+				</div>
+				<div class="section" id="api-classes-queuecollection-constructor">
+					<h3>API - Classes - QueueCollection - constructor</h3>
+					<hr>
+					<h4>new Tact.QueueCollection(els, name)</h4>
+					<p>
+						@constructor<br>
+						@param {jQuery} els<br>
+						@param {string} name
+					</p>
+				</div>
+				<div class="section" id="api-classes-queuecollection-getByIndex">
+					<h3>API - Classes - QueueCollection - getByIndex</h3>
+					<hr>
+					<h4>Tact.QueueCollection.getByIndex(index)</h4>
+					<p>
+						@description<br>
+						@param {number} index<br>
+						@returns {Tact.Queue}
+					</p>
+				</div>
+				<div class="section" id="api-classes-queuecollection-push">
+					<h3>API - Classes - QueueCollection - push</h3>
+					<hr>
+					<h4>Tact.QueueCollection.push(delegate)</h4>
+					<p>
+						@description <br>
+						@param {function} delegate<br>
+						@returns {Tact.QueueCollection}
+					</p>
+				</div>
+				<div class="section" id="api-classes-queuecollection-pop">
+					<h3>API - Classes - QueueCollection - pop</h3>
+					<hr>
+					<h4>Tact.QueueCollection.pop(args)</h4>
+					<p>
+						@description <br>
+						@param {array} args<br>
+						@returns {Tact.QueueCollection}
+					</p>
+				</div>
+				<div class="section" id="api-classes-queuecollection-maxCount">
+					<h3>API - Classes - QueueCollection - maxCount</h3>
+					<hr>
+					<h4>Tact.QueueCollection.maxCount()</h4>
+					<p>
+						@description <br>
+						@returns {number}
+					</p>
+				</div>
+				
+			</div>
+		
+			<div class="accordion" data-behaviors-lazy="Docs.Accordion"  data-auto-height="false" data-navigation="true" data-collapsible="true">
+				<h3><a href="#">Static</a></h3>
+				<div>
+					<ul data-behaviors-lazy="Tact.Docs.SectionSelector">
+						<li data-section="api-static-assert">assert<ul>
+							<li data-section="api-static-assert-areEqual">areEqual</li>
+							<li data-section="api-static-assert-fail">fail</li>
+							<li data-section="api-static-assert-isFalse">isFalse</li>
+							<li data-section="api-static-assert-isNull">isNull</li>
+							<li data-section="api-static-assert-isTrue">isTrue</li>
+							<li data-section="api-static-assert-notNull">notNull</li>
+							<li data-section="api-static-assert-notEqual">notEqual</li>
+						</ul></li>
+						<li data-section="api-static-behaviors">behaviors<ul>
+							<li data-section="api-static-behaviors-allFrom">allFrom</li>
+							<li data-section="api-static-behaviors-broadcast">broadcast</li>
+							<li data-section="api-static-behaviors-ensure">ensure</li>
+							<li data-section="api-static-behaviors-msg">msg</li>
+							<li data-section="api-static-behaviors-parse">parse</li>
+						</ul></li>
+						<li data-section="api-static-bootloader">bootloader<ul>
+							<li data-section="api-static-bootloader-caching">caching</li>
+							<li data-section="api-static-bootloader-require">require</li>
+							<li data-section="api-static-bootloader-requireByType">requireByType</li>
+						</ul></li>
+						<li data-section="api-static-class">class<ul>
+							<li data-section="api-static-class-define">define</li>
+							<li data-section="api-static-class-defineAsSingleton">defineAsSingleton</li>
+							<li data-section="api-static-class-extend">extend</li>
+							<li data-section="api-static-class-extendAsSingleton">extendAsSingleton</li>
+							<li data-section="api-static-class-is">is</li>
+							<li data-section="api-static-class-ns">ns</li>
+						</ul></li>
+						<li data-section="api-static-domdata">domdata<ul>
+							<li data-section="api-static-domdata-read">read</li>
+						</ul></li>
+						<li data-section="api-static-ioc">ioc<ul>
+							<li data-section="api-static-ioc-register">register</li>
+							<li data-section="api-static-ioc-resolve">resolve</li>
+						</ul></li>
+						<li data-section="api-static-log">log<ul>
+							<li data-section="api-static-log-write">write</li>
+							<li data-section="api-static-log-onWrite">onWrite</li>
+						</ul></li>
+						<li data-section="api-static-storage">storage<ul>
+							<li data-section="api-static-storage-default">default</li>
+							<li data-section="api-static-storage-local">local</li>
+							<li data-section="api-static-storage-session">session</li>
+						</ul></li>
+						<li data-section="api-static-testing">testing<ul>
+							<li data-section="api-static-testing-register">register</li>
+							<li data-section="api-static-testing-runAll">runAll</li>
+							<li data-section="api-static-testing-runFixture">runFixture</li>
+							<li data-section="api-static-testing-runMethod">runMethod</li>
+						</ul></li>
+						<li data-section="api-static-utilities">utilities<ul>
+							<li data-section="api-static-utilities-clone">clone</li>
+							<li data-section="api-static-utilities-delegate">delegate</li>
+						</ul></li>
+					</ul>
+				</div>
+				<h3><a href="#">Extensions</a></h3>
+				<div>
+					<ul data-behaviors-lazy="Tact.Docs.SectionSelector">
+						<li data-section="api-extensions-primary">Primary<ul>
+							<li data-section="api-extensions-primary-behaviors">behaviors</li>
+							<li data-section="api-extensions-primary-domdata">domdata</li>
+							<li data-section="api-extensions-primary-events">events</li>
+							<li data-section="api-extensions-primary-queue">queues</li>
+						</ul></li>
+						<li data-section="api-extensions-shortcuts">Shortcuts<ul>
+							<li data-section="api-extensions-shortcuts-behaviorQueueLength">behaviorQueueLength</li>
+							<li data-section="api-extensions-shortcuts-broadcast">broadcast</li>
+							<li data-section="api-extensions-shortcuts-enqueueMsg">enqueueMsg</li>
+							<li data-section="api-extensions-shortcuts-enqueueBroadcast">enqueueBroadcast</li>
+							<li data-section="api-extensions-shortcuts-eventFire">eventFire</li>
+							<li data-section="api-extensions-shortcuts-eventMaxCount">eventMaxCount</li>
+							<li data-section="api-extensions-shortcuts-eventSubscribe">eventSubscribe</li>
+							<li data-section="api-extensions-shortcuts-eventUnsubscribe">eventUnsubscribe</li>
+							<li data-section="api-extensions-shortcuts-msg">msg</li>
+							<li data-section="api-extensions-shortcuts-queueMaxCount">queueMaxCount</li>
+							<li data-section="api-extensions-shortcuts-queuePop">queuePop</li>
+							<li data-section="api-extensions-shortcuts-queuePush">queuePush</li>
+							<li data-section="api-extensions-shortcuts-unqueue">unqueue</li>
+						</ul></li>
+					</ul>
+				</div>
+				<h3><a href="#">Classes</a></h3>
+				<div>
+					<ul data-behaviors-lazy="Tact.Docs.SectionSelector">
+						<li data-section="api-classes-behaviorcollection">Tact.BehaviorCollection<ul>
+							<li data-section="api-classes-behaviorcollection-constructor">constructor</li>
+							<li data-section="api-classes-behaviorcollection-addBehavior">addBehavior</li>
+							<li data-section="api-classes-behaviorcollection-allFrom">allFrom</li>
+							<li data-section="api-classes-behaviorcollection-touchBehavior">touchBehavior</li>
+						</ul></li>
+						<li data-section="api-classes-behaviormanager">Tact.BehaviorManager<ul>
+							<li data-section="api-classes-behaviormanager-constructor">constructor</li>
+							<li data-section="api-classes-behaviormanager-msg">msg</li>
+							<li data-section="api-classes-behaviormanager-broadcast">broadcast</li>
+							<li data-section="api-classes-behaviormanager-enqueueMsg">enqueueMsg</li>
+							<li data-section="api-classes-behaviormanager-enqueueBroadcast">enqueueBroadcast</li>
+							<li data-section="api-classes-behaviormanager-unqueue">unqueue</li>
+							<li data-section="api-classes-behaviormanager-queueLength">queueLength</li>
+						</ul></li>
+						<li data-section="api-classes-dependancy">Tact.Dependancy<ul>
+							<li data-section="api-classes-dependancy-constructor">constructor</li>
+							<li data-section="api-classes-dependancy-resolve">resolve</li>
+						</ul></li>
+						<li data-section="api-classes-event">Tact.Event<ul>
+							<li data-section="api-classes-event-constructor">constructor</li>
+							<li data-section="api-classes-event-count">count</li>
+							<li data-section="api-classes-event-fire">fire</li>
+							<li data-section="api-classes-event-subscribe">subscribe</li>
+							<li data-section="api-classes-event-unsubscribe">unsubscribe</li>
+						</ul></li>
+						<li data-section="api-classes-eventcollection">Tact.EventCollection<ul>
+							<li data-section="api-classes-eventcollection-constructor">constructor</li>
+							<li data-section="api-classes-eventcollection-fire">fire</li>
+							<li data-section="api-classes-eventcollection-getByIndex">getByIndex</li>
+							<li data-section="api-classes-eventcollection-maxCount">maxCount</li>
+							<li data-section="api-classes-eventcollection-subscribe">subscribe</li>
+							<li data-section="api-classes-eventcollection-unsubscribe">unsubscribe</li>
+						</ul></li>
+						<li data-section="api-classes-storage">Tact.Storage<ul>
+							<li data-section="api-classes-storage-constructor">constructor</li>
+							<li data-section="api-classes-storage-clear">clear</li>
+							<li data-section="api-classes-storage-getItem">getItem</li>
+							<li data-section="api-classes-storage-getObject">getObject</li>
+							<li data-section="api-classes-storage-removeItem">removeItem</li>
+							<li data-section="api-classes-storage-removeObject">removeObject</li>
+							<li data-section="api-classes-storage-setItem">setItem</li>
+							<li data-section="api-classes-storage-setObject">setObject</li>
+						</ul></li>
+						<li data-section="api-classes-queue">Tact.Queue<ul>
+							<li data-section="api-classes-queue-constructor">constructor</li>
+							<li data-section="api-classes-queue-count">count</li>
+							<li data-section="api-classes-queue-pop">pop</li>
+							<li data-section="api-classes-queue-push">push</li>
+						</ul></li>
+						<li data-section="api-classes-queuecollection">Tact.QueueCollection<ul>
+							<li data-section="api-classes-queuecollection-constructor">constructor</li>
+							<li data-section="api-classes-queuecollection-getByIndex">getByIndex</li>
+							<li data-section="api-classes-queuecollection-maxCount">maxCount</li>
+							<li data-section="api-classes-queuecollection-pop">pop</li>
+							<li data-section="api-classes-queuecollection-push">push</li>
+						</ul></li>
+					</ul>
+				</div>
+				
+			</div>
+			
+			<div class="clear"></div>
+		</div>
+	
+		<div id="versions">
+			<h3>Version History</h3>
+			<ul>
+				<li>1.0.0<ul>
+					<li>Initial Release</li>
+				</ul></li>
+			</ul>
+		</div>
+	
+		<div id="about">
+			<h3>TactJS</h3>
+			<hr>
+			<h4>About the Framework</h4>
+			<p>TactJS stands for JavaScript Object Oriented Query. It is designed to be a very lightweight set of extensions for jQuery.<br>
+			The primary objectives of TactJS are:</p>
+			<ol>
+				<li>Simplify writing applications in JavaScript.</li>
+				<li>Promote object orientation by creating a simple was to define and extend classes.</li>
+				<li>Offer a discoverable mechanism for marking up DOM elements with both functionality and data.</li>
+				<li>Encourage Test Driven Development by including simple unit testing and dependency injection tools.</li>
+				<li>Adhear to jQuery standards and best practices.</li>
+			</ol>
+			<h4>Browser Compatability</h4>
+			<p>Good question!</p>
+			<h4>About the Authors</h4>
+			<p>Tom makes war at Blizzard Entertainment. Zach makes love at Match.com.<br>
+			When their powers combine, they make...umm, web development a little bit easier?</p>
+		</div>
+	</div>
+    </div>
+</body>
+</html>

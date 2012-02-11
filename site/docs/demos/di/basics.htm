@@ -1,0 +1,44 @@
+﻿<h3>
+    Demos - Dependency Injection - DI Basics</h3>
+<hr>
+<p>
+    Add a Tact.Dependency object to the public interface
+    of your class and it will be replaced by the desired mapping when you instantiate
+    your class using the IOC resolve method.</p>
+<h4>
+    Defining a class with a dependency.</h4>
+<pre>Tact.Cat = $.types.define(function() {
+	var self = {
+		box : new Tact.Dependency('IBox'),
+		doBusiness : function(a) { 
+			self.box.poop();
+		}
+	};
+	return self;
+});</pre>
+<h4>
+    Defining a class that impliments the dependency's interface.</h4>
+<pre>Tact.LitterBox = $.types.define(function() {
+	var _isStinky = false;
+	var self = {
+		poop : function() { 
+			_isStinky = true;
+		},
+		clean : function() {
+			_isStinky = false;
+		},
+		isStinky : function() {
+			return _isStinky;
+		}
+	};
+	return self;
+});</pre><h4>
+    Registering the types with the container.</h4>
+<pre>$.ioc.register('IPet', Tact.Cat);
+$.ioc.register('IBox', Tact.LitterBox);</pre>
+<h4>
+    Resolving the types.</h4>
+<pre>
+var cat = $.ioc.resolve('IPet');
+cat.doBusiness();
+cat.box.isStinky(); // True</pre>

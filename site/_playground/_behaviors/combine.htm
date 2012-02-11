@@ -1,0 +1,83 @@
+﻿<h3>
+    Combine Multiple Behaviors on the Same Element</h3>
+<p>
+    Here we'll comebine the slide and toggle behaviors from the previous pages. Here
+    they are again for reference:
+</p>
+<h4>
+    Docs.Demos.Toggler</h4>
+<pre>// Docs.Demos.Toggler :: Toggles visibility of first child elements
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.Toggler = $.types.define(function () {
+        var _context;
+        var _config;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _config = $(_context).data();
+                if (_config.behaviorsEager)
+                    self.toggle();
+            },
+            toggle: function () {
+                $(_context).children().toggleClass("toggle-off toggle-on");
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+<h4>
+    Docs.Demos.Slider</h4>
+<pre>// Docs.Demos.Slider :: Slides the element a specified number of pixels left or right.
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.Slider = $.types.define(function () {
+        var _context;
+        var _data;
+        var _slideDistance;
+        var _slideTime;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _data = $(_context).domdata();
+                _slideDistance = (_data.slideDistance ? _data.slideDistance : 100);
+                _slideTime = (_data.slideTime ? _data.slideTime : 1000);
+            },
+            slideRight: function () {
+                $(_context).animate({ marginLeft: '+=' + _slideDistance + 'px' }, 
+                    _slideTime);
+            },
+            slideLeft: function () {
+                $(_context).animate({ marginLeft: '-=' + _slideDistance + 'px' }, 
+                    _slideTime);
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+<p>
+    Here's the markup we'll use to demonstrate these behaviors combined on one element.</p>
+<pre>&lt;div class=&quot;square mas&quot; data-behaviors-lazy=&quot;Docs.Demos.Toggler Docs.Demos.Slider&quot; 
+    id=&quot;togglerSlider&quot; data-slide-distance=&quot;200&quot; data-slide-time=&quot;2000&quot;&gt;
+    &lt;div class=&quot;bg-green square pointer toggle-off&quot; 
+        onclick=&quot;$(this).parent().msg(&#39;toggle&#39;).msg(&#39;slideLeft&#39;)&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;bg-red square pointer toggle-on&quot; 
+        onclick=&quot;$(this).parent().msg(&#39;toggle&#39;).msg(&#39;slideRight&#39;)&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;           
+            </pre>
+<p>
+    Click the red square below to see the demo in action.</p>
+<div class="square mas" data-behaviors-lazy="Docs.Demos.Toggler Docs.Demos.Slider"
+    id="togglerSlider" data-slide-distance="200" data-slide-time="2000">
+    <div class="bg-green square pointer toggle-off" onclick="$(this).parent().msg('toggle').msg('slideLeft')">
+    </div>
+    <div class="bg-red square pointer toggle-on" onclick="$(this).parent().msg('toggle').msg('slideRight')">
+    </div>
+</div>
+<p>
+    Note that the order behaviors are declared makes a difference. The behaviors will
+    be loaded by the bootloader in the same order they are declared, and likewise, the
+    behaviors will be initialized in the same order they are declared. If you have a
+    behavior which depends on another behavior on the same element, be sure to declare
+    the dependant behavior last.
+</p>

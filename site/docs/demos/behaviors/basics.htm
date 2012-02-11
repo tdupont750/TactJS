@@ -1,0 +1,163 @@
+﻿<div class="span1 col1 right center">
+    <a class="center" href="downloads/demos/behaviors/basics.zip">
+        <div class="download center">
+        </div>
+    </a>
+</div>
+<h3>
+    Demos - Behaviors - Behavior Basics</h3>
+<hr />
+<p>
+    In order to work with behaviors in TactJS it is first important to define a few
+    key terms.</p>
+<ul>
+    <li><strong>Behavior</strong>
+        <ul>
+            <li>A behavior is a TactJS class that is declared in a webpage's markup and works
+                as a closure which can be reused. It is typically declared in it's own file.</li>
+        </ul>
+    </li>
+    <li><strong>Behavior Namespace</strong>
+        <ul>
+            <li>Behaviors are intended to use a namespace that reflects the actual location of the
+                class in the website's script directory. This is so that the $.bootloader can find
+                the behavior required by simply looking at it's declaration in markup. It also aides
+                developers in discovering which behaviors are interacting with a peice of markup
+                quickly, and where to find those behaviors in the web project.</li>
+        </ul>
+    </li>
+    <li><strong>Message</strong>
+        <ul>
+            <li>In order to call a method in a behavior, a message can be sent targeting the element
+                that behavior is declared on. Only the instance of the behavior on the targeted
+                element will be affected.</li>
+        </ul>
+    </li>
+    <li><strong>Broadcast</strong>
+        <ul>
+            <li>Broadcast is like message, except that it will target all the behaviors within the
+                targeted element, sending the message to each of them.</li>
+        </ul>
+    </li>
+    <li><strong>Container/Context</strong>
+        <ul>
+            <li>The element on which a behavior is declared. Behaviors are designed to only interact
+                within their context so that the behavior can be reused with no interference</li>
+        </ul>
+    </li>
+</ul>
+<p>
+    Now let's look at a very basic behavior called <strong>Docs.Demos.Toggler</strong>
+    which has one method to toggle the visibility of first children inside it's container.</p>
+<h3>
+    Docs.Demos.Toggler</h3>
+<pre>// Docs.Demos.Toggler :: Toggles visibility of first child elements
+(function ($) {
+    $.types.ns('Docs');
+    Docs.Demos.Toggler = $.types.define(function () {
+        var _context;
+        var _config;
+        var self = {
+            init: function (context) {
+                _context = context;
+                _config = $(_context).data();
+                if (_config.behaviorsEager)
+                    self.toggle();
+            },
+            toggle: function () {
+                $(_context).children().toggleClass("toggle-off toggle-on");
+            }
+        };
+        return self;
+    });
+})(jQuery);</pre>
+<p>
+    This simple behavior has all the major pieces of any behavior.</p>
+<ul>
+    <li><strong>$.types.ns("Name.Space")</strong>
+        <ul>
+            <li>Since behaviors are inteded to be loaded on demand, it's important that their namespace
+                be declared with each class declaration so it is always available. The namespace
+                must correspond to the location in the filesystem where the behavior can be found.
+                In this case, the behavior is at "<strong>Core/Docs/Toggler.js</strong>" inside
+                the script directory.</li>
+        </ul>
+    </li>
+    <li><strong>_context</strong>
+        <ul>
+            <li>Used to store the context passed to the behavior instance when the behavior is parsed.</li>
+        </ul>
+    </li>
+    <li><strong>self</strong>
+        <ul>
+            <li>The "public scope" for the behavior. Methods declared here can be invoked via message
+                or broadcast. Typcally contains <strong>init</strong>.</li>
+        </ul>
+    </li>
+    <li><strong>init</strong>
+        <ul>
+            <li>A special method in self invoked when the behavior is first initialized in the DOM.
+                It is passed the behavior's context. Init is usually used to store the context and
+                configuration data in a private scope variable and perform any required first load
+                actions. If the element uses "data-behaviors-eager" then init will be run as soon
+                as the element on which it is declared is added to the DOM.</li>
+        </ul>
+    </li>
+</ul>
+<p>
+    There are two ways to declare a behavior on an element.
+    <ul>
+        <li><strong>data-behaviors-lazy</strong>
+            <ul>
+                <li>This attribute name indicates that the behaviors on this element will only be loaded
+                    once they are requested via a message or broadcast to the element. This also means
+                    that if the behavior scripts are not already on the page, the bootloader will wait
+                    until the element receives a message to load the required scripts. </li>
+            </ul>
+        </li>
+        <li><strong>data-behaviors-eager</strong>
+            <ul>
+                <li>Using this attribute tells the behaviors to load their required scripts through
+                    the bootloader (if necessecary), and run their <strong>init</strong> methods as
+                    soon as the element is added to the DOM.</li>
+            </ul>
+        </li>
+    </ul>
+</p>
+<p>
+    Now let's see how to declare <strong>Docs.Demos.Toggler</strong> on an element with
+    both <strong>data-behaviors-lazy</strong> and <strong>data-behaviors-eager</strong></p>
+<pre>&lt;div class=&quot;square mas&quot; div data-behaviors-lazy=&quot;Docs.Demos.Toggler&quot;&gt;
+    &lt;div class=&quot;bg-green square pointer toggle-off&quot; &gt;&lt;/div&gt;
+    &lt;div class=&quot;bg-red square pointer toggle-on&quot; &gt;&lt;/div&gt;
+&lt;/div&gt;                
+            </pre>
+<div class="square mas" data-behaviors-lazy="Docs.Demos.Toggler">
+    <div class="bg-green square pointer toggle-off">
+    </div>
+    <div class="bg-red square pointer toggle-on">
+    </div>
+</div>
+<p>
+    Which produces this red square. Because we used <strong>data-behaviors-lazy</strong>,
+    nothing has changed from the original markup because the behavior has not yet been
+    initialized.</p>
+<p>
+    Let's see what happens when we change the markup to use <strong>data-behaviors-eager</strong>...
+</p>
+<pre>&lt;div class=&quot;square mas&quot; data-behaviors-eager=&quot;Docs.Demos.Toggler&quot; &gt;
+    &lt;div class=&quot;bg-green square pointer toggle-off&quot; &gt;&lt;/div&gt;
+    &lt;div class=&quot;bg-red square pointer toggle-on&quot; &gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+<div class="square mas" data-behaviors-eager="Docs.Demos.Toggler">
+    <div class="bg-green square pointer toggle-off">
+    </div>
+    <div class="bg-red square pointer toggle-on">
+    </div>
+</div>
+<p>
+    Viola! The elements are toggled in the init method, and now we see a green square!
+    Next let's look at
+    <br />
+    <a class="txt-white" href="demos.htm#/demos-behaviors-messaging" data-behaviors-lazy="Docs.HashLink"
+        onclick="$(this).msg('click')"><strong>message</strong> and <strong>broadcast</strong></a></p>

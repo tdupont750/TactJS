@@ -1,0 +1,60 @@
+﻿<h3>
+    Features - Classes - Type Checking</h3>
+<hr>
+<p>
+    Type checking is built into class definitions.</p>
+<h4>
+    Example</h4>
+<pre>$.types.ns("Tact");
+
+Tact.Mammal = $.types.define(function() {
+	var self = {
+		breathsAir : true
+	};
+	return self;
+});
+
+Tact.Poodle = $.types.extend(Tact.Mammal, function() {
+	var self = {
+		isCute : true
+	};
+	return self;
+});
+
+Tact.Monkey = $.types.extend(Tact.Mammal, function() {
+	var self = {
+		usesTools : true
+	};
+	return self;
+});
+
+Tact.Human = $.types.extend(Tact.Monkey, function() {
+	var self = {
+		usesJooQuery : true
+	};
+	return self;
+});
+
+var mammal = new Tact.Mammal();
+mammal.is(Tact.Mammal); // true
+mammal.is(Tact.Poodle); // false
+mammal.is(Tact.Monkey); // false
+mammal.is(Tact.Human);  // false
+
+var poodle = new Tact.Poodle();
+poodle.is(Tact.Mammal); // true
+poodle.is(Tact.Poodle); // true
+poodle.is(Tact.Monkey); // false
+poodle.is(Tact.Human);  // false
+
+var monkey = new Tact.Monkey();
+monkey.is(Tact.Mammal); // true
+monkey.is(Tact.Poodle); // false
+monkey.is(Tact.Monkey); // true
+monkey.is(Tact.Human);  // false
+
+var human = new Tact.Human();
+human.is(Tact.Mammal); // true
+human.is(Tact.Poodle); // false
+human.is(Tact.Monkey); // true
+human.is(Tact.Human);  // true</pre>

@@ -1,0 +1,38 @@
+﻿<h3>
+    API - Static - Utilities</h3>
+<hr>
+<h4>
+    $.utilities</h4>
+<br />
+<br />
+<h3>
+    API - Static - Utilities - clone</h3>
+<hr>
+<h4>
+    $.utilities.clone(source)</h4>
+<p>
+    @description Clone an object or array.<br>
+    @param {object} source<br>
+    @returns {object} Clone of source.
+</p>
+<h4>
+    Example</h4>
+<pre>var myCow = {
+	says: 'Moo',
+	isBig: true
+};
+var yourCow = $.utilities.clone(myCow);
+
+var myStuff = [1, true, 'meh'];
+var yourStuff = $.utilities.clone(myStuff);</pre>
+<h3>
+    API - Static - Utilities - delegate</h3>
+<hr>
+<h4>
+    $.utilities.createDelegate(fn, scope)</h4>
+<p>
+    @description reates a delegate that preserves scope.<br>
+    @param {function} fn<br>
+    @param {object} scope<br>
+    @returns {function} delegate
+</p>
