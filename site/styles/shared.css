@@ -1,5 +1,6 @@
 ﻿html { width: 100%; height: 100%; }
 body { font-size: 12px; font-family: "Arial" , sans-serif; background-image: url(../images/bg.jpg); background-repeat: repeat; margin: 0px; padding: 0px; font-size: 14px; }
+img { border:none; }
 pre {font-family: "Arial" , sans-serif; font-size:12px; padding:5px; border:1px dashed #fff;}
 h1, h2, h3, h4 { margin: 0px; padding: 0px; }
 h1 { font-weight: normal; font-size: 42px; }
