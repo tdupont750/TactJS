@@ -1,4 +1,6 @@
-﻿//configuration
+﻿// Copyright (c) 2012 Zach Mayer Tom Dupont
+
+//configuration
 var _scriptsRoot = "Scripts/";
 var _bootstrap = "core.js";
 

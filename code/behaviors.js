@@ -1,4 +1,6 @@
-﻿(function ($) {
+﻿// Copyright (c) 2012 Zach Mayer Tom Dupont
+
+(function ($) {
     if (!$ || !$.types) {
         throw 'Initialization Error: Behaviors requires Core.';
     }
